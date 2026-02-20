@@ -13,15 +13,34 @@
 ```
 E:\poker-project\
 ├── INDEX.md (this file)
-├── DOCUMENTATION_STANDARDS.md (naming, versioning, format rules)
+├── README.md (optional: quick start guide)
+├── .gitignore
+│
+├── standards/
+│   ├── DOCUMENTATION_STANDARDS.md (naming, versioning, format rules)
+│   ├── CODING_STANDARDS.md (Python code standards)
+│   └── GITFLOW.md (Git workflow)
+│
 ├── specifications/
 │   └── Functional requirements, use cases, architectural specs
+│
 ├── design/
-│   └── Design documents, API specs, database schemas
+│   └── Design documents, API specs, task boards, data schemas
+│
 ├── code/
-│   └── Source code and project files
+│   ├── poker_engine/
+│   ├── requirements.txt
+│   └── PHASE_1_README.md
+│
 ├── tests/
-│   └── Test cases, test results, documentation
+│   ├── unit/ (current unit tests)
+│   ├── integration/ (Phase 4+)
+│   ├── e2e/ (Phase 4+)
+│   └── performance/ (Phase 5+)
+│
+├── progress/
+│   └── PROGRESS_*.md (session logs and milestones)
+│
 └── archive/
     └── Deprecated or historical documents
 ```
@@ -56,6 +75,17 @@ E:\poker-project\
 
 ---
 
+## Navigation
+
+**Standards & Rules** → `/standards/` (DOCUMENTATION_STANDARDS.md, CODING_STANDARDS.md, GITFLOW.md)
+**Project Specs** → `/specifications/` (charter, requirements)
+**Design & Planning** → `/design/` (task boards, API specs)
+**Source Code** → `/code/poker_engine/`
+**Tests** → `/tests/unit/`, `/tests/integration/`, etc.
+**Progress & Logs** → `/progress/`
+
+---
+
 ## Last Updated
 
-- **2026-02-19 23:12 GMT+13** — Initial structure created
+- **2026-02-20 13:52 GMT+13** — Reorganized for scale; moved standards to `/standards/`, created modular test structure (`/tests/unit/`, `/integration/`, `/e2e/`, `/performance/`), created `/progress/` folder for session logs, removed duplicate CODE_STANDARDS.md
