@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "jest --coverage",
-    "migrate": "node src/database/migrate.js"
+    "test": "jest --coverage --coverageReporters=text --coverageReporters=lcov",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "keywords": ["poker", "tournament", "api"],
   "author": "Angus Young",
