@@ -1,0 +1,713 @@
+openapi: 3.0.0
+info:
+  title: OpenClaw Poker Platform API
+  description: Tournament management, leaderboard, and match tracking API
+  version: 1.0.0
+  contact:
+    name: Angus Young
+    url: https://openclaw-poker.local
+
+servers:
+  - url: https://api.openclaw-poker.local/api
+    description: Production server
+  - url: http://localhost:5000/api
+    description: Development server
+
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      operationId: loginUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 32
+                  description: Username
+                password:
+                  type: string
+                  description: Password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT bearer token
+                  user_id:
+                    type: integer
+                  username:
+                    type: string
+                  expires_in:
+                    type: integer
+                    description: Token expiry in seconds
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /tournaments:
+    get:
+      summary: List all tournaments
+      operationId: getTournaments
+      tags:
+        - Tournaments
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/TournamentStatus'
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [scheduled_at, created_at, player_count]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tournaments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tournament'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+    post:
+      summary: Create a new tournament
+      operationId: createTournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - buy_in_chips
+                - entry_fee_usd
+                - max_players
+                - scheduled_at
+              properties:
+                name:
+                  type: string
+                  minLength: 3
+                  maxLength: 128
+                description:
+                  type: string
+                buy_in_chips:
+                  type: integer
+                  minimum: 1
+                entry_fee_usd:
+                  type: number
+                  format: double
+                  minimum: 0
+                max_players:
+                  type: integer
+                  minimum: 2
+                  maximum: 8
+                scheduled_at:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Tournament created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tournament'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /tournaments/{id}:
+    get:
+      summary: Get tournament details
+      operationId: getTournament
+      tags:
+        - Tournaments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TournamentDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tournaments/{id}/register:
+    post:
+      summary: Register for a tournament
+      operationId: registerTournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        '200':
+          description: Registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  tournament_id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  player_count:
+                    type: integer
+                  seats_available:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /tournaments/{id}/unregister:
+    delete:
+      summary: Withdraw from a tournament
+      operationId: unregisterTournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Unregistered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  tournament_id:
+                    type: integer
+                  user_id:
+                    type: integer
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tournaments/{tournament_id}/matches:
+    get:
+      summary: List matches in a tournament
+      operationId: getMatches
+      tags:
+        - Matches
+      parameters:
+        - name: tournament_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/MatchStatus'
+        - name: table_number
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tournament_id:
+                    type: integer
+                  matches:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Match'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /matches/{id}:
+    get:
+      summary: Get match details
+      operationId: getMatch
+      tags:
+        - Matches
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /leaderboard:
+    get:
+      summary: Get global leaderboard
+      operationId: getLeaderboard
+      tags:
+        - Leaderboard
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [all_time, this_month, this_week]
+            default: all_time
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  leaderboard:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeaderboardEntry'
+                  total_players:
+                    type: integer
+                  updated_at:
+                    type: string
+                    format: date-time
+                  period:
+                    type: string
+
+  /leaderboard/{user_id}:
+    get:
+      summary: Get player statistics
+      operationId: getPlayerStats
+      tags:
+        - Leaderboard
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerStats'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TournamentStatus:
+      type: string
+      enum: [draft, scheduled, in_progress, completed, cancelled]
+
+    MatchStatus:
+      type: string
+      enum: [scheduled, in_progress, completed, cancelled]
+
+    PlayerStatusTournament:
+      type: string
+      enum: [registered, active, eliminated, withdrew]
+
+    PlayerStatusMatch:
+      type: string
+      enum: [active, folded, eliminated, won]
+
+    Tournament:
+      type: object
+      required:
+        - id
+        - name
+        - status
+        - buy_in_chips
+        - entry_fee_usd
+        - max_players
+        - scheduled_at
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/TournamentStatus'
+        buy_in_chips:
+          type: integer
+        entry_fee_usd:
+          type: number
+          format: double
+        max_players:
+          type: integer
+        scheduled_at:
+          type: string
+          format: date-time
+        player_count:
+          type: integer
+        seats_available:
+          type: integer
+        created_by:
+          type: string
+
+    TournamentDetail:
+      allOf:
+        - $ref: '#/components/schemas/Tournament'
+        - type: object
+          properties:
+            description:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            players:
+              type: array
+              items:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                  username:
+                    type: string
+                  status:
+                    $ref: '#/components/schemas/PlayerStatusTournament'
+                  starting_stack:
+                    type: integer
+                  current_stack:
+                    type: integer
+                  joined_at:
+                    type: string
+                    format: date-time
+            matches:
+              type: array
+              items:
+                $ref: '#/components/schemas/Match'
+
+    Match:
+      type: object
+      required:
+        - match_id
+        - table_number
+        - game_number
+        - status
+      properties:
+        match_id:
+          type: integer
+        table_number:
+          type: integer
+        game_number:
+          type: integer
+        status:
+          $ref: '#/components/schemas/MatchStatus'
+        winner:
+          type: string
+          nullable: true
+        pot_total:
+          type: integer
+        hand_count:
+          type: integer
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MatchDetail:
+      allOf:
+        - $ref: '#/components/schemas/Match'
+        - type: object
+          properties:
+            tournament_id:
+              type: integer
+            players:
+              type: array
+              items:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                  username:
+                    type: string
+                  position:
+                    type: integer
+                  starting_stack:
+                    type: integer
+                  ending_stack:
+                    type: integer
+                    nullable: true
+                  status:
+                    $ref: '#/components/schemas/PlayerStatusMatch'
+            scheduled_at:
+              type: string
+              format: date-time
+
+    LeaderboardEntry:
+      type: object
+      required:
+        - rank
+        - user_id
+        - username
+        - tournaments_played
+        - tournament_wins
+        - avg_finish
+        - total_winnings
+      properties:
+        rank:
+          type: integer
+        user_id:
+          type: integer
+        username:
+          type: string
+        tournaments_played:
+          type: integer
+        tournament_wins:
+          type: integer
+        avg_finish:
+          type: number
+          format: double
+        total_winnings:
+          type: number
+          format: double
+        win_rate:
+          type: number
+          format: double
+
+    PlayerStats:
+      type: object
+      required:
+        - user_id
+        - username
+        - rank
+      properties:
+        user_id:
+          type: integer
+        username:
+          type: string
+        rank:
+          type: integer
+        tournaments_played:
+          type: integer
+        tournament_wins:
+          type: integer
+        avg_finish:
+          type: number
+          format: double
+        total_winnings:
+          type: number
+          format: double
+        win_rate:
+          type: number
+          format: double
+        recent_matches:
+          type: array
+          items:
+            type: object
+            properties:
+              tournament:
+                type: string
+              tournament_id:
+                type: integer
+              finish_position:
+                type: integer
+              prize:
+                type: number
+                format: double
+              date:
+                type: string
+                format: date
+              players_count:
+                type: integer
+        stats:
+          type: object
+          properties:
+            avg_stack_at_elimination:
+              type: integer
+            best_finish:
+              type: integer
+            worst_finish:
+              type: integer
+
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        pages:
+          type: integer
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+
+  responses:
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: INVALID_REQUEST
+              message: Malformed request body or query parameters
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: UNAUTHORIZED
+              message: Invalid or expired token
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: FORBIDDEN
+              message: Insufficient permissions
+
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: NOT_FOUND
+              message: Resource does not exist
+
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: CONFLICT
+              message: Resource already exists

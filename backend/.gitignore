@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+*.db
+*.sqlite
+*.sqlite3
+dist/
+build/
+.DS_Store
+*.log
+.vscode/
+.idea/
+coverage/
+.nyc_output/

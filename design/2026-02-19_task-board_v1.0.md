@@ -96,18 +96,32 @@
 ### 3.2 Website Frontend
 - [ ] Build tournament lobby
 - [ ] Build leaderboard
-- [ ] Build bot upload interface
+- [x] ~~Build bot upload interface~~ **→ MOVED TO BACKLOG (ON-HOLD)**
 - **Status:** READY (after 3.1)
-- **Estimate:** 4-5 hours
-- **Token Budget:** approximately 1500-2000 tokens
+- **Estimate:** 3-4 hours (reduced from 4-5)
+- **Token Budget:** approximately 1000-1200 tokens (reduced)
 
 ### 3.3 Website Backend
 - [ ] Build tournament management API
-- [ ] Build bot execution engine
 - [ ] Build scoring and leaderboard API
+- [x] ~~Build bot execution engine~~ **→ MOVED TO BACKLOG (ON-HOLD)**
 - **Status:** READY (after 3.1)
-- **Estimate:** 4-5 hours
-- **Token Budget:** approximately 1500-2000 tokens
+- **Estimate:** 3-4 hours (reduced from 4-5)
+- **Token Budget:** approximately 1000-1200 tokens (reduced)
+
+---
+
+## Phase 3.4: Setup Documentation (POST-LAUNCH)
+
+### 3.4 Setup & Deployment Guides
+- [ ] Development environment setup guide
+- [ ] Production deployment guide
+- [ ] Database migration guide
+- [ ] Docker setup (optional)
+- **Status:** BACKLOG (after test + prod setups verified)
+- **Estimate:** 2 hours
+- **Token Budget:** approximately 500-700 tokens
+- **Trigger:** Once Phase 3.2 & 3.3 have working test/prod environments
 
 ---
 
@@ -132,12 +146,12 @@
 
 ## Summary
 
-- **Phase 1 Total:** Approximately 5-7 tasks, USD 1.50-2.50
-- **Phase 2 Total:** Approximately 10 tasks, USD 2.00-3.00
-- **Phase 3 Total:** Approximately 6 tasks, USD 2.00-3.00
+- **Phase 1 Total:** Approximately 5-7 tasks, USD 1.50-2.50 — COMPLETE ✓
+- **Phase 2 Total:** Approximately 10 tasks, USD 2.00-3.00 — COMPLETE ✓
+- **Phase 3 Total:** Approximately 4-5 tasks (bot upload on hold), USD 1.50-2.00
 - **Phase 4 Total:** Approximately 2 main tasks, USD 0.50-1.00
 
-**Grand Total:** Approximately USD 6.00-9.50 (within budget with margin)
+**Grand Total:** Approximately USD 5.50-8.50 (within budget with increased margin)
 
 ---
 
@@ -145,27 +159,33 @@
 
 **Phase 1 (Bot Logic):** COMPLETE ✓
 - 1.1 & 1.2 fully implemented with 64/64 tests passing
-- 1.3 & 1.4 unblocked and ready to start
+- 1.3 & 1.4 on backlog (Zynga integration skipped per decision 2026-02-21)
 
-**Phase 2 (Dealer Engine):** IN PROGRESS
+**Phase 2 (Dealer Engine):** COMPLETE ✓
 - 2.1 Functional Requirements: DONE (2026-02-20)
-- 2.2 Core Dealer Logic: READY to start
+- 2.2 Core Dealer Logic: DONE (2026-02-21) — 38/38 tests passing
+- 2.3 & 2.4 Testing: READY to start or skip based on timeline
+
+**Phase 3 (Platform Website):** READY TO START
+- Scope: Tournament lobby + leaderboards ONLY
+- Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
+- 3.1 Architecture: NEXT STEP (awaiting approval)
 
 ---
 
 ## Next Action
 
-**BEGIN WITH:** Task 2.2 (Core Dealer Logic Implementation)
+**BEGIN WITH:** Task 3.1 (Technology Stack & Architecture Specification)
 
 Rationale:
-- Phase 2.1 requirements already documented
-- Architecture review recommended before coding (1-2 hours, ~400 tokens)
-- Then implement dealer state machine + tests
+- Phase 2 complete and verified
+- Phase 3 scope clarified (no bot upload)
+- Need tech stack approval before frontend/backend coding
 
-**Approval Status:** Awaiting Jon's confirmation to commence (with or without architecture doc).
+**Approval Status:** Ready to draft Phase 3.1 spec; awaiting Jon's go-ahead.
 
 ---
 
-**Last Updated:** 2026-02-20 15:02 GMT+13 (Phase 1 completion)
-**Version:** 1.0
+**Last Updated:** 2026-02-21 10:03 GMT+13 (Phase 2 completion + Phase 3 scope change)
+**Version:** 1.1 (Updated: scope change, bot upload backlog)
 **Maintainer:** Angus Young (auto-updated on task completion)
