@@ -5,6 +5,7 @@
 const express = require('express');
 const database = require('../database/db');
 const authMiddleware = require('../middleware/auth');
+const validators = require('../utils/validation');
 
 const router = express.Router();
 

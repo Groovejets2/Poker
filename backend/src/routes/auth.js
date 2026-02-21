@@ -6,6 +6,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const database = require('../database/db');
+const validators = require('../utils/validation');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
@@ -77,20 +78,29 @@ router.post('/register', async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
-    if (!username || !password) {
+    if (!validators.username(username)) {
       return res.status(400).json({
         error: {
           code: 'INVALID_REQUEST',
-          message: 'Username and password are required'
+          message: 'Username: 3-32 chars, alphanumeric + underscore'
         }
       });
     }
 
-    if (username.length < 3 || username.length > 32) {
+    if (!validators.password(password)) {
       return res.status(400).json({
         error: {
           code: 'INVALID_REQUEST',
-          message: 'Username must be 3-32 characters'
+          message: 'Password must be at least 6 characters'
+        }
+      });
+    }
+
+    if (email && !validators.email(email)) {
+      return res.status(400).json({
+        error: {
+          code: 'INVALID_REQUEST',
+          message: 'Invalid email format'
         }
       });
     }

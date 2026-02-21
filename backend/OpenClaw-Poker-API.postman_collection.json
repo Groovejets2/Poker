@@ -1,0 +1,233 @@
+{
+  "info": {
+    "name": "OpenClaw Poker API",
+    "description": "Tournament management and leaderboard API",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"testuser\", \"email\": \"test@example.com\", \"password\": \"password123\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"player1\", \"password\": \"password123\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "tests": "if (pm.response.code === 200) { pm.environment.set('token', pm.response.json().token); }"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tournaments",
+      "item": [
+        {
+          "name": "List Tournaments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tournaments?page=1&limit=20&status=scheduled",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"},
+                {"key": "status", "value": "scheduled"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Tournament",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tournaments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Register for Tournament",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tournaments/1/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments", "1", "register"]
+            }
+          }
+        },
+        {
+          "name": "Unregister from Tournament",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/tournaments/1/unregister",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments", "1", "unregister"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "List Tournament Matches",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/matches/tournament/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["matches", "tournament", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Match Details",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/matches/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["matches", "1"]
+            }
+          }
+        },
+        {
+          "name": "Submit Match Score",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"winner_id\": 1, \"results\": [{\"user_id\": 1, \"ending_stack\": 25000, \"status\": \"won\"}, {\"user_id\": 2, \"ending_stack\": 5000, \"status\": \"eliminated\"}]}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/matches/1/submit-score",
+              "host": ["{{baseUrl}}"],
+              "path": ["matches", "1", "submit-score"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leaderboard",
+      "item": [
+        {
+          "name": "Global Leaderboard",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard?limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["leaderboard"],
+              "query": [
+                {"key": "limit", "value": "50"},
+                {"key": "offset", "value": "0"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Player Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["leaderboard", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
