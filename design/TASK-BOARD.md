@@ -1,7 +1,32 @@
 # Task Board - OpenClaw Poker Platform
 
-**Last Updated:** 2026-02-19 23:12 GMT+13
-**Status Legend:** READY | IN PROGRESS | DONE | BLOCKED | CANCELLED
+**Category:** design
+**Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
+
+**Status:** active
+**Version:** 1.1
+**Last Updated:** 2026-02-22 11:50 GMT+13
+**Owner:** Jon + Angus
+**Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../DEPLOYMENT_ARCHITECTURE.md)
+
+---
+
+## Change Log
+
+| Date | Version | Author | Change |
+|------|---------|--------|--------|
+| 2026-02-22 11:50 | 1.1 | Angus | Added metadata and change log; renamed from 2026-02-19_task-board_v1.0.md to TASK-BOARD.md |
+| 2026-02-21 10:03 | 1.1 | Angus | Updated Phase 2 completion status, Phase 3 scope change (bot upload backlog) |
+| 2026-02-19 23:12 | 1.0 | Jon | Initial creation |
+
+---
+
+## Quick Navigation
+
+Use these sections with offset/limit to avoid loading full file:
+- **Summary Only:** Load "Phase Status Summary" section (~40 lines)
+- **Immediate Actions:** Load "Immediate Next Actions" section (~20 lines)
+- **Full Task Breakdown:** Load "Phase 1-4" sections as needed
 
 ---
 
@@ -48,20 +73,21 @@
 ## Phase 2: Dealer Engine
 
 ### 2.1 Functional Requirements Document
-- [ ] Define dealer responsibilities
-- [ ] Define betting rules (check, fold, raise, all-in)
-- [ ] Define pot management
-- [ ] Define action order and turn logic
-- **Status:** READY (start now)
+- [x] Define dealer responsibilities
+- [x] Define betting rules (check, fold, raise, all-in)
+- [x] Define pot management
+- [x] Define action order and turn logic
+- **Status:** DONE
 - **Estimate:** 1-2 hours
 - **Token Budget:** approximately 400-600 tokens
 
 ### 2.2 Core Dealer Logic
-- [ ] Implement dealer state machine
-- [ ] Implement betting round management
-- [ ] Implement pot distribution (winner, splits)
-- [ ] Unit tests (50 or more test cases)
-- **Status:** READY (after 2.1)
+- [x] Implement dealer state machine
+- [x] Implement betting round management
+- [x] Implement pot distribution (winner, splits)
+- [x] Unit tests (38/38 tests passing)
+- **Status:** DONE
+- **Completed:** 2026-02-21 10:00 GMT+13
 - **Estimate:** 4-5 hours
 - **Token Budget:** approximately 1500-2000 tokens
 
@@ -102,23 +128,23 @@
 - **Token Budget:** approximately 1000-1200 tokens (reduced)
 
 ### 3.3 Website Backend
-- [ ] Build tournament management API
-- [ ] Build scoring and leaderboard API
+- [x] Build tournament management API (DONE 2026-02-22)
+- [x] Build scoring and leaderboard API (DONE 2026-02-22)
 - [x] ~~Build bot execution engine~~ **→ MOVED TO BACKLOG (ON-HOLD)**
-- **Status:** READY (after 3.1)
-- **Estimate:** 3-4 hours (reduced from 4-5)
-- **Token Budget:** approximately 1000-1200 tokens (reduced)
+- **Status:** DONE (needs ORM refactor for test/prod separation)
+- **Estimate:** 3-4 hours (completed)
+- **Token Budget:** approximately 1000-1200 tokens (used)
 
 ---
 
 ## Phase 3.4: GitFlow Strategy & PR Automation
 
-### 3.4 GitFlow Implementation (PRIORITY: TOMORROW)
+### 3.4 GitFlow Implementation (PRIORITY: AFTER 3.3 REFACTOR)
 - [ ] Create GitFlow skill with branching strategy (feature/, release/, hotfix/)
 - [ ] Implement PR automation via GitHub API
 - [ ] Build sub-agent for PR creation + notifications
 - [ ] Define code review standards (see below)
-- **Status:** READY (starts tomorrow morning)
+- **Status:** READY (after Phase 3.3 refactor)
 - **Estimate:** 2-3 hours
 - **Token Budget:** approximately 1000-1200 tokens
 
@@ -169,7 +195,7 @@
 
 - **Phase 1 Total:** Approximately 5-7 tasks, USD 1.50-2.50 — COMPLETE ✓
 - **Phase 2 Total:** Approximately 10 tasks, USD 2.00-3.00 — COMPLETE ✓
-- **Phase 3 Total:** Approximately 4-5 tasks (bot upload on hold), USD 1.50-2.00
+- **Phase 3 Total:** Approximately 4-5 tasks (bot upload on hold), USD 1.50-2.00 — 3.3 DONE, 3.2 READY
 - **Phase 4 Total:** Approximately 2 main tasks, USD 0.50-1.00
 
 **Grand Total:** Approximately USD 5.50-8.50 (within budget with increased margin)
@@ -187,26 +213,30 @@
 - 2.2 Core Dealer Logic: DONE (2026-02-21) — 38/38 tests passing
 - 2.3 & 2.4 Testing: READY to start or skip based on timeline
 
-**Phase 3 (Platform Website):** READY TO START
-- Scope: Tournament lobby + leaderboards ONLY
+**Phase 3 (Platform Website):** IN PROGRESS
+- 3.3 Backend API: DONE (2026-02-22) — but needs ORM refactor for test/prod
+- 3.2 Frontend: READY to start (awaiting 3.3 refactor)
+- 3.1 Architecture: SUPERSEDED by DEPLOYMENT_ARCHITECTURE.md
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
-- 3.1 Architecture: NEXT STEP (awaiting approval)
 
 ---
 
-## Next Action
+## Immediate Next Actions
 
-**BEGIN WITH:** Task 3.1 (Technology Stack & Architecture Specification)
+**PRIORITY 1:** Refactor Phase 3.3 Backend (ORM Integration)
+- Current: Raw SQLite via sqlite3 module
+- Target: TypeORM or Sequelize (database-agnostic)
+- Why: Enable test/prod separation (SQLite for test, PostgreSQL for prod)
+- Estimate: 2-3 hours
+- Then: test/prod folder restructuring per DEPLOYMENT_ARCHITECTURE.md
 
-Rationale:
-- Phase 2 complete and verified
-- Phase 3 scope clarified (no bot upload)
-- Need tech stack approval before frontend/backend coding
-
-**Approval Status:** Ready to draft Phase 3.1 spec; awaiting Jon's go-ahead.
+**PRIORITY 2:** Phase 3.2 Frontend (React)
+- Blocked on 3.3 refactor completion
+- Build tournament lobby + leaderboard
+- Estimate: 3-4 hours after 3.3 ready
 
 ---
 
-**Last Updated:** 2026-02-21 10:03 GMT+13 (Phase 2 completion + Phase 3 scope change)
-**Version:** 1.1 (Updated: scope change, bot upload backlog)
-**Maintainer:** Angus Young (auto-updated on task completion)
+**Last Updated:** 2026-02-22 11:50 GMT+13
+**Version:** 1.1
+**Maintainer:** Angus Young + Jon
