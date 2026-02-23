@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { TournamentPlayer } from './TournamentPlayer';
 
 @Entity('users')
 export class User {
@@ -13,6 +14,9 @@ export class User {
 
   @Column({ length: 255 })
   password_hash: string;
+
+  @OneToMany(() => TournamentPlayer, tournamentPlayer => tournamentPlayer.user)
+  tournamentPlayers: TournamentPlayer[];
 
   @CreateDateColumn()
   created_at: Date;
