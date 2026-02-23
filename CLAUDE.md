@@ -2,11 +2,11 @@
 
 **Category:** standards
 **Purpose:** Operational guidelines and remaining work for Phase 3.3 completion for Opus 4.6
-**Status:** active
+**Status:** SUPERSEDED - Phase 3.3 complete, see code review in docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md
 **Version:** 1.0
-**Last Updated:** 2026-02-23 17:28 GMT+13
+**Last Updated:** 2026-02-23 18:45 GMT+13
 **Owner:** Angus
-**Tags:** operational, handoff, phase-3.3, typeorm
+**Tags:** operational, handoff, phase-3.3, typeorm, completed
 
 ---
 
