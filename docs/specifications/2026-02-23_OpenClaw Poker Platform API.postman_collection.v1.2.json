@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "OpenClaw Poker API v1.1",
-    "description": "Tournament management and leaderboard API - Uses JWT Bearer Token Authentication (NOT OAuth)\n\nQuick Start:\n1. Send 'Login' request with valid credentials\n2. Token is automatically saved to {{token}} variable\n3. All protected endpoints inherit Bearer Token auth from collection\n4. Token expires after 1 hour - re-login to get new token",
-    "version": "1.1.0",
+    "name": "OpenClaw Poker Platform API v1.2",
+    "description": "Tournament management and leaderboard API - Uses JWT Bearer Token Authentication (NOT OAuth)\n\nQuick Start:\n1. Send 'Login' request with valid credentials\n2. Token is automatically saved to {{token}} variable\n3. All protected endpoints inherit Bearer Token auth from collection\n4. Token expires after 1 hour - re-login to get new token\n\nv1.2 Changes:\n- Added POST /tournaments (Create Tournament) endpoint to match OpenAPI spec",
+    "version": "1.2.0",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -141,6 +141,47 @@
               ]
             },
             "description": "Get paginated list of tournaments. No authentication required."
+          }
+        },
+        {
+          "name": "Create Tournament",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Check if tournament created successfully",
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    console.log('Tournament created with ID: ' + jsonData.id);",
+                  "    pm.collectionVariables.set('tournamentId', jsonData.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Friday Night Poker\",\n  \"description\": \"Weekly Friday night tournament\",\n  \"buy_in_chips\": 1000,\n  \"entry_fee_usd\": 10.00,\n  \"max_players\": 8,\n  \"scheduled_at\": \"2026-02-28T19:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tournaments",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments"]
+            },
+            "description": "Create a new tournament.\n\nRequires: JWT Bearer Token (login first)\n\nRequired fields:\n- name: 3-128 chars\n- buy_in_chips: minimum 1\n- entry_fee_usd: minimum 0\n- max_players: 2-8 players\n- scheduled_at: ISO 8601 date-time\n\nOptional:\n- description: tournament description\n\nNOTE: Backend endpoint not yet implemented (501 Not Implemented expected)"
           }
         },
         {
@@ -331,6 +372,12 @@
       "value": "",
       "type": "string",
       "description": "JWT Bearer Token - automatically set by Login request"
+    },
+    {
+      "key": "tournamentId",
+      "value": "",
+      "type": "string",
+      "description": "Tournament ID - automatically set by Create Tournament request"
     }
   ]
 }
