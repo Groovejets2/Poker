@@ -5,7 +5,8 @@
 
 **Status:** active
 **Version:** 1.0
-**Last Updated:** 2026-02-23 17:23 GMT+13
+**Last Updated:** 2026-02-23 17:28 GMT+13
+**Version:** 1.0
 **Owner:** Angus
 **Tags:** guides, setup, deployment, troubleshooting
 **Related Documents:** [../standards/DOCUMENTATION_STANDARDS.md](../standards/DOCUMENTATION_STANDARDS.md)

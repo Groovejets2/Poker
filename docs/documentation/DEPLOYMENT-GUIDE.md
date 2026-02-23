@@ -5,7 +5,8 @@
 
 **Status:** draft
 **Version:** 1.0
-**Last Updated:** 2026-02-23 17:22 GMT+13
+**Last Updated:** 2026-02-23 17:28 GMT+13
+**Version:** 1.0
 **Owner:** Angus
 **Tags:** deployment, production, operations, devops
 
