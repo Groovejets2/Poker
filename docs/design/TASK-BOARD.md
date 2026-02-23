@@ -4,8 +4,8 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 1.1
-**Last Updated:** 2026-02-22 11:50 GMT+13
+**Version:** 1.2
+**Last Updated:** 2026-02-23 17:27 GMT+13
 **Owner:** Jon + Angus
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-23 17:27 | 1.2 | Angus | Updated Phase 3.3 status - 60% complete, handoff to Opus 4.6; documented remaining work |
 | 2026-02-22 11:50 | 1.1 | Angus | Added metadata and change log; renamed from 2026-02-19_task-board_v1.0.md to TASK-BOARD.md |
 | 2026-02-21 10:03 | 1.1 | Angus | Updated Phase 2 completion status, Phase 3 scope change (bot upload backlog) |
 | 2026-02-19 23:12 | 1.0 | Jon | Initial creation |
