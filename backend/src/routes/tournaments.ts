@@ -56,6 +56,91 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+// POST /tournaments - Create tournament
+router.post('/', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { name, description, buy_in_chips, entry_fee_usd, max_players, scheduled_at } = req.body;
+    const userId = (req as any).user.user_id;
+
+    // Validate required fields
+    if (!name || !buy_in_chips || entry_fee_usd === undefined || !max_players || !scheduled_at) {
+      return res.status(400).json({
+        error: {
+          code: 'INVALID_REQUEST',
+          message: 'Missing required fields: name, buy_in_chips, entry_fee_usd, max_players, scheduled_at'
+        }
+      });
+    }
+
+    // Validate field values
+    if (name.length < 3 || name.length > 128) {
+      return res.status(400).json({
+        error: { code: 'INVALID_REQUEST', message: 'Name must be 3-128 characters' }
+      });
+    }
+
+    if (buy_in_chips < 1) {
+      return res.status(400).json({
+        error: { code: 'INVALID_REQUEST', message: 'Buy-in chips must be at least 1' }
+      });
+    }
+
+    if (entry_fee_usd < 0) {
+      return res.status(400).json({
+        error: { code: 'INVALID_REQUEST', message: 'Entry fee cannot be negative' }
+      });
+    }
+
+    if (max_players < 2 || max_players > 8) {
+      return res.status(400).json({
+        error: { code: 'INVALID_REQUEST', message: 'Max players must be between 2 and 8' }
+      });
+    }
+
+    // Validate scheduled_at is a valid date
+    const scheduledDate = new Date(scheduled_at);
+    if (isNaN(scheduledDate.getTime())) {
+      return res.status(400).json({
+        error: { code: 'INVALID_REQUEST', message: 'Invalid scheduled_at date format' }
+      });
+    }
+
+    const tournamentRepository = AppDataSource.getRepository(Tournament);
+    const userRepository = AppDataSource.getRepository(User);
+
+    // Verify user exists
+    const user = await userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(401).json({
+        error: { code: 'UNAUTHORIZED', message: 'User not found' }
+      });
+    }
+
+    // Create tournament
+    const tournament = tournamentRepository.create({
+      name,
+      description: description || null,
+      status: 'scheduled',
+      buy_in_chips,
+      entry_fee_usd,
+      max_players,
+      scheduled_at: scheduledDate,
+      created_by: { id: userId } as User
+    });
+
+    const savedTournament = await tournamentRepository.save(tournament);
+
+    // Return with 201 Created
+    res.status(201).json({
+      ...savedTournament,
+      player_count: 0,
+      seats_available: max_players
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /tournaments/:id
 router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
