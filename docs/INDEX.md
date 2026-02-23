@@ -7,7 +7,7 @@
 **Version:** 1.0
 **Last Updated:** 2026-02-22 11:50 GMT+13
 **Owner:** Jon + Angus
-**Related Documents:** [DOCUMENTATION_STANDARDS.md](../DOCUMENTATION_STANDARDS.md)
+**Related Documents:** [DOCUMENTATION_STANDARDS.md](./standards/DOCUMENTATION_STANDARDS.md)
 
 ---
 

@@ -7,7 +7,7 @@
 **Version:** 1.1
 **Last Updated:** 2026-02-22 11:50 GMT+13
 **Owner:** Jon + Angus
-**Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../DEPLOYMENT_ARCHITECTURE.md)
+**Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
 
 ---
 
