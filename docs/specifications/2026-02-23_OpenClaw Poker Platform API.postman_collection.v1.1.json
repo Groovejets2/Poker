@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "OpenClaw Poker API",
+    "name": "OpenClaw Poker API v1.1",
     "description": "Tournament management and leaderboard API - Uses JWT Bearer Token Authentication (NOT OAuth)\n\nQuick Start:\n1. Send 'Login' request with valid credentials\n2. Token is automatically saved to {{token}} variable\n3. All protected endpoints inherit Bearer Token auth from collection\n4. Token expires after 1 hour - re-login to get new token",
     "version": "1.1.0",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
