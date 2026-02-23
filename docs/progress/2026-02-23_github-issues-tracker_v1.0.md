@@ -18,7 +18,7 @@ Copy each issue template below and paste into GitHub's "New Issue" form.
 
 ---
 
-## CRITICAL Issues (5 total)
+## CRITICAL Issues (6 total)
 
 ### Issue 1: [CRITICAL] Default JWT secret key allows authentication bypass
 
@@ -250,6 +250,119 @@ if (env === 'production') {
 ### Related
 - Code Review: docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md (CRIT-5)
 - Branch: feature/phase-3.3-orm-refactor
+```
+
+---
+
+### Issue 6: [CRITICAL] No role-based access control (any user can create tournaments)
+
+**Labels:** `security`, `critical`, `phase-3.3`, `authorization`, `rbac`
+
+**Description:**
+```markdown
+## Severity: CRITICAL - Security/Authorization
+
+**Files:** `backend/src/database/entities/User.ts`, `backend/src/routes/tournaments.ts:60`
+
+### Issue
+No role distinction between players and admins. ANY authenticated user can create tournaments:
+
+```typescript
+// Currently anyone with a JWT can create tournaments
+router.post('/', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+  // No role check - just needs to be logged in!
+});
+```
+
+User entity has no role field:
+- No way to distinguish admin from player
+- No authorization middleware to check permissions
+- Admin functions (create tournament) accessible to all users
+
+### Impact
+- **Security breach:** Regular players can create tournaments
+- **Business logic violation:** Tournament creation is an admin function
+- **Data integrity risk:** Unauthorized tournament manipulation
+- **No audit trail:** Can't track who should/shouldn't have access
+
+### Fix
+
+**1. Add role column to User entity:**
+```typescript
+@Entity('users')
+export class User {
+  // ... existing fields ...
+
+  @Column({ default: 'player' })
+  role: string; // 'player' | 'admin' | 'moderator'
+}
+```
+
+**2. Create authorization middleware:**
+```typescript
+// middleware/requireRole.ts
+export const requireRole = (allowedRoles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const userRole = (req as any).user?.role;
+
+    if (!userRole || !allowedRoles.includes(userRole)) {
+      return res.status(403).json({
+        error: {
+          code: 'FORBIDDEN',
+          message: 'Insufficient permissions for this operation'
+        }
+      });
+    }
+
+    next();
+  };
+};
+```
+
+**3. Protect admin endpoints:**
+```typescript
+import { requireRole } from '../middleware/requireRole';
+
+// Only admins can create tournaments
+router.post('/', authMiddleware, requireRole(['admin']), async (req, res) => {
+  // Tournament creation logic
+});
+```
+
+**4. Update JWT payload to include role:**
+```typescript
+// auth.ts - include role in token
+const token = jwt.sign(
+  {
+    user_id: user.id,
+    username: user.username,
+    role: user.role  // Add role to JWT payload
+  },
+  JWT_SECRET,
+  { expiresIn: JWT_EXPIRY }
+);
+```
+
+**5. Database migration needed:**
+```sql
+ALTER TABLE users ADD COLUMN role VARCHAR(20) DEFAULT 'player';
+UPDATE users SET role = 'admin' WHERE id = 1; -- Set first user as admin
+```
+
+### Priority
+**BLOCKER** - Fix before production deployment
+
+### Testing Requirements
+- [ ] Regular user cannot create tournament (403 Forbidden)
+- [ ] Admin user can create tournament (201 Created)
+- [ ] Role included in JWT payload
+- [ ] requireRole middleware works for multiple roles
+- [ ] Default role is 'player' for new registrations
+
+### Related
+- Discovered: 2026-02-23 during POST /tournaments implementation
+- Branch: feature/phase-3.3-orm-refactor
+- Related Issues: CRIT-1 (JWT security), HIGH-3 (match score authorization)
 ```
 
 ---
@@ -602,12 +715,13 @@ Fix to ensure test/prod parity
 | 3 | Database not ready when server starts | bug, critical, reliability | BLOCKER |
 | 4 | Auto-schema sync can destroy data | bug, critical, database | HIGH |
 | 5 | No PostgreSQL SSL configuration | security, critical, production | BLOCKER |
-| 6 | N+1 query problem in tournament list | performance, high | HIGH |
-| 7 | Race condition in tournament registration | bug, high, data-integrity | HIGH |
-| 8 | No authorization on match score submission | security, high, authorization | HIGH |
-| 9 | No transaction for match score updates | bug, high, data-integrity | HIGH |
-| 10 | No validation of query parameters | bug, high, validation | HIGH |
-| 11 | SQL dialect incompatibility | bug, high, database, compatibility | HIGH |
+| 6 | No role-based access control (any user can create tournaments) | security, critical, authorization, rbac | BLOCKER |
+| 7 | N+1 query problem in tournament list | performance, high | HIGH |
+| 8 | Race condition in tournament registration | bug, high, data-integrity | HIGH |
+| 9 | No authorization on match score submission | security, high, authorization | HIGH |
+| 10 | No transaction for match score updates | bug, high, data-integrity | HIGH |
+| 11 | No validation of query parameters | bug, high, validation | HIGH |
+| 12 | SQL dialect incompatibility | bug, high, database, compatibility | HIGH |
 
 ---
 
@@ -618,16 +732,21 @@ Fix to ensure test/prod parity
 - [ ] Issue 3 - Database initialization race
 - [ ] Issue 4 - Auto-schema sync
 - [ ] Issue 5 - PostgreSQL SSL
-- [ ] Issue 6 - N+1 query
-- [ ] Issue 7 - Tournament registration race
-- [ ] Issue 8 - Match score authorization
-- [ ] Issue 9 - Match score transaction
-- [ ] Issue 10 - Query parameter validation
-- [ ] Issue 11 - SQL dialect compatibility
+- [ ] Issue 6 - No RBAC (any user can create tournaments)
+- [ ] Issue 7 - N+1 query
+- [ ] Issue 8 - Tournament registration race
+- [ ] Issue 9 - Match score authorization
+- [ ] Issue 10 - Match score transaction
+- [ ] Issue 11 - Query parameter validation
+- [ ] Issue 12 - SQL dialect compatibility
 
 ---
 
 **Document Created:** 2026-02-23 19:00 GMT+13
-**Version:** 1.0
+**Version:** 1.1
+**Last Updated:** 2026-02-23 23:45 GMT+13
 **Status:** active
 **Next Action:** Create issues manually at https://github.com/Groovejets2/Poker/issues
+
+**Changelog:**
+- v1.1 (2026-02-23 23:45): Added CRIT-6 (RBAC missing) discovered during POST /tournaments implementation

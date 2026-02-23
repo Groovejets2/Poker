@@ -2,9 +2,9 @@
 
 **Category:** standards
 **Purpose:** Current status of Phase 3.3 TypeScript/TypeORM conversion and next actions
-**Status:** COMPLETE - API functional, CRITICAL issues remain before production
-**Version:** 1.1
-**Last Updated:** 2026-02-23 23:25 GMT+13
+**Status:** COMPLETE - API functional, 5 CRITICAL issues remain before production
+**Version:** 1.2
+**Last Updated:** 2026-02-23 23:50 GMT+13
 **Owner:** Jon + Development Team
 **Tags:** operational, phase-3.3, typeorm, completed, production-blockers
 
@@ -14,6 +14,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-23 23:50 | 1.2 | Sonnet 4.5 | Added POST /tournaments implementation; discovered CRIT-6 (RBAC); updated issues tracker |
 | 2026-02-23 23:25 | 1.1 | Sonnet 4.5 | Updated post-legacy-file-removal; added CRITICAL issues section; API verified working |
 | 2026-02-23 17:28 | 1.0 | Angus | Final version ready for handoff to Opus 4.6 |
 
@@ -93,12 +94,23 @@ docs/
 - Legacy JavaScript files removed (server.js, database/db.js)
 - API tested and verified working
 
-**Latest Session (2026-02-23 evening):**
+**Latest Sessions (2026-02-23 evening):**
+
+**Session 1: Legacy File Removal**
 - Removed legacy `backend/src/server.js` (conflicted with server.ts)
 - Removed legacy `backend/src/database/db.js` (old SQLite wrapper)
 - Improved TypeScript type safety in route parameter parsing
 - Tested full authentication flow (register → login → protected endpoints)
 - Committed changes (commit e5aaa6b)
+
+**Session 2: Postman Collection & Create Tournament**
+- Fixed Postman collection v1.2 naming (added "Platform")
+- Implemented POST /tournaments endpoint (create tournament)
+- Full validation per OpenAPI spec (name, buy_in, entry_fee, max_players, scheduled_at)
+- Tested successfully - tournament creation works
+- Discovered CRIT-6: No RBAC (any user can create tournaments)
+- Updated GitHub issues tracker to v1.1 with CRIT-6
+- Commits: 6419abd (Postman v1.2), b2fe677 (POST /tournaments)
 
 **Testing Results:** ✅ ALL PASS
 - Server starts successfully on port 5000
@@ -141,12 +153,18 @@ docs/
    - Fix: Disable synchronize, create TypeORM migrations
    - File: `backend/src/database/data-source.ts`
 
-**Total Estimated Time:** 2.5 hours
+5. **CRIT-6: No Role-Based Access Control** (45 min fix)
+   - Current: ANY authenticated user can create tournaments (admin function)
+   - Impact: Security breach - regular players can create tournaments
+   - Fix: Add role field to User entity, create requireRole middleware, protect admin endpoints
+   - Files: `backend/src/database/entities/User.ts`, `backend/src/routes/tournaments.ts:60`
+
+**Total Estimated Time:** 3 hours
 
 **See Full Details:**
 - docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md (comprehensive review)
 - docs/progress/2026-02-23_critical-issues-timeline_v1.0.md (resolution timeline)
-- docs/progress/2026-02-23_github-issues-tracker_v1.0.md (GitHub issue templates)
+- docs/progress/2026-02-23_github-issues-tracker_v1.0.md (GitHub issue templates - updated v1.1)
 
 ---
 
@@ -277,13 +295,20 @@ See: `docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md` (HIGH-1 through HI
 ## Session Logs
 
 **Latest sessions:**
+- 2026-02-23 late evening: Postman collection fix & POST /tournaments implementation
+  - Fixed Postman collection naming (v1.2)
+  - Implemented missing create tournament endpoint
+  - Discovered CRIT-6 (RBAC security issue)
+  - Updated issues tracker to v1.1
+  - Commits: 6419abd, b2fe677
+
 - 2026-02-23 evening: Legacy file removal and API testing
   - Log: `docs/progress/2026-02-23_legacy-js-removal-and-api-testing_v1.0.md`
   - Commit: e5aaa6b
 
 - 2026-02-23 afternoon: Phase 3.3 code review
   - Review: `docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md`
-  - Issues: `docs/progress/2026-02-23_github-issues-tracker_v1.0.md`
+  - Issues: `docs/progress/2026-02-23_github-issues-tracker_v1.0.md` (now v1.1)
   - Timeline: `docs/progress/2026-02-23_critical-issues-timeline_v1.0.md`
 
 ---
