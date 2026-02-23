@@ -63,7 +63,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     const tournamentPlayerRepository = AppDataSource.getRepository(TournamentPlayer);
 
     const tournament = await tournamentRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: parseInt(req.params.id as string) },
       relations: ['created_by']
     });
 
@@ -93,7 +93,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 // POST /tournaments/:id/register
 router.post('/:id/register', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tournamentId = parseInt(req.params.id);
+    const tournamentId = parseInt(req.params.id as string);
     const userId = (req as any).user.user_id;
 
     const tournamentRepository = AppDataSource.getRepository(Tournament);
@@ -156,7 +156,7 @@ router.post('/:id/register', authMiddleware, async (req: Request, res: Response,
 // DELETE /tournaments/:id/unregister
 router.delete('/:id/unregister', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tournamentId = parseInt(req.params.id);
+    const tournamentId = parseInt(req.params.id as string);
     const userId = (req as any).user.user_id;
 
     const tournamentPlayerRepository = AppDataSource.getRepository(TournamentPlayer);

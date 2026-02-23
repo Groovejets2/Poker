@@ -55,7 +55,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
  */
 router.get('/:user_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = parseInt(req.params.user_id);
+    const userId = parseInt(req.params.user_id as string);
 
     const userRepository = AppDataSource.getRepository(User);
 

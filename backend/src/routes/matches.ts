@@ -13,7 +13,7 @@ const router = Router();
  */
 router.get('/tournament/:tournament_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tournamentId = parseInt(req.params.tournament_id);
+    const tournamentId = parseInt(req.params.tournament_id as string);
 
     const matchRepository = AppDataSource.getRepository(Match);
 
@@ -45,7 +45,7 @@ router.get('/tournament/:tournament_id', async (req: Request, res: Response, nex
  */
 router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const matchId = parseInt(req.params.id);
+    const matchId = parseInt(req.params.id as string);
 
     const matchRepository = AppDataSource.getRepository(Match);
     const matchPlayerRepository = AppDataSource.getRepository(MatchPlayer);
@@ -87,7 +87,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
  */
 router.post('/:id/submit-score', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const matchId = parseInt(req.params.id);
+    const matchId = parseInt(req.params.id as string);
     const { winner_id, results } = req.body;
 
     if (!winner_id || !results) {
