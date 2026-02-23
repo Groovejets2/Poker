@@ -24,26 +24,26 @@
 
 | Document | Tags | Purpose | Read When |
 |----------|------|---------|-----------|
-| [SETUP-GUIDE.md](SETUP-GUIDE.md) | setup, development, environment | Get the development environment running | First time setup, onboarding new dev |
-| [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md) | deployment, production, operations | Deploy to production | Taking to prod, updates |
-| [API-REFERENCE.md](API-REFERENCE.md) | api, backend, endpoints | API endpoint documentation, usage examples | Building frontend, testing API |
-| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | debugging, troubleshooting, errors | Debug common issues, error messages | When something breaks |
+| [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) | setup, development, environment | Get the development environment running | First time setup, onboarding new dev |
+| [DEPLOYMENT-GUIDE.md](./documentation/DEPLOYMENT-GUIDE.md) | deployment, production, operations | Deploy to production | Taking to prod, updates |
+| [API-REFERENCE.md](./documentation/API-REFERENCE.md) | api, backend, endpoints | API endpoint documentation, usage examples | Building frontend, testing API |
+| [TROUBLESHOOTING.md](./documentation/TROUBLESHOOTING.md) | debugging, troubleshooting, errors | Debug common issues, error messages | When something breaks |
 
 ---
 
 ## By Situation
 
 ### I'm setting up locally for the first time
-→ Start with [SETUP-GUIDE.md](SETUP-GUIDE.md)
+→ Start with [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md)
 
 ### I want to test the API
-→ [API-REFERENCE.md](API-REFERENCE.md) + [SETUP-GUIDE.md](SETUP-GUIDE.md) for local setup
+→ [API-REFERENCE.md](./documentation/API-REFERENCE.md) + [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) for local setup
 
 ### I'm deploying to production
-→ [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md) + [SETUP-GUIDE.md](SETUP-GUIDE.md) (for reference)
+→ [DEPLOYMENT-GUIDE.md](./documentation/DEPLOYMENT-GUIDE.md) + [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) (for reference)
 
 ### Something's broken / I'm getting an error
-→ [TROUBLESHOOTING.md](TROUBLESHOOTING.md) first, then [SETUP-GUIDE.md](SETUP-GUIDE.md) for reference
+→ [TROUBLESHOOTING.md](./documentation/TROUBLESHOOTING.md) first, then [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) for reference
 
 ---
 
