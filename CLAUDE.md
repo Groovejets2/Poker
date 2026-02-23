@@ -1,12 +1,12 @@
-# CLAUDE.md - Phase 3.3 TypeORM Refactor (Completion Guide)
+# CLAUDE.md - Phase 3.3 TypeORM Refactor (Status Document)
 
 **Category:** standards
-**Purpose:** Operational guidelines and remaining work for Phase 3.3 completion for Opus 4.6
-**Status:** SUPERSEDED - Phase 3.3 complete, see code review in docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md
-**Version:** 1.0
-**Last Updated:** 2026-02-23 18:45 GMT+13
-**Owner:** Angus
-**Tags:** operational, handoff, phase-3.3, typeorm, completed
+**Purpose:** Current status of Phase 3.3 TypeScript/TypeORM conversion and next actions
+**Status:** COMPLETE - API functional, CRITICAL issues remain before production
+**Version:** 1.1
+**Last Updated:** 2026-02-23 23:25 GMT+13
+**Owner:** Jon + Development Team
+**Tags:** operational, phase-3.3, typeorm, completed, production-blockers
 
 ---
 
@@ -14,6 +14,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-23 23:25 | 1.1 | Sonnet 4.5 | Updated post-legacy-file-removal; added CRITICAL issues section; API verified working |
 | 2026-02-23 17:28 | 1.0 | Angus | Final version ready for handoff to Opus 4.6 |
 
 ---
@@ -81,6 +82,74 @@ docs/
 
 ---
 
+## Current Status (2026-02-23 23:25 GMT+13)
+
+### ✅ Phase 3.3 COMPLETE - TypeScript Conversion Done
+
+**All conversion work completed:**
+- All routes converted to TypeScript (auth, tournaments, matches, leaderboard)
+- All middleware converted to TypeScript (auth, errorHandler)
+- All utils converted to TypeScript (validation)
+- Legacy JavaScript files removed (server.js, database/db.js)
+- API tested and verified working
+
+**Latest Session (2026-02-23 evening):**
+- Removed legacy `backend/src/server.js` (conflicted with server.ts)
+- Removed legacy `backend/src/database/db.js` (old SQLite wrapper)
+- Improved TypeScript type safety in route parameter parsing
+- Tested full authentication flow (register → login → protected endpoints)
+- Committed changes (commit e5aaa6b)
+
+**Testing Results:** ✅ ALL PASS
+- Server starts successfully on port 5000
+- Health endpoint responds correctly
+- User registration works
+- User login works (JWT issued)
+- Protected endpoints authenticate correctly
+
+**See:** docs/progress/2026-02-23_legacy-js-removal-and-api-testing_v1.0.md
+
+---
+
+## ⚠️ CRITICAL Issues Before Production
+
+**Status:** API is functional for development/testing but **NOT PRODUCTION-READY**
+
+**BLOCKER Issues (Must fix before any deployment):**
+
+1. **CRIT-1: Default JWT Secret** (15 min fix)
+   - Current: Falls back to 'dev-secret-key' if JWT_SECRET not set
+   - Impact: Anyone can forge authentication tokens
+   - Fix: Require JWT_SECRET environment variable, fail if missing
+   - Files: `backend/src/routes/auth.ts:9`, `backend/src/middleware/auth.ts:43`
+
+2. **CRIT-3: Database Race Condition** (30 min fix)
+   - Current: Server starts before database initialization completes
+   - Impact: Random 500 errors on startup, inconsistent behaviour
+   - Fix: Wait for DataSource.initialize() before starting Express server
+   - File: `backend/src/server.ts`
+
+3. **CRIT-5: No PostgreSQL SSL** (45 min fix)
+   - Current: Production database connection has no SSL configuration
+   - Impact: Credentials transmitted in plaintext, security violation
+   - Fix: Add SSL configuration to production DataSource config
+   - File: `backend/src/database/data-source.ts`
+
+4. **CRIT-4: Auto-Schema Sync** (60 min fix)
+   - Current: `synchronize: true` can destroy data automatically
+   - Impact: Data loss during entity changes, no migration history
+   - Fix: Disable synchronize, create TypeORM migrations
+   - File: `backend/src/database/data-source.ts`
+
+**Total Estimated Time:** 2.5 hours
+
+**See Full Details:**
+- docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md (comprehensive review)
+- docs/progress/2026-02-23_critical-issues-timeline_v1.0.md (resolution timeline)
+- docs/progress/2026-02-23_github-issues-tracker_v1.0.md (GitHub issue templates)
+
+---
+
 ## What's Done
 
 ✅ **TypeORM setup:**
@@ -89,135 +158,133 @@ docs/
 - All 5 entities created (User, Tournament, TournamentPlayer, Match, MatchPlayer)
 
 ✅ **Routes converted to TypeScript:**
-- auth.ts: Login/register with TypeORM User repository
-- tournaments.ts: List, get, register, unregister with TypeORM
+- auth.ts: Login/register with TypeORM User repository ✅
+- tournaments.ts: List, get, register, unregister with TypeORM ✅
+- matches.ts: Match details, tournament matches, score submission ✅
+- leaderboard.ts: Global rankings, player stats ✅
 
-✅ **Documentation reorganized:**
+✅ **Middleware converted to TypeScript:**
+- auth.ts: JWT verification middleware ✅
+- errorHandler.ts: Express error handler ✅
+
+✅ **Utils converted to TypeScript:**
+- validation.ts: Username, password, email validators ✅
+
+✅ **Legacy cleanup:**
+- Removed old server.js (2026-02-23) ✅
+- Removed old database/db.js (2026-02-23) ✅
+
+✅ **Documentation reorganised:**
 - All docs moved to `docs/` subfolder
 - Path references updated in AGENTS.md
 
 ✅ **server.ts created:**
-- Express server with TypeORM initialization
+- Express server with TypeORM initialisation
 - Routes mounted
 - Error middleware
 
----
-
-## What's Remaining (IN ORDER)
-
-### 1. Convert matches.ts to TypeScript
-**File:** `backend/src/routes/matches.js` → `backend/src/routes/matches.ts`
-
-**Current logic:**
-- GET /matches/:id - Get match details
-- GET /tournaments/:id/matches - List matches for tournament
-- POST /tournaments/:id/matches/:matchId/score - Submit match score
-
-**Convert to TypeScript:**
-- Replace raw database.get/all/run with TypeORM repositories
-- Import Match, MatchPlayer, User, Tournament entities
-- Use TypeORM QueryBuilder for complex queries
-- Import Express types
-
-**Commit message:** `feat: Convert matches routes to TypeScript with TypeORM`
+✅ **API tested and verified:**
+- Health check working
+- Registration working
+- Login working (JWT issued)
+- Protected endpoints working
 
 ---
 
-### 2. Convert leaderboard.ts to TypeScript
-**File:** `backend/src/routes/leaderboard.js` → `backend/src/routes/leaderboard.ts`
+## Next Actions
 
-**Current logic:**
-- GET /leaderboard - Global rankings (top players by winnings)
-- GET /leaderboard/:userId - Player stats (tournaments, wins, avg finish, total winnings)
+### Immediate Next Steps
 
-**Convert to TypeScript:**
-- Use TypeORM QueryBuilder for complex aggregations
-- Calculate: tournaments_played, tournament_wins, avg_finish, total_winnings
-- Group and order by winnings descending
+**Phase 3.3 is COMPLETE.** All TypeScript conversion work is done.
 
-**Commit message:** `feat: Convert leaderboard routes to TypeScript with TypeORM`
+**Choose one of the following paths:**
 
----
+#### Path A: Fix CRITICAL Issues (Recommended Before Production)
+**Time Required:** 2.5 hours
+**Priority:** HIGH - Required before production deployment
 
-### 3. Convert middleware/auth.ts
-**File:** `backend/src/middleware/auth.js` → `backend/src/middleware/auth.ts`
+See section "⚠️ CRITICAL Issues Before Production" above for details.
 
-**Current logic:**
-- JWT verification with `jwt.verify()`
-- Extract user_id and username from token
-- Attach to req.user
+Follow timeline in: `docs/progress/2026-02-23_critical-issues-timeline_v1.0.md`
 
-**Convert to TypeScript:**
-- Add Express Request/Response/NextFunction types
-- Define interface for req.user (user_id: number, username: string)
-- Export default middleware
+#### Path B: Continue with Phase 3.2 (Frontend Development)
+**Status:** Ready to start (no blockers)
+**Work:** Build React frontend for tournament lobby and leaderboard
+**See:** docs/design/TASK-BOARD.md section "Phase 3.2 Website Frontend"
 
-**Commit message:** `feat: Convert auth middleware to TypeScript`
+**Note:** Backend API is fully functional at `http://localhost:5000` for frontend development
+
+#### Path C: Address HIGH Priority Issues
+**Time Required:** 3-4 hours
+**Work:** Fix N+1 queries, race conditions, authorization gaps
+
+See: `docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md` (HIGH-1 through HIGH-6)
 
 ---
 
-### 4. Convert middleware/errorHandler.ts
-**File:** `backend/src/middleware/errorHandler.js` → `backend/src/middleware/errorHandler.ts`
+## How to Resume Work
 
-**Current logic:**
-- Catch errors and return JSON with status codes
-- Log errors
-- Return 500 for unexpected errors
+**If starting a new session:**
 
-**Convert to TypeScript:**
-- Add Express error handler types
-- Type error parameter
-- Export default middleware
-
-**Commit message:** `feat: Convert error handler middleware to TypeScript`
-
----
-
-### 5. Convert utils/validation.ts
-**File:** `backend/src/utils/validation.js` → `backend/src/utils/validation.ts`
-
-**Current logic:**
-- Validators: username (3-32 chars), password (6+ chars), email (regex)
-
-**Convert to TypeScript:**
-- Export functions with return type: boolean
-- Add JSDoc comments for clarity
-
-**Commit message:** `feat: Convert validation utilities to TypeScript`
-
----
-
-### 6. Update package.json
-**Already done:** start and dev scripts use ts-node
-
-**Verify:** `npm start` works (TypeORM initializes, server listens on port 5000)
-
----
-
-### 7. Test the API
-**Steps:**
-1. Ensure `.env` file exists or use default JWT_SECRET
-2. Run `npm install` (if not already done)
-3. Run `npm start` - should see:
-   ```
-   TypeORM DataSource initialized successfully
-   OpenClaw Poker API running on port 5000
-   ```
-4. Test with curl or Postman:
-   ```
-   POST http://localhost:5000/api/auth/login
-   { "username": "test", "password": "password" }
+1. **Check current branch:**
+   ```bash
+   git status
+   # Should show: feature/phase-3.3-orm-refactor
+   # If not, checkout: git checkout feature/phase-3.3-orm-refactor
    ```
 
-**Expected response:**
-```
-{
-  "token": "<JWT_TOKEN>",
-  "user_id": 1,
-  "username": "test",
-  "expires_in": 3600
-}
-```
+2. **Check latest commits:**
+   ```bash
+   git log --oneline -5
+   # Should see:
+   # e5aaa6b - chore: Complete removal of legacy JavaScript files
+   # 5862f80 - chore: Remove old JavaScript files
+   # 102d025 - fix(CRIT-2): Add User->TournamentPlayer relationship
+   ```
+
+3. **Test API is working:**
+   ```bash
+   cd backend
+   npm start
+   # Should see:
+   # - OpenClaw Poker API running on port 5000
+   # - TypeORM DataSource initialized successfully
+   ```
+
+4. **Test endpoints:**
+   ```bash
+   # Health check
+   curl http://localhost:5000/health
+
+   # Register user
+   curl -X POST http://localhost:5000/api/auth/register \
+     -H "Content-Type: application/json" \
+     -d '{"username":"testuser","email":"test@example.com","password":"password123"}'
+
+   # Login
+   curl -X POST http://localhost:5000/api/auth/login \
+     -H "Content-Type: application/json" \
+     -d '{"username":"testuser","password":"password123"}'
+   ```
+
+5. **Review documentation:**
+   - Phase 3.3 code review: `docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md`
+   - Critical issues timeline: `docs/progress/2026-02-23_critical-issues-timeline_v1.0.md`
+   - Task board: `docs/design/TASK-BOARD.md`
+
+---
+
+## Session Logs
+
+**Latest sessions:**
+- 2026-02-23 evening: Legacy file removal and API testing
+  - Log: `docs/progress/2026-02-23_legacy-js-removal-and-api-testing_v1.0.md`
+  - Commit: e5aaa6b
+
+- 2026-02-23 afternoon: Phase 3.3 code review
+  - Review: `docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md`
+  - Issues: `docs/progress/2026-02-23_github-issues-tracker_v1.0.md`
+  - Timeline: `docs/progress/2026-02-23_critical-issues-timeline_v1.0.md`
 
 ---
 
@@ -271,13 +338,50 @@ Estimated cost for remaining work: 1.5-2 hours (~$1.86-2.48)
 
 ---
 
-## When You're Done
+## Git Workflow
 
-1. Final commit: `feat: Phase 3.3 complete - full TypeScript/TypeORM conversion with test-ready API`
-2. Push to feature/phase-3.3-orm-refactor
-3. Report to Jon: "Phase 3.3 complete. API testable in Postman at localhost:5000"
-4. Do NOT merge to main/develop
+**Current Branch:** `feature/phase-3.3-orm-refactor`
+
+**Status:** 2 commits ahead of origin
+
+**Do NOT merge to main/develop until CRITICAL issues are fixed**
+
+**When ready to merge:**
+1. Ensure all CRITICAL issues are addressed (see timeline doc)
+2. Run full test suite
+3. Create pull request to `develop` branch
+4. Request code review
+5. Merge after approval
 
 ---
 
-**Good luck. This is straightforward routing work. Follow the patterns in auth.ts and tournaments.ts.**
+## Quick Reference
+
+**Start API:**
+```bash
+cd backend
+npm start
+# API will be at http://localhost:5000
+```
+
+**Test Health:**
+```bash
+curl http://localhost:5000/health
+```
+
+**View Logs:**
+```bash
+# In backend directory with npm start running
+# Logs appear in terminal
+```
+
+**Common Issues:**
+- If "TypeORM DataSource initialization failed" → Check database file permissions
+- If "JWT_SECRET" error → Set JWT_SECRET in .env file (or use default for testing)
+- If port 5000 in use → Change PORT in .env or kill existing process
+
+---
+
+**Document Version:** 1.1
+**Last Updated:** 2026-02-23 23:25 GMT+13
+**Next Update:** After CRITICAL issues addressed or Phase 3.2 started
