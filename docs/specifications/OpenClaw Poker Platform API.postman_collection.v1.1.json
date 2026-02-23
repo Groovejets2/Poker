@@ -1,0 +1,336 @@
+{
+  "info": {
+    "name": "OpenClaw Poker API",
+    "description": "Tournament management and leaderboard API - Uses JWT Bearer Token Authentication (NOT OAuth)\n\nQuick Start:\n1. Send 'Login' request with valid credentials\n2. Token is automatically saved to {{token}} variable\n3. All protected endpoints inherit Bearer Token auth from collection\n4. Token expires after 1 hour - re-login to get new token",
+    "version": "1.1.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// JWT Bearer Token Authentication",
+          "// Token automatically set by Login request",
+          "// Expires after 1 hour (3600 seconds)"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Check if registration successful",
+                  "if (pm.response.code === 201) {",
+                  "    console.log('User registered successfully');",
+                  "    console.log('Use the Login request to get JWT token');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account. No authentication required.\n\nValidation:\n- username: 3-32 chars, alphanumeric + underscore\n- password: minimum 6 characters\n- email: valid format (optional)"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Automatically save JWT token to environment",
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('JWT Token saved! Expires in ' + jsonData.expires_in + ' seconds');",
+                  "    console.log('All protected endpoints will now use this token automatically');",
+                  "} else {",
+                  "    console.log('Login failed - check credentials');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login with username/password to obtain JWT Bearer Token.\n\nToken is automatically saved to {{token}} variable and used for all protected endpoints.\n\nToken expires after 1 hour (3600 seconds)."
+          }
+        }
+      ],
+      "description": "Authentication endpoints using JWT (JSON Web Tokens), NOT OAuth.\n\nFlow:\n1. Register a new account OR use existing credentials\n2. Login to get JWT token\n3. Token is automatically applied to all protected endpoints"
+    },
+    {
+      "name": "Tournaments",
+      "item": [
+        {
+          "name": "List Tournaments",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tournaments?page=1&limit=20&status=scheduled",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments"],
+              "query": [
+                {"key": "page", "value": "1", "description": "Page number (default: 1)"},
+                {"key": "limit", "value": "20", "description": "Results per page (default: 20, max: 100)"},
+                {"key": "status", "value": "scheduled", "description": "Filter: draft|scheduled|in_progress|completed|cancelled"}
+              ]
+            },
+            "description": "Get paginated list of tournaments. No authentication required."
+          }
+        },
+        {
+          "name": "Get Tournament",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tournaments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments", "1"]
+            },
+            "description": "Get detailed tournament information including registered players. No authentication required."
+          }
+        },
+        {
+          "name": "Register for Tournament",
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tournaments/1/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments", "1", "register"]
+            },
+            "description": "Register authenticated user for tournament.\n\nRequires: JWT Bearer Token (login first)\n\nReturns 409 if already registered or 400 if tournament is full."
+          }
+        },
+        {
+          "name": "Unregister from Tournament",
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/tournaments/1/unregister",
+              "host": ["{{baseUrl}}"],
+              "path": ["tournaments", "1", "unregister"]
+            },
+            "description": "Remove authenticated user from tournament.\n\nRequires: JWT Bearer Token (login first)"
+          }
+        }
+      ],
+      "description": "Tournament management endpoints"
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "List Tournament Matches",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/matches/tournament/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["matches", "tournament", "1"]
+            },
+            "description": "Get all matches for a specific tournament. No authentication required."
+          }
+        },
+        {
+          "name": "Get Match Details",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/matches/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["matches", "1"]
+            },
+            "description": "Get detailed match information including all players. No authentication required."
+          }
+        },
+        {
+          "name": "Submit Match Score",
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"winner_id\": 1,\n  \"results\": [\n    {\n      \"user_id\": 1,\n      \"ending_stack\": 2000,\n      \"status\": \"won\"\n    },\n    {\n      \"user_id\": 2,\n      \"ending_stack\": 0,\n      \"status\": \"eliminated\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/matches/1/submit-score",
+              "host": ["{{baseUrl}}"],
+              "path": ["matches", "1", "submit-score"]
+            },
+            "description": "Submit final match results.\n\nRequires: JWT Bearer Token (login first)\n\nStatus values: won|eliminated|active"
+          }
+        }
+      ],
+      "description": "Match management endpoints"
+    },
+    {
+      "name": "Leaderboard",
+      "item": [
+        {
+          "name": "Global Leaderboard",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard?limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["leaderboard"],
+              "query": [
+                {"key": "limit", "value": "50", "description": "Number of results (default: 50, max: 100)"},
+                {"key": "offset", "value": "0", "description": "Pagination offset"}
+              ]
+            },
+            "description": "Get global player rankings ordered by total winnings. No authentication required."
+          }
+        },
+        {
+          "name": "Player Stats",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["leaderboard", "1"]
+            },
+            "description": "Get detailed statistics for a specific player. No authentication required."
+          }
+        }
+      ],
+      "description": "Leaderboard and player statistics endpoints"
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["health"]
+        },
+        "description": "Check if API is running. No /api prefix for health endpoint."
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "JWT Bearer Token - automatically set by Login request"
+    }
+  ]
+}
