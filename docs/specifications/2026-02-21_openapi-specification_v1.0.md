@@ -10,15 +10,36 @@
 
 ## 1. Authentication
 
-### Security Scheme: JWT Bearer Token
+### Security Scheme: JWT Bearer Token (NOT OAuth)
 
-All protected endpoints require a valid JWT token in the `Authorization` header:
+**Important:** This API uses **JWT (JSON Web Tokens)**, NOT OAuth 2.0.
+
+**How JWT Authentication Works:**
+1. Client sends username/password to `POST /auth/login`
+2. Server validates credentials and returns a JWT token
+3. Client includes token in `Authorization` header for protected endpoints
+4. Token expires after 1 hour (3600 seconds)
+
+**All protected endpoints require a valid JWT token in the `Authorization` header:**
 
 ```
 Authorization: Bearer <token>
 ```
 
-Token obtained via POST `/auth/login` endpoint.
+**How to Obtain Token:**
+- Endpoint: `POST /auth/login`
+- Request Body: `{"username": "string", "password": "string"}`
+- Response: `{"token": "eyJhbGc...", "user_id": 1, "username": "player1", "expires_in": 3600}`
+
+**Token Payload:**
+```json
+{
+  "user_id": 1,
+  "username": "player1",
+  "iat": 1616161616,
+  "exp": 1616165216
+}
+```
 
 ---
 

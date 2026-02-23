@@ -111,9 +111,30 @@
 
 ---
 
-## Phase 3.4: Setup Documentation (POST-LAUNCH)
+## Phase 3.4: GitFlow Strategy & PR Automation
 
-### 3.4 Setup & Deployment Guides
+### 3.4 GitFlow Implementation (PRIORITY: TOMORROW)
+- [ ] Create GitFlow skill with branching strategy (feature/, release/, hotfix/)
+- [ ] Implement PR automation via GitHub API
+- [ ] Build sub-agent for PR creation + notifications
+- [ ] Define code review standards (see below)
+- **Status:** READY (starts tomorrow morning)
+- **Estimate:** 2-3 hours
+- **Token Budget:** approximately 1000-1200 tokens
+
+**Code Review Standards (CRITICAL):**
+- Agent must analyze code critically
+- Challenge logic when confident in alternative approach
+- Willingly recode solutions for better quality
+- Use PR process as collaborative improvement tool
+- Call Jon before making major architectural decisions
+- PRs should improve code, not just pass tests
+
+---
+
+## Phase 3.5: Setup Documentation (POST-LAUNCH)
+
+### 3.5 Setup & Deployment Guides
 - [ ] Development environment setup guide
 - [ ] Production deployment guide
 - [ ] Database migration guide

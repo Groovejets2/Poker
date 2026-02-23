@@ -1,5 +1,25 @@
 # OpenClaw Poker Platform - Project Charter
 
+**Category:** specifications
+**Purpose:** Define project vision, budget, phases, success metrics, and governance model
+
+**Status:** active
+**Version:** 1.0
+**Last Updated:** 2026-02-22 11:48 GMT+13
+**Owner:** Jon
+**Related Documents:** [TASK-BOARD.md](../design/TASK-BOARD.md), [DEPLOYMENT_ARCHITECTURE.md](../DEPLOYMENT_ARCHITECTURE.md), [DOCUMENTATION_STANDARDS.md](../DOCUMENTATION_STANDARDS.md)
+
+---
+
+## Change Log
+
+| Date | Version | Author | Change |
+|------|---------|--------|--------|
+| 2026-02-22 11:48 | 1.0 | Angus | Added change log table and updated metadata format per DOCUMENTATION_STANDARDS.md |
+| 2026-02-19 23:12 | 1.0 | Jon | Initial creation |
+
+---
+
 ## Vision Statement
 
 OpenClaw Poker: An open platform where developers build, test, and compete with AI poker bots. Craft your strategy. Upload your bot. Prove your algorithm is smarter than everyone else's. Compete in tournaments, win prize pools, and claim glory. The real reward isn't just the money — it's knowing your bot outplayed the competition.

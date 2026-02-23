@@ -1,14 +1,11 @@
-/**
- * Authentication Routes
- */
+import { Router, Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import { AppDataSource } from '../database/data-source';
+import { User } from '../database/entities/User';
+import * as validators from '../utils/validation';
 
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const database = require('../database/db');
-const validators = require('../utils/validation');
-
-const router = express.Router();
+const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 const JWT_EXPIRY = 3600; // 1 hour
 
@@ -16,7 +13,7 @@ const JWT_EXPIRY = 3600; // 1 hour
  * POST /auth/login
  * Login user and return JWT token
  */
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { username, password } = req.body;
 
@@ -29,10 +26,10 @@ router.post('/login', async (req, res, next) => {
       });
     }
 
-    const user = await database.get(
-      'SELECT id, username, password_hash FROM users WHERE username = ?',
-      [username]
-    );
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({
+      where: { username }
+    });
 
     if (!user) {
       return res.status(401).json({
@@ -74,7 +71,7 @@ router.post('/login', async (req, res, next) => {
  * POST /auth/register
  * Create new user account
  */
-router.post('/register', async (req, res, next) => {
+router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { username, email, password } = req.body;
 
@@ -106,19 +103,23 @@ router.post('/register', async (req, res, next) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
+    const userRepository = AppDataSource.getRepository(User);
 
-    const result = await database.run(
-      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
-      [username, email || null, passwordHash]
-    );
+    const newUser = userRepository.create({
+      username,
+      email: email || null,
+      password_hash: passwordHash
+    });
+
+    const savedUser = await userRepository.save(newUser);
 
     res.status(201).json({
-      user_id: result.id,
-      username: username,
+      user_id: savedUser.id,
+      username: savedUser.username,
       message: 'User created successfully'
     });
-  } catch (err) {
-    if (err.message?.includes('UNIQUE constraint failed')) {
+  } catch (err: any) {
+    if (err.message?.includes('UNIQUE constraint failed') || err.code === 'ER_DUP_ENTRY') {
       return res.status(409).json({
         error: {
           code: 'CONFLICT',
@@ -130,4 +131,4 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;
