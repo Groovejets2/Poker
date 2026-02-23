@@ -127,13 +127,23 @@ Use these sections with offset/limit to avoid loading full file:
 - **Estimate:** 3-4 hours (reduced from 4-5)
 - **Token Budget:** approximately 1000-1200 tokens (reduced)
 
-### 3.3 Website Backend
-- [x] Build tournament management API (DONE 2026-02-22)
-- [x] Build scoring and leaderboard API (DONE 2026-02-22)
+### 3.3 Website Backend - TypeORM Refactor
+- [x] TypeORM setup + dependencies (DONE 2026-02-23)
+- [x] All 5 entities created (User, Tournament, TournamentPlayer, Match, MatchPlayer)
+- [x] DataSource configuration (test/prod switching)
+- [x] server.ts created (Express + TypeORM initialization)
+- [x] auth.ts converted to TypeScript (DONE 2026-02-23)
+- [x] tournaments.ts converted to TypeScript (DONE 2026-02-23)
+- [ ] matches.ts conversion (READY FOR OPUS)
+- [ ] leaderboard.ts conversion (READY FOR OPUS)
+- [ ] middleware conversions (READY FOR OPUS)
+- [ ] utils conversions (READY FOR OPUS)
+- [ ] Server startup test (READY FOR OPUS)
 - [x] ~~Build bot execution engine~~ **→ MOVED TO BACKLOG (ON-HOLD)**
-- **Status:** DONE (needs ORM refactor for test/prod separation)
-- **Estimate:** 3-4 hours (completed)
-- **Token Budget:** approximately 1000-1200 tokens (used)
+- **Status:** IN PROGRESS - 60% complete, ready for handoff to Opus 4.6
+- **Completed by:** Angus Young (2026-02-23)
+- **Remaining work:** ~2-3 hours (documented in CLAUDE.md)
+- **Next:** Opus to complete route conversions and test API
 
 ---
 
@@ -214,8 +224,8 @@ Use these sections with offset/limit to avoid loading full file:
 - 2.3 & 2.4 Testing: READY to start or skip based on timeline
 
 **Phase 3 (Platform Website):** IN PROGRESS
-- 3.3 Backend API: DONE (2026-02-22) — but needs ORM refactor for test/prod
-- 3.2 Frontend: READY to start (awaiting 3.3 refactor)
+- 3.3 Backend API: 60% COMPLETE (Angus 2026-02-23) — TypeORM entities + auth/tournaments routes done, handed to Opus 4.6
+- 3.2 Frontend: READY to start (awaiting 3.3 refactor completion)
 - 3.1 Architecture: SUPERSEDED by DEPLOYMENT_ARCHITECTURE.md
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
 
@@ -223,17 +233,18 @@ Use these sections with offset/limit to avoid loading full file:
 
 ## Immediate Next Actions
 
-**PRIORITY 1:** Refactor Phase 3.3 Backend (ORM Integration)
-- Current: Raw SQLite via sqlite3 module
-- Target: TypeORM or Sequelize (database-agnostic)
-- Why: Enable test/prod separation (SQLite for test, PostgreSQL for prod)
-- Estimate: 2-3 hours
-- Then: test/prod folder restructuring per DEPLOYMENT_ARCHITECTURE.md
+**PRIORITY 1:** Complete Phase 3.3 Backend TypeORM Refactor (OPUS 4.6)
+- Status: Handoff complete 2026-02-23 17:26 GMT+13
+- Work: Convert matches.ts, leaderboard.ts, middleware, utils to TypeScript
+- Resources: CLAUDE.md in root has full breakdown and remaining work
+- Estimate: 2-3 hours remaining
+- Then: Test server startup and verify API works with Postman
 
 **PRIORITY 2:** Phase 3.2 Frontend (React)
 - Blocked on 3.3 refactor completion
 - Build tournament lobby + leaderboard
 - Estimate: 3-4 hours after 3.3 ready
+- Start after Opus confirms 3.3 working in TEST environment
 
 ---
 
