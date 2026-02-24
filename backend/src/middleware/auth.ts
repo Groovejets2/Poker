@@ -3,10 +3,12 @@ import jwt from 'jsonwebtoken';
 
 /**
  * JWT payload interface
+ * CRIT-6 FIX: Added role field for RBAC
  */
 export interface JwtPayload {
   user_id: number;
   username: string;
+  role: string; // 'player' | 'admin' | 'moderator'
 }
 
 /**
@@ -18,6 +20,15 @@ declare global {
       user?: JwtPayload;
     }
   }
+}
+
+// CRIT-1 FIX: Require JWT_SECRET - no fallback allowed
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set');
+  console.error('Generate a secret with: openssl rand -base64 32');
+  console.error('Then add to .env file: JWT_SECRET=your_generated_secret');
+  process.exit(1);
 }
 
 /**
@@ -38,10 +49,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction): void =
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || 'dev-secret-key'
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
     req.user = decoded;
     next();

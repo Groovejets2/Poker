@@ -4,6 +4,7 @@ import { Tournament } from '../database/entities/Tournament';
 import { TournamentPlayer } from '../database/entities/TournamentPlayer';
 import { User } from '../database/entities/User';
 import authMiddleware from '../middleware/auth';
+import { requireRole } from '../middleware/requireRole';
 
 const router = Router();
 
@@ -57,10 +58,12 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 });
 
 // POST /tournaments - Create tournament
-router.post('/', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+// CRIT-6 FIX: Only admins can create tournaments
+router.post('/', authMiddleware, requireRole(['admin']), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, description, buy_in_chips, entry_fee_usd, max_players, scheduled_at } = req.body;
-    const userId = (req as any).user.user_id;
+    // MED-1 FIX: Remove 'as any' cast for better type safety
+    const userId = req.user!.user_id;
 
     // Validate required fields
     if (!name || !buy_in_chips || entry_fee_usd === undefined || !max_players || !scheduled_at) {
@@ -179,7 +182,8 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 router.post('/:id/register', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const tournamentId = parseInt(req.params.id as string);
-    const userId = (req as any).user.user_id;
+    // MED-1 FIX: Remove 'as any' cast
+    const userId = req.user!.user_id;
 
     const tournamentRepository = AppDataSource.getRepository(Tournament);
     const tournamentPlayerRepository = AppDataSource.getRepository(TournamentPlayer);
@@ -242,7 +246,8 @@ router.post('/:id/register', authMiddleware, async (req: Request, res: Response,
 router.delete('/:id/unregister', authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const tournamentId = parseInt(req.params.id as string);
-    const userId = (req as any).user.user_id;
+    // MED-1 FIX: Remove 'as any' cast
+    const userId = req.user!.user_id;
 
     const tournamentPlayerRepository = AppDataSource.getRepository(TournamentPlayer);
 
