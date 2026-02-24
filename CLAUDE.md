@@ -1,12 +1,12 @@
-# CLAUDE.md - Phase 3.3 TypeORM Refactor (Status Document)
+# CLAUDE.md - Project Status Document
 
 **Category:** standards
-**Purpose:** Current status of Phase 3.3 TypeScript/TypeORM conversion and deployment
-**Status:** DEPLOYED - v0.1.0 deployed to production (2026-02-24), 5 CRITICAL issues identified for future fix
-**Version:** 1.3
-**Last Updated:** 2026-02-24 00:30 GMT+13
+**Purpose:** Current project status and how to resume work
+**Status:** Phase 3.3 DEPLOYED (v0.1.0), Phase 3.2 Feature Branch READY for frontend development
+**Version:** 1.4
+**Last Updated:** 2026-02-24 01:00 GMT+13
 **Owner:** Jon + Development Team
-**Tags:** operational, phase-3.3, typeorm, deployed, production, v0.1.0
+**Tags:** operational, phase-3.3, phase-3.2, deployed, production, v0.1.0, frontend-ready
 
 ---
 
@@ -14,10 +14,61 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-24 01:00 | 1.4 | Sonnet 4.5 | Created Phase 3.2 feature branch; saved state for exit/resume; ready for frontend work |
 | 2026-02-24 00:30 | 1.3 | Sonnet 4.5 | Phase 3.3 DEPLOYED to production as v0.1.0; added comprehensive unit tests (43 tests); updated all documentation |
 | 2026-02-23 23:50 | 1.2 | Sonnet 4.5 | Added POST /tournaments implementation; discovered CRIT-6 (RBAC); updated issues tracker |
 | 2026-02-23 23:25 | 1.1 | Sonnet 4.5 | Updated post-legacy-file-removal; added CRITICAL issues section; API verified working |
 | 2026-02-23 17:28 | 1.0 | Angus | Final version ready for handoff to Opus 4.6 |
+
+---
+
+## 🚀 QUICK RESUME - START HERE
+
+**Current State:** Phase 3.2 Frontend Development Ready
+**Branch:** `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
+**Last Updated:** 2026-02-24 01:00 GMT+13
+
+### To Resume Work:
+
+1. **Check current branch:**
+   ```bash
+   git branch  # Should show: * feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
+   ```
+
+2. **If not on Phase 3.2 branch:**
+   ```bash
+   git checkout feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
+   git pull origin feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
+   ```
+
+3. **Start backend API (for testing):**
+   ```bash
+   cd backend
+   npm start  # API runs on localhost:5000
+   ```
+
+4. **Review Phase 3.2 work scope:**
+   - Read: `docs/progress/2026-02-24_phase-3.2-frontend-branch-created_v1.0.md`
+   - See: `docs/design/TASK-BOARD.md` - Phase 3.2 section
+
+5. **Begin frontend development:**
+   - Set up React project in `/frontend` directory
+   - Build tournament lobby UI
+   - Build leaderboard UI
+   - Integrate with API at localhost:5000
+
+### What's Been Completed:
+- ✅ Phase 3.3 - Backend API deployed to production as v0.1.0
+- ✅ 43 unit tests passing (93.71% routes coverage)
+- ✅ All documentation updated
+- ✅ GitFlow deployment workflow executed
+- ✅ Phase 3.2 feature branch created and pushed
+
+### Next Task:
+**Build Phase 3.2 Frontend** - Tournament lobby + leaderboard UI (React)
+- Estimate: 3-4 hours
+- Backend API ready: v0.1.0 at localhost:5000
+- No blockers
 
 ---
 
