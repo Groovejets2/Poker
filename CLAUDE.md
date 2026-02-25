@@ -3,8 +3,8 @@
 **Category:** standards
 **Purpose:** Current project status and how to resume work
 **Status:** Phase 3.2 Frontend - Styling & API Integration
-**Version:** 1.7
-**Last Updated:** 2026-02-25 12:30 GMT+13
+**Version:** 1.8
+**Last Updated:** 2026-02-25 12:45 GMT+13
 **Owner:** Jon + Development Team
 **Tags:** operational, phase-3.2, frontend, unblocked, styling, integration
 
@@ -16,6 +16,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-25 12:45 | 1.8 | Sonnet 4.5 | Added REQUIRED TEST tasks to Phase 3.2; must run API start, integration flow, E2E tests, and unit tests before completion |
 | 2026-02-25 12:30 | 1.7 | Sonnet 4.5 | Streamlined document to 300 lines; archived older logs to CLAUDE_ARCHIVE.md |
 | 2026-02-25 12:00 | 1.6 | Sonnet 4.5 | Phase 3.2 frontend UNBLOCKED: CSS import issue resolved by separating type/value imports; website renders correctly; needs styling + API connection |
 | 2026-02-25 10:00 | 1.5 | Sonnet 4.5 | Phase 3.2 frontend BLOCKED: Built 37 React files, comprehensive testing, but ANY CSS import causes blank screen; documented in session log; ready for debugging |
@@ -56,10 +57,12 @@
    - Open http://localhost:5173
    - Test navigation: Home → Register → Login → Tournaments → Leaderboard
 
-3. **Next tasks:**
+3. **Next tasks (ALL TESTS REQUIRED):**
    - Apply TailwindCSS styling to components
-   - Test full integration with backend API
-   - Run E2E tests: `cd frontend && npm run test:e2e`
+   - **REQUIRED:** Start backend API and verify connection
+   - **REQUIRED:** Test full integration flow (register→login→tournaments→leaderboard)
+   - **REQUIRED:** Run E2E tests: `cd frontend && npm run test:e2e` (must pass)
+   - **REQUIRED:** Run unit tests: `cd frontend && npm test` (must pass)
 
 ---
 
@@ -123,10 +126,19 @@
 **Time:** 2-3 hours
 **Tasks:**
 1. Apply TailwindCSS styling to all components
-2. Test full integration with backend API
-3. Verify user flows: registration → login → tournaments → leaderboard
-4. Run and fix E2E test suite
-5. Polish UI/UX
+2. **REQUIRED TEST: Start backend API** - `cd backend && npm start` (verify port 5000)
+3. **REQUIRED TEST: Full integration flow:**
+   - Register new user at /register
+   - Login with credentials at /login
+   - View tournaments at /tournaments
+   - View leaderboard at /leaderboard
+   - Verify all navigation links work
+   - Verify JWT authentication flow works
+4. **REQUIRED TEST: Run E2E suite** - `cd frontend && npm run test:e2e` (23 tests must pass)
+5. **REQUIRED TEST: Run unit tests** - `cd frontend && npm test` (16 tests must pass)
+6. Polish UI/UX
+
+**⚠️ DO NOT mark Phase 3.2 complete until all REQUIRED TESTS are run and passing!**
 
 ### Priority 2: Backend Optimizations (Optional)
 **Status:** Functional, these are enhancements
@@ -275,10 +287,16 @@ docs/
 - ✅ Authentication flow implemented
 - ✅ CSS rendering working
 - ⏳ TailwindCSS styling applied to all components
-- ⏳ Full integration with backend API tested
-- ⏳ User flows verified (register → login → tournaments → leaderboard)
-- ⏳ E2E test suite passing
+- ⏳ **REQUIRED TEST: Backend API running** - Start with `cd backend && npm start`, verify port 5000
+- ⏳ **REQUIRED TEST: Full integration flow verified:**
+  - Register new user → Login → View tournaments → View leaderboard
+  - All navigation links working
+  - JWT authentication flow working
+- ⏳ **REQUIRED TEST: E2E test suite passing** - Run `cd frontend && npm run test:e2e`
+- ⏳ **REQUIRED TEST: Frontend unit tests passing** - Run `cd frontend && npm test` (16 tests)
 - ⏳ UI/UX polished and production-ready
+
+**⚠️ IMPORTANT:** Phase 3.2 cannot be marked complete until ALL REQUIRED TESTS are run and passing.
 
 ---
 
@@ -340,8 +358,8 @@ cd frontend && npm run test:e2e
 
 ---
 
-**Document Version:** 1.7
-**Last Updated:** 2026-02-25 12:30 GMT+13
-**Next Update:** After Phase 3.2 styling complete and API integration tested
+**Document Version:** 1.8
+**Last Updated:** 2026-02-25 12:45 GMT+13
+**Next Update:** After Phase 3.2 styling complete and all REQUIRED TESTS passing
 
 **Historical Information:** See [CLAUDE_ARCHIVE.md](CLAUDE_ARCHIVE.md)

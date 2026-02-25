@@ -4,8 +4,8 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 1.7
-**Last Updated:** 2026-02-25 12:00 GMT+13
+**Version:** 1.8
+**Last Updated:** 2026-02-25 12:45 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-25 12:45 | 1.8 | Sonnet 4.5 | Added REQUIRED TEST tasks to Phase 3.2: API start, integration flow, E2E tests, unit tests must all pass before phase completion |
 | 2026-02-25 12:00 | 1.7 | Sonnet 4.5 | Phase 3.2 Frontend UNBLOCKED: CSS import issue resolved by separating type/value imports; website now renders; buttons need backend API running |
 | 2026-02-25 10:00 | 1.6 | Sonnet 4.5 | Phase 3.2 Frontend BLOCKED: 37 React files built, comprehensive testing added, but CSS import causes blank screen; needs debugging |
 | 2026-02-24 10:00 | 1.5 | Sonnet 4.5 | Phase 3.6 COMPLETE (security fixes); added Phase 3.7 (RBAC test cleanup, optional); updated priorities |
@@ -137,17 +138,27 @@ Use these sections with offset/limit to avoid loading full file:
 - [x] E2E testing setup (Playwright) - 23 tests written (DONE 2026-02-24)
 - [x] **Fix CSS Import Issue** - Resolved by separating type/value imports (DONE 2026-02-25)
 - [ ] Apply TailwindCSS styling to all components
-- [ ] Connect frontend to backend API (buttons currently non-functional without API)
+- [ ] **REQUIRED TEST: Start backend API** - Run `cd backend && npm start` and verify server starts on port 5000
+- [ ] **REQUIRED TEST: Full integration flow** - Test complete user journey:
+  - [ ] Register new user at /register
+  - [ ] Login with credentials at /login
+  - [ ] View tournaments list at /tournaments
+  - [ ] View leaderboard at /leaderboard
+  - [ ] Verify all navigation links work
+  - [ ] Verify JWT authentication flow works
+- [ ] **REQUIRED TEST: Run E2E test suite** - Execute `cd frontend && npm run test:e2e` and ensure all tests pass
+- [ ] **REQUIRED TEST: Run frontend unit tests** - Execute `cd frontend && npm test` and ensure all 16 tests pass
 - [x] ~~Build bot upload interface~~ **→ MOVED TO BACKLOG (ON-HOLD)**
 - **Status:** ✅ UNBLOCKED - Website renders, needs styling and API connection (2026-02-25)
-- **Progress:** 97% complete (React code + CSS working, needs styling polish + API connection)
+- **Progress:** 97% complete (React code + CSS working, needs styling polish + API connection + testing verification)
 - **Files Created:** 37 files, 2,500+ lines of TypeScript/React
 - **Resolution:** CSS blocker fixed by separating TypeScript type imports from value imports
 - **Commit:** c3836ac - fix: Resolve CSS import blocker by separating type imports (2026-02-25)
 - **Current State:** Basic website works, renders correctly, but buttons don't work (need backend API running)
 - **Session Log:** docs/progress/2026-02-24_phase-3.2-frontend-css-blocker_v1.0.md
-- **Next Steps:** Apply TailwindCSS styling, start backend API, test full integration
-- **Estimate:** 2-3 hours for styling + integration
+- **Next Steps:** Apply TailwindCSS styling, start backend API, test full integration, run all test suites
+- **IMPORTANT:** All REQUIRED TEST tasks MUST be completed and passing before Phase 3.2 is marked complete
+- **Estimate:** 2-3 hours for styling + integration + testing
 - **Token Budget:** approximately 800-1000 tokens
 
 ### 3.3 Website Backend - TypeORM Refactor + Testing
@@ -395,6 +406,6 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ---
 
-**Last Updated:** 2026-02-25 12:00 GMT+13
-**Version:** 1.7
+**Last Updated:** 2026-02-25 12:45 GMT+13
+**Version:** 1.8
 **Maintainer:** Jon + Development Team
