@@ -4,8 +4,8 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 1.5
-**Last Updated:** 2026-02-24 10:00 GMT+13
+**Version:** 1.6
+**Last Updated:** 2026-02-25 10:00 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-25 10:00 | 1.6 | Sonnet 4.5 | Phase 3.2 Frontend BLOCKED: 37 React files built, comprehensive testing added, but CSS import causes blank screen; needs debugging |
 | 2026-02-24 10:00 | 1.5 | Sonnet 4.5 | Phase 3.6 COMPLETE (security fixes); added Phase 3.7 (RBAC test cleanup, optional); updated priorities |
 | 2026-02-24 00:15 | 1.4 | Sonnet 4.5 | Phase 3.3 DEPLOYED to production; added unit testing, CRITICAL issues phase, deployment tracking |
 | 2026-02-23 18:15 | 1.3 | Sonnet 4.5 | Phase 3.3 COMPLETE - all routes, middleware, utils converted to TypeScript; API tested and verified working; added game engine architecture note |
@@ -124,11 +125,27 @@ Use these sections with offset/limit to avoid loading full file:
 - **Token Budget:** approximately 600-800 tokens
 
 ### 3.2 Website Frontend
-- [ ] Build tournament lobby
-- [ ] Build leaderboard
+- [x] React + TypeScript + Vite setup (DONE 2026-02-24)
+- [x] Build tournament lobby pages (DONE 2026-02-24)
+- [x] Build leaderboard pages (DONE 2026-02-24)
+- [x] Authentication flow (login, register, protected routes) (DONE 2026-02-24)
+- [x] API service layer with Axios interceptors (DONE 2026-02-24)
+- [x] Auth context with JWT management (DONE 2026-02-24)
+- [x] Component architecture (Layout, Navigation, ProtectedRoute, TournamentCard) (DONE 2026-02-24)
+- [x] Unit testing setup (Vitest + React Testing Library) - 16 tests, 15 passing (DONE 2026-02-24)
+- [x] E2E testing setup (Playwright) - 23 tests written (DONE 2026-02-24)
+- [ ] **BLOCKER: Fix CSS Import Issue** - ANY CSS import causes blank screen
+- [ ] Apply TailwindCSS styling to all components (blocked by CSS issue)
 - [x] ~~Build bot upload interface~~ **→ MOVED TO BACKLOG (ON-HOLD)**
-- **Status:** READY (after 3.1)
-- **Estimate:** 3-4 hours (reduced from 4-5)
+- **Status:** ⚠️ BLOCKED on CSS rendering issue (2026-02-24/25)
+- **Progress:** 95% complete (all React code done, just CSS broken)
+- **Files Created:** 37 files, 2,500+ lines of TypeScript/React
+- **Blocker:** CSS import in main.tsx causes blank white screen
+- **Debugging Time:** 2.5 hours (TailwindCSS v4→v3 downgrade, PostCSS configs, empty CSS tests)
+- **Evidence:** Screenshot + 793-line session log
+- **Session Log:** docs/progress/2026-02-24_phase-3.2-frontend-css-blocker_v1.0.md
+- **Next Steps:** Manual browser debugging, check DevTools console, try fresh Vite project
+- **Estimate:** 3-4 hours (original) + unknown debugging time
 - **Token Budget:** approximately 1000-1200 tokens (reduced)
 
 ### 3.3 Website Backend - TypeORM Refactor + Testing
@@ -333,11 +350,11 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - 2.2 Core Dealer Logic: DONE (2026-02-21) — 38/38 tests passing
 - 2.3 & 2.4 Testing: READY to start or skip based on timeline
 
-**Phase 3 (Platform Website):** IN PROGRESS
+**Phase 3 (Platform Website):** IN PROGRESS - BLOCKED
 - 3.3 Backend API: DEPLOYED ✓ (v0.1.0, 2026-02-24) — Full TypeScript/TypeORM conversion + 43 unit tests, deployed to production
 - 3.6 Security Fixes: COMPLETE ✓ (2026-02-24) — All 5 CRITICAL issues resolved in 3.25 hours
 - 3.7 Test Quality: BACKLOG (optional) — Fix 10 RBAC tests (~30 min), low priority
-- 3.2 Frontend: READY to start (no blockers, backend API working)
+- 3.2 Frontend: ⚠️ BLOCKED (2026-02-24/25) — 37 React files built (95% complete), but CSS import causes blank screen; needs manual browser debugging
 - 3.1 Architecture: SUPERSEDED by DEPLOYMENT_ARCHITECTURE.md
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
 
@@ -345,13 +362,21 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ## Immediate Next Actions
 
-**PRIORITY 1:** Phase 3.2 Frontend (React)
-- Status: READY TO START (Phase 3.3 deployed 2026-02-24 00:15 GMT+13)
-- Work: Build tournament lobby + leaderboard UI
-- Backend API confirmed working at localhost:5000
-- Backend deployed to production as v0.1.0
-- Estimate: 3-4 hours
-- No blockers - ready to begin
+**PRIORITY 1:** ⚠️ Phase 3.2 Frontend - CSS BLOCKER (URGENT)
+- Status: BLOCKED (2026-02-24/25) - 95% complete but CSS import breaks app
+- Work: Fix CSS import issue causing blank white screen
+- Progress: 37 React files built, all functionality implemented, comprehensive testing added
+- Blocker: ANY CSS import in main.tsx causes blank screen (even empty CSS file)
+- Evidence: Screenshot + 793-line debugging session log
+- Session Log: docs/progress/2026-02-24_phase-3.2-frontend-css-blocker_v1.0.md
+- Debugging Done: 2.5 hours (TailwindCSS v4→v3, PostCSS configs, empty CSS tests)
+- Next Steps:
+  1. Read session log (has ALL context)
+  2. Manual browser debugging at localhost:5173
+  3. Check DevTools console for JavaScript errors
+  4. Try fresh Vite project to isolate issue
+  5. Consider React/Vite version downgrades
+- Estimate: Unknown (environmental/build tool issue)
 
 **PRIORITY 2:** Phase 3.7 Test Quality Improvements (Optional)
 - Status: BACKLOG (2026-02-24), NOT BLOCKING anything
@@ -371,6 +396,6 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ---
 
-**Last Updated:** 2026-02-24 00:15 GMT+13
-**Version:** 1.4
+**Last Updated:** 2026-02-25 10:00 GMT+13
+**Version:** 1.6
 **Maintainer:** Jon + Development Team

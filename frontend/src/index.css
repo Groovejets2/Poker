@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
-/* Custom base styles */
-body {
-  min-height: 100vh;
-  background-color: rgb(249 250 251); /* gray-50 */
+/* Custom styles */
+@layer base {
+  body {
+    min-height: 100vh;
+    background-color: #f9fafb;
+  }
 }
