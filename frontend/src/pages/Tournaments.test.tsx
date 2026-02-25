@@ -97,11 +97,11 @@ describe('Tournaments Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Test Tournament 1')).toBeInTheDocument();
-      expect(screen.getByText(/buy-in:/i)).toBeInTheDocument();
-      expect(screen.getByText('$100')).toBeInTheDocument();
-      expect(screen.getByText(/entry fee:/i)).toBeInTheDocument();
-      expect(screen.getByText('$10')).toBeInTheDocument();
-      expect(screen.getByText(/5\/10/i)).toBeInTheDocument(); // player count
+      expect(screen.getByText(/buy-in/i)).toBeInTheDocument();
+      expect(screen.getByText(/\$100/)).toBeInTheDocument();
+      expect(screen.getByText(/entry fee/i)).toBeInTheDocument();
+      expect(screen.getByText(/\$10/)).toBeInTheDocument();
+      expect(screen.getByText(/5\s*\/\s*10/i)).toBeInTheDocument(); // player count
     });
   });
 
@@ -144,8 +144,8 @@ describe('Tournaments Component', () => {
     renderWithProviders(<Tournaments />);
 
     await waitFor(() => {
-      expect(screen.getByText('scheduled')).toBeInTheDocument();
-      expect(screen.getByText('in_progress')).toBeInTheDocument();
+      expect(screen.getByText('SCHEDULED')).toBeInTheDocument();
+      expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
     });
   });
 });
