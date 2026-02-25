@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { leaderboardService, PlayerStats as PlayerStatsType } from '../services/leaderboard.service';
+import { leaderboardService } from '../services/leaderboard.service';
+import type { PlayerStats as PlayerStatsType } from '../services/leaderboard.service';
 import { useAuth } from '../context/AuthContext';
 
 export const PlayerStats = () => {

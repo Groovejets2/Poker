@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { tournamentsService, Tournament } from '../services/tournaments.service';
+import { tournamentsService } from '../services/tournaments.service';
+import type { Tournament } from '../services/tournaments.service';
 import { useAuth } from '../context/AuthContext';
 
 export const Tournaments = () => {

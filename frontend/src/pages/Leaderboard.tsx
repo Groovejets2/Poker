@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { leaderboardService, LeaderboardPlayer } from '../services/leaderboard.service';
+import { leaderboardService } from '../services/leaderboard.service';
+import type { LeaderboardPlayer } from '../services/leaderboard.service';
 
 export const Leaderboard = () => {
   const [players, setPlayers] = useState<LeaderboardPlayer[]>([]);
