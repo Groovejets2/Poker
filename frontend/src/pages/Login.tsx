@@ -30,20 +30,36 @@ export const Login = () => {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          Login to your account
-        </h2>
+      <div className="card p-10 shadow-lg">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+            Welcome Back
+          </h2>
+          <p style={{ color: 'var(--color-text-secondary)' }}>
+            Login to access your account
+          </p>
+        </div>
 
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+          <div
+            className="mb-6 px-4 py-3 rounded-lg"
+            style={{
+              backgroundColor: 'var(--color-error-bg)',
+              borderLeft: '4px solid var(--color-error)',
+              color: 'var(--color-error)'
+            }}
+          >
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="block text-sm font-semibold mb-2"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
               Username
             </label>
             <input
@@ -52,12 +68,22 @@ export const Login = () => {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+              style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+              placeholder="Enter your username"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold mb-2"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
               Password
             </label>
             <input
@@ -66,24 +92,30 @@ export const Login = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+              style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+              placeholder="Enter your password"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full py-3.5 rounded-lg text-sm font-bold uppercase tracking-wide transition-all btn-gold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+        <div className="mt-8 pt-6 border-t text-center" style={{ borderColor: 'var(--color-border)' }}>
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             Don't have an account?{' '}
-            <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-              Register here
+            <Link to="/register" className="font-semibold text-gold hover:text-gold-light transition-colors">
+              Create one now
             </Link>
           </p>
         </div>

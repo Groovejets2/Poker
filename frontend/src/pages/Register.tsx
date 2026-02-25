@@ -46,20 +46,36 @@ export const Register = () => {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          Create your account
-        </h2>
+      <div className="card p-10 shadow-lg">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+            Join OpenClaw Poker
+          </h2>
+          <p style={{ color: 'var(--color-text-secondary)' }}>
+            Create your account to start playing
+          </p>
+        </div>
 
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+          <div
+            className="mb-6 px-4 py-3 rounded-lg"
+            style={{
+              backgroundColor: 'var(--color-error-bg)',
+              borderLeft: '4px solid var(--color-error)',
+              color: 'var(--color-error)'
+            }}
+          >
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="block text-sm font-semibold mb-2"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
               Username
             </label>
             <input
@@ -68,13 +84,23 @@ export const Register = () => {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+              style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+              placeholder="Choose a username"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold mb-2"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              Email Address
             </label>
             <input
               id="email"
@@ -82,12 +108,22 @@ export const Register = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+              style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+              placeholder="your.email@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold mb-2"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
               Password
             </label>
             <input
@@ -96,14 +132,21 @@ export const Register = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+              style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+              placeholder="Minimum 8 characters"
             />
           </div>
 
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-semibold mb-2"
+              style={{ color: 'var(--color-text-secondary)' }}
             >
               Confirm Password
             </label>
@@ -113,23 +156,29 @@ export const Register = () => {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+              style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+              placeholder="Re-enter your password"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full py-3.5 rounded-lg text-sm font-bold uppercase tracking-wide transition-all btn-gold disabled:opacity-50 disabled:cursor-not-allowed mt-6"
           >
-            {loading ? 'Creating account...' : 'Register'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+        <div className="mt-8 pt-6 border-t text-center" style={{ borderColor: 'var(--color-border)' }}>
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link to="/login" className="font-semibold text-gold hover:text-gold-light transition-colors">
               Login here
             </Link>
           </p>
