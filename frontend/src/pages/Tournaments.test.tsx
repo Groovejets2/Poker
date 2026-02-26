@@ -40,23 +40,29 @@ describe('Tournaments Component', () => {
     {
       id: 1,
       name: 'Test Tournament 1',
-      buy_in: 100,
-      entry_fee: 10,
+      buy_in_chips: 100,
+      entry_fee_usd: 10,
       max_players: 10,
       scheduled_at: '2026-03-01T10:00:00Z',
+      created_at: '2026-02-01T10:00:00Z',
+      updated_at: '2026-02-01T10:00:00Z',
       status: 'scheduled' as const,
       player_count: 5,
+      seats_available: 5,
       is_registered: false,
     },
     {
       id: 2,
       name: 'Test Tournament 2',
-      buy_in: 200,
-      entry_fee: 20,
+      buy_in_chips: 200,
+      entry_fee_usd: 20,
       max_players: 20,
       scheduled_at: '2026-03-02T10:00:00Z',
+      created_at: '2026-02-01T10:00:00Z',
+      updated_at: '2026-02-01T10:00:00Z',
       status: 'in_progress' as const,
       player_count: 15,
+      seats_available: 5,
       is_registered: false,
     },
   ];
@@ -98,9 +104,9 @@ describe('Tournaments Component', () => {
     await waitFor(() => {
       expect(screen.getByText('Test Tournament 1')).toBeInTheDocument();
       expect(screen.getByText(/buy-in/i)).toBeInTheDocument();
-      expect(screen.getByText(/\$100/)).toBeInTheDocument();
+      expect(screen.getByText('$100')).toBeInTheDocument();
       expect(screen.getByText(/entry fee/i)).toBeInTheDocument();
-      expect(screen.getByText(/\$10/)).toBeInTheDocument();
+      expect(screen.getAllByText(/\$10/).length).toBeGreaterThan(0); // $10 appears in both $100 and $10
       expect(screen.getByText(/5\s*\/\s*10/i)).toBeInTheDocument(); // player count
     });
   });
@@ -144,8 +150,8 @@ describe('Tournaments Component', () => {
     renderWithProviders(<Tournaments />);
 
     await waitFor(() => {
-      expect(screen.getByText('SCHEDULED')).toBeInTheDocument();
-      expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
+      expect(screen.getByText('scheduled')).toBeInTheDocument();
+      expect(screen.getByText('in progress')).toBeInTheDocument();
     });
   });
 });

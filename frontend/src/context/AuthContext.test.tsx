@@ -38,18 +38,23 @@ describe('AuthContext', () => {
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    const mockUser = {
-      id: 1,
+    const mockAuthResponse = {
+      token: 'test-token',
+      user_id: 1,
       username: 'testuser',
-      email: 'test@example.com',
       role: 'player',
+      expires_in: 3600,
     };
 
     act(() => {
-      result.current.login('test-token', mockUser);
+      result.current.login(mockAuthResponse);
     });
 
-    expect(result.current.user).toEqual(mockUser);
+    expect(result.current.user).toEqual({
+      user_id: 1,
+      username: 'testuser',
+      role: 'player',
+    });
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.isAdmin).toBe(false);
   });
@@ -61,15 +66,16 @@ describe('AuthContext', () => {
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    const mockAdmin = {
-      id: 2,
+    const mockAdminAuth = {
+      token: 'admin-token',
+      user_id: 2,
       username: 'admin',
-      email: 'admin@example.com',
       role: 'admin',
+      expires_in: 3600,
     };
 
     act(() => {
-      result.current.login('admin-token', mockAdmin);
+      result.current.login(mockAdminAuth);
     });
 
     expect(result.current.isAdmin).toBe(true);
@@ -82,15 +88,16 @@ describe('AuthContext', () => {
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    const mockUser = {
-      id: 1,
+    const mockAuthResponse = {
+      token: 'test-token',
+      user_id: 1,
       username: 'testuser',
-      email: 'test@example.com',
       role: 'player',
+      expires_in: 3600,
     };
 
     act(() => {
-      result.current.login('test-token', mockUser);
+      result.current.login(mockAuthResponse);
     });
 
     expect(result.current.isAuthenticated).toBe(true);

@@ -11,6 +11,8 @@ vi.mock('../services/auth.service', () => ({
     login: vi.fn(),
     getUser: vi.fn(() => null),
     isAuthenticated: vi.fn(() => false),
+    storeAuth: vi.fn(),
+    logout: vi.fn(),
   },
 }));
 
@@ -59,12 +61,10 @@ describe('Login Component', () => {
   it('should handle successful login', async () => {
     const mockResponse = {
       token: 'test-token',
-      user: {
-        id: 1,
-        username: 'testuser',
-        email: 'test@example.com',
-        role: 'player',
-      },
+      user_id: 1,
+      username: 'testuser',
+      role: 'player',
+      expires_in: 3600,
     };
 
     vi.mocked(authService.authService.login).mockResolvedValue(mockResponse);
