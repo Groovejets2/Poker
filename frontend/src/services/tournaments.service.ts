@@ -4,11 +4,14 @@ export interface Tournament {
   id: number;
   name: string;
   buy_in: number;
+  buy_in_chips?: number;
   entry_fee: number;
+  entry_fee_usd?: number;
   max_players: number;
   scheduled_at: string;
   status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
   player_count?: number;
+  seats_available?: number;
   is_registered?: boolean;
 }
 
@@ -26,7 +29,14 @@ export const tournamentsService = {
    */
   async getAll(): Promise<Tournament[]> {
     const response = await apiClient.get('/tournaments');
-    return response.data;
+    const tournaments = response.data.tournaments || response.data;
+
+    // Map backend field names to frontend field names
+    return tournaments.map((t: any) => ({
+      ...t,
+      buy_in: t.buy_in_chips || t.buy_in,
+      entry_fee: t.entry_fee_usd || t.entry_fee,
+    }));
   },
 
   /**

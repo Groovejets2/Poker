@@ -27,7 +27,23 @@ export const authService = {
    */
   async register(data: RegisterData): Promise<AuthResponse> {
     const response = await apiClient.post('/auth/register', data);
-    return response.data;
+
+    // Backend doesn't return token on register, so we need to login
+    if (!response.data.token) {
+      // Auto-login after registration
+      return this.login({ username: data.username, password: data.password });
+    }
+
+    // Map backend response to frontend format
+    return {
+      token: response.data.token,
+      user: {
+        id: response.data.user_id,
+        username: response.data.username,
+        email: data.email,
+        role: response.data.role || 'player',
+      },
+    };
   },
 
   /**
@@ -35,7 +51,17 @@ export const authService = {
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await apiClient.post('/auth/login', credentials);
-    return response.data;
+
+    // Map backend response to frontend format
+    return {
+      token: response.data.token,
+      user: {
+        id: response.data.user_id,
+        username: response.data.username,
+        email: response.data.email || '',
+        role: response.data.role || 'player',
+      },
+    };
   },
 
   /**

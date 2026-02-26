@@ -30,7 +30,14 @@ export const leaderboardService = {
    */
   async getLeaderboard(): Promise<LeaderboardPlayer[]> {
     const response = await apiClient.get('/leaderboard');
-    return response.data;
+    const leaderboard = response.data.leaderboard || response.data;
+
+    // Map backend field names to frontend field names
+    return leaderboard.map((player: any) => ({
+      ...player,
+      tournaments_won: player.tournament_wins || player.tournaments_won || 0,
+      avg_finish_position: player.avg_finish || player.avg_finish_position,
+    }));
   },
 
   /**
