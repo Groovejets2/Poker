@@ -25,8 +25,12 @@ app.use(helmet());
 app.use(cors({
   origin: [
     'http://localhost:3000',
+    'http://localhost:5173',  // Vite default port
+    'http://localhost:5174',  // Vite alternate port
+    'http://localhost:5175',  // Vite alternate port
     'https://openclaw-poker.local'
-  ]
+  ],
+  credentials: true
 }));
 app.use(express.json({ limit: '100kb' })); // MED-4 FIX: Add request body size limit
 
