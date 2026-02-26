@@ -137,7 +137,7 @@ export const Tournaments = () => {
                     Buy-in
                   </span>
                   <span className="font-semibold text-gold">
-                    ${tournament.buy_in.toLocaleString()}
+                    ${tournament.buy_in_chips.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -145,7 +145,7 @@ export const Tournaments = () => {
                     Entry Fee
                   </span>
                   <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                    ${tournament.entry_fee.toLocaleString()}
+                    ${tournament.entry_fee_usd.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">

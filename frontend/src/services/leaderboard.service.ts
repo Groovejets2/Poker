@@ -1,27 +1,35 @@
 import apiClient from './api';
 
+/**
+ * Leaderboard interfaces matching backend API specification
+ * See: docs/specifications/OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md
+ */
 export interface LeaderboardPlayer {
-  user_id: number;
+  rank: number;
+  user_id: number;                // ✅ Backend field name
   username: string;
   tournaments_played: number;
-  tournaments_won: number;
+  tournament_wins: number;        // ✅ Backend field name (not tournaments_won)
+  avg_finish: number | null;      // ✅ Backend field name (not avg_finish_position)
   total_winnings: number;
-  avg_finish_position: number;
 }
 
 export interface PlayerStats {
-  user_id: number;
+  user_id: number;                // ✅ Backend field name
   username: string;
   tournaments_played: number;
-  tournaments_won: number;
+  tournament_wins: number;        // ✅ Backend field name
+  avg_finish: number | null;      // ✅ Backend field name
   total_winnings: number;
-  avg_finish_position: number;
-  recent_tournaments?: Array<{
-    tournament_id: number;
-    tournament_name: string;
-    finish_position: number;
-    payout: number;
-  }>;
+}
+
+interface LeaderboardResponse {
+  leaderboard: LeaderboardPlayer[];
+  updated_at: string;
+}
+
+interface PlayerStatsResponse {
+  player: PlayerStats;
 }
 
 export const leaderboardService = {
@@ -29,22 +37,15 @@ export const leaderboardService = {
    * Get global leaderboard
    */
   async getLeaderboard(): Promise<LeaderboardPlayer[]> {
-    const response = await apiClient.get('/leaderboard');
-    const leaderboard = response.data.leaderboard || response.data;
-
-    // Map backend field names to frontend field names
-    return leaderboard.map((player: any) => ({
-      ...player,
-      tournaments_won: player.tournament_wins || player.tournaments_won || 0,
-      avg_finish_position: player.avg_finish || player.avg_finish_position,
-    }));
+    const response = await apiClient.get<LeaderboardResponse>('/leaderboard');
+    return response.data.leaderboard;
   },
 
   /**
    * Get player statistics
    */
   async getPlayerStats(userId: number): Promise<PlayerStats> {
-    const response = await apiClient.get(`/leaderboard/${userId}`);
-    return response.data;
+    const response = await apiClient.get<PlayerStatsResponse>(`/leaderboard/${userId}`);
+    return response.data.player;
   },
 };
