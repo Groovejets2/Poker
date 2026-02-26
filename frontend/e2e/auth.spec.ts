@@ -4,7 +4,7 @@ test.describe('Authentication', () => {
   test('should load login page', async ({ page }) => {
     await page.goto('/login');
 
-    await expect(page.locator('h2')).toContainText('Login to your account');
+    await expect(page.locator('h2')).toContainText('Welcome Back');
   });
 
   test('should display login form fields', async ({ page }) => {
@@ -19,13 +19,13 @@ test.describe('Authentication', () => {
   test('should have link to registration', async ({ page }) => {
     await page.goto('/login');
 
-    await expect(page.getByRole('link', { name: /register here/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /create one now/i })).toBeVisible();
   });
 
   test('should load registration page', async ({ page }) => {
     await page.goto('/register');
 
-    await expect(page.locator('h2')).toContainText('Create your account');
+    await expect(page.locator('h2')).toContainText('Join OpenClaw Poker');
   });
 
   test('should display registration form fields', async ({ page }) => {
@@ -36,23 +36,23 @@ test.describe('Authentication', () => {
     await expect(page.getByLabel(/email/i)).toBeVisible();
     await expect(page.getByLabel(/^password$/i)).toBeVisible();
     await expect(page.getByLabel(/confirm password/i)).toBeVisible();
-    await expect(page.getByRole('button', { name: /register/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /create account/i })).toBeVisible();
   });
 
   test('should navigate between login and register', async ({ page }) => {
     await page.goto('/login');
 
     // Click Register link
-    await page.getByRole('link', { name: /register here/i }).click();
+    await page.getByRole('link', { name: /create one now/i }).click();
 
     await expect(page).toHaveURL(/\/register/);
-    await expect(page.locator('h2')).toContainText('Create your account');
+    await expect(page.locator('h2')).toContainText('Join OpenClaw Poker');
 
     // Click Login link
     await page.getByRole('link', { name: /login here/i }).click();
 
     await expect(page).toHaveURL(/\/login/);
-    await expect(page.locator('h2')).toContainText('Login to your account');
+    await expect(page.locator('h2')).toContainText('Welcome Back');
   });
 
   test('should show validation for empty form submission', async ({ page }) => {

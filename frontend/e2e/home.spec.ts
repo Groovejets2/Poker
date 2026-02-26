@@ -12,18 +12,18 @@ test.describe('Home Page', () => {
   test('should display feature cards', async ({ page }) => {
     await page.goto('/');
 
-    // Check for three main feature cards
-    await expect(page.getByText('🏆 Tournaments')).toBeVisible();
-    await expect(page.getByText('📊 Leaderboard')).toBeVisible();
-    await expect(page.getByText('👤 Your Stats')).toBeVisible();
+    // Check for three main feature cards (no emojis in premium theme)
+    await expect(page.getByRole('heading', { name: 'Tournaments' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Leaderboard' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Your Statistics' })).toBeVisible();
   });
 
   test('should show login/register buttons for guests', async ({ page }) => {
     await page.goto('/');
 
-    // Navigation should show Login and Register buttons
-    await expect(page.getByRole('link', { name: /login/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /register/i })).toBeVisible();
+    // Navigation should show Login and Register buttons (use exact match to avoid multiple matches)
+    await expect(page.getByRole('link', { name: 'Login', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Register', exact: true })).toBeVisible();
   });
 
   test('should navigate to tournaments page', async ({ page }) => {
@@ -50,7 +50,7 @@ test.describe('Home Page', () => {
     await page.goto('/');
 
     // Should show call-to-action section
-    await expect(page.getByText(/Ready to get started/i)).toBeVisible();
-    await expect(page.getByRole('link', { name: /create account/i })).toBeVisible();
+    await expect(page.getByText(/Ready to Join the Elite/i)).toBeVisible();
+    await expect(page.getByRole('link', { name: /Create Your Account/i })).toBeVisible();
   });
 });

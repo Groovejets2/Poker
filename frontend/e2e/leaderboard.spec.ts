@@ -35,12 +35,12 @@ test.describe('Leaderboard Page', () => {
     const table = page.locator('table');
 
     if (await table.count() > 0) {
-      // Check for table headers
-      await expect(page.getByText('Rank')).toBeVisible();
-      await expect(page.getByText('Player')).toBeVisible();
-      await expect(page.getByText('Tournaments Played')).toBeVisible();
-      await expect(page.getByText('Wins')).toBeVisible();
-      await expect(page.getByText('Total Winnings')).toBeVisible();
+      // Check for table headers (use getByRole to target columnheader specifically)
+      await expect(page.getByRole('columnheader', { name: 'Rank' })).toBeVisible();
+      await expect(page.getByRole('columnheader', { name: 'Player' })).toBeVisible();
+      await expect(page.getByRole('columnheader', { name: 'Tournaments' })).toBeVisible();
+      await expect(page.getByRole('columnheader', { name: 'Wins' })).toBeVisible();
+      await expect(page.getByRole('columnheader', { name: 'Total Winnings' })).toBeVisible();
     }
   });
 
