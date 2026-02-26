@@ -13,7 +13,7 @@ export const PlayerStats = () => {
   const navigate = useNavigate();
 
   // If no userId in params, use logged in user's ID
-  const targetUserId = userId ? parseInt(userId) : user?.id;
+  const targetUserId = userId ? parseInt(userId) : user?.user_id;
 
   useEffect(() => {
     if (targetUserId) {
@@ -73,7 +73,7 @@ export const PlayerStats = () => {
 
           <div className="bg-green-50 p-6 rounded-lg">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Tournaments Won</h3>
-            <p className="text-3xl font-bold text-green-600">{stats.tournaments_won}</p>
+            <p className="text-3xl font-bold text-green-600">{stats.tournament_wins}</p>
           </div>
 
           <div className="bg-yellow-50 p-6 rounded-lg">
@@ -86,7 +86,7 @@ export const PlayerStats = () => {
           <div className="bg-purple-50 p-6 rounded-lg">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Avg. Finish Position</h3>
             <p className="text-3xl font-bold text-purple-600">
-              {stats.avg_finish_position?.toFixed(1) || 'N/A'}
+              {stats.avg_finish?.toFixed(1) || 'N/A'}
             </p>
           </div>
         </div>
@@ -96,7 +96,7 @@ export const PlayerStats = () => {
             <div className="p-4 bg-gray-50 rounded-lg">
               <p className="text-sm text-gray-500">Win Rate</p>
               <p className="text-2xl font-bold text-gray-900">
-                {((stats.tournaments_won / stats.tournaments_played) * 100).toFixed(1)}%
+                {((stats.tournament_wins / stats.tournaments_played) * 100).toFixed(1)}%
               </p>
             </div>
 

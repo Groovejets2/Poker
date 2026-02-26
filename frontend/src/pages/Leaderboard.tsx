@@ -109,7 +109,7 @@ export const Leaderboard = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                        {player.tournaments_won}
+                        {player.tournament_wins}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -119,7 +119,7 @@ export const Leaderboard = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span style={{ color: 'var(--color-text-secondary)' }}>
-                        {player.avg_finish_position?.toFixed(1) || 'N/A'}
+                        {player.avg_finish?.toFixed(1) || 'N/A'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">

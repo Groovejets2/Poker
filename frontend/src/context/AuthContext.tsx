@@ -3,16 +3,16 @@ import { authService } from '../services/auth.service';
 import type { AuthResponse } from '../services/auth.service';
 
 interface User {
-  id: number;
+  user_id: number;
   username: string;
-  email: string;
+  email?: string;
   role: string;
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (token: string, user: User) => void;
+  login: (authData: AuthResponse) => void;
   logout: () => void;
   isAdmin: boolean;
 }
@@ -42,12 +42,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = (token: string, userData: User) => {
-    const authData: AuthResponse = {
-      token,
-      user: userData,
-    };
+  const login = (authData: AuthResponse) => {
     authService.storeAuth(authData);
+    const userData: User = {
+      user_id: authData.user_id,
+      username: authData.username,
+      role: authData.role,
+    };
     setUser(userData);
   };
 

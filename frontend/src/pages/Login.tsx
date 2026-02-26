@@ -19,7 +19,7 @@ export const Login = () => {
 
     try {
       const response = await authService.login({ username, password });
-      login(response.token, response.user);
+      login(response);
       navigate('/tournaments');
     } catch (err: any) {
       setError(err.response?.data?.error?.message || 'Login failed. Please try again.');

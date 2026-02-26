@@ -33,7 +33,7 @@ export const Register = () => {
 
     try {
       const response = await authService.register({ username, email, password });
-      login(response.token, response.user);
+      login(response);
       navigate('/tournaments');
     } catch (err: any) {
       setError(

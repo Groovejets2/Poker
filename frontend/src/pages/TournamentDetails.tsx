@@ -97,12 +97,12 @@ export const TournamentDetails = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Buy-in</h3>
-            <p className="text-2xl font-bold text-gray-900">${tournament.buy_in}</p>
+            <p className="text-2xl font-bold text-gray-900">${tournament.buy_in_chips}</p>
           </div>
 
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Entry Fee</h3>
-            <p className="text-2xl font-bold text-gray-900">${tournament.entry_fee}</p>
+            <p className="text-2xl font-bold text-gray-900">${tournament.entry_fee_usd}</p>
           </div>
 
           <div className="bg-gray-50 p-4 rounded-lg">
