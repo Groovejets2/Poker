@@ -16,6 +16,7 @@ import jwt from 'jsonwebtoken';
 jest.mock('../../database/data-source');
 
 // Mock auth middleware by directly setting req.user
+// CRIT-6: Updated to include role field
 jest.mock('../../middleware/auth', () => {
   return jest.fn((req: any, res: any, next: any) => {
     const authHeader = req.headers.authorization;
@@ -28,7 +29,7 @@ jest.mock('../../middleware/auth', () => {
     const token = authHeader.replace('Bearer ', '');
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'test-secret') as any;
-      req.user = { user_id: decoded.user_id, username: decoded.username };
+      req.user = { user_id: decoded.user_id, username: decoded.username, role: decoded.role || 'player' };
       next();
     } catch (err) {
       return res.status(401).json({
@@ -36,6 +37,27 @@ jest.mock('../../middleware/auth', () => {
       });
     }
   });
+});
+
+// Mock requireRole middleware
+jest.mock('../../middleware/requireRole', () => {
+  return {
+    requireRole: (allowedRoles: string[]) => {
+      return (req: any, res: any, next: any) => {
+        const userRole = req.user?.role;
+        if (!userRole || !allowedRoles.includes(userRole)) {
+          return res.status(403).json({
+            error: {
+              code: 'FORBIDDEN',
+              message: 'Insufficient permissions for this operation',
+              required_role: allowedRoles.length === 1 ? allowedRoles[0] : allowedRoles
+            }
+          });
+        }
+        next();
+      };
+    }
+  };
 });
 
 describe('Tournaments Routes', () => {
@@ -67,9 +89,9 @@ describe('Tournaments Routes', () => {
       return createMockRepository();
     });
 
-    // Create test JWT token
+    // Create test JWT token (CRIT-6: with admin role for create tournament tests)
     testToken = jwt.sign(
-      { user_id: 1, username: 'testuser' },
+      { user_id: 1, username: 'testuser', role: 'admin' },
       process.env.JWT_SECRET || 'test-secret',
       { expiresIn: '1h' }
     );

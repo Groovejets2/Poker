@@ -1,7 +1,8 @@
 # Documentation Standards - OpenClaw Poker Project
 
 **Effective Date:** 2026-02-19
-**Version:** 1.0
+**Version:** 1.1
+**Last Updated:** 2026-02-26 21:30 GMT+13
 
 ---
 
@@ -54,6 +55,24 @@ E:\poker-project\
 - **v1.2, v1.3, etc.** — Additional minor updates
 - **v2.0** — Major changes, significant restructuring, or complete rewrite
 - **v3.0+** — Reserved for major revisions
+
+### Document Creation Policy
+
+**MANDATORY: Check for Existing Documents First**
+
+Before creating ANY new document:
+1. **Search** the `docs/` folder for similar documents
+2. **Check** the relevant INDEX.md file
+3. **Ask:** Does a document with this purpose already exist?
+4. **If YES:** Update the existing document (bump version) instead of creating a new one
+5. **If NO:** Proceed with new document creation
+
+**Examples of Violations:**
+- Creating `CURRENT_SESSION_STATE.md` when `RESUME_STATE.md` already exists
+- Creating `API-SPEC-v2.md` when `API-SPECIFICATION.md` should be updated
+- Creating `SETUP-NEW.md` when `SETUP-GUIDE.md` should be revised
+
+**Penalty for Violation:** Document must be consolidated immediately
 
 ### Archival Process
 

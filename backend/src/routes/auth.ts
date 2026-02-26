@@ -6,7 +6,16 @@ import { User } from '../database/entities/User';
 import * as validators from '../utils/validation';
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
+
+// CRIT-1 FIX: Require JWT_SECRET - no fallback allowed
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set');
+  console.error('Generate a secret with: openssl rand -base64 32');
+  console.error('Then add to .env file: JWT_SECRET=your_generated_secret');
+  process.exit(1);
+}
+
 const JWT_EXPIRY = 3600; // 1 hour
 
 /**
@@ -50,8 +59,13 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
       });
     }
 
+    // CRIT-6 FIX: Include role in JWT payload for RBAC
     const token = jwt.sign(
-      { user_id: user.id, username: user.username },
+      {
+        user_id: user.id,
+        username: user.username,
+        role: user.role
+      },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRY }
     );
@@ -60,6 +74,7 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
       token,
       user_id: user.id,
       username: user.username,
+      role: user.role,
       expires_in: JWT_EXPIRY
     });
   } catch (err) {

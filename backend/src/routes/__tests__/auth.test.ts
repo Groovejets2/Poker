@@ -38,6 +38,7 @@ describe('Auth Routes', () => {
         username: 'newuser',
         email: 'new@example.com',
         password_hash: 'hashedpassword',
+        role: 'player', // CRIT-6: Default role
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -115,6 +116,7 @@ describe('Auth Routes', () => {
         username: 'testuser',
         password_hash: 'hashedpassword',
         email: 'test@example.com',
+        role: 'player', // CRIT-6: Include role
       } as User;
 
       mockUserRepository.findOne.mockResolvedValue(user);
@@ -133,6 +135,7 @@ describe('Auth Routes', () => {
       expect(response.body).toHaveProperty('token');
       expect(response.body).toHaveProperty('user_id', 1);
       expect(response.body).toHaveProperty('username', 'testuser');
+      expect(response.body).toHaveProperty('role', 'player'); // CRIT-6: Check role in response
       expect(response.body).toHaveProperty('expires_in', 3600);
     });
 

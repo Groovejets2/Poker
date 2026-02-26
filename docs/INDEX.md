@@ -4,10 +4,10 @@
 **Purpose:** User guides, setup procedures, troubleshooting, and operational documentation
 
 **Status:** active
-**Version:** 1.0
-**Last Updated:** 2026-02-22 11:50 GMT+13
-**Owner:** Jon + Angus
-**Related Documents:** [DOCUMENTATION_STANDARDS.md](./standards/DOCUMENTATION_STANDARDS.md)
+**Version:** 2.0
+**Last Updated:** 2026-02-26 21:15 GMT+13
+**Owner:** Jon + Development Team
+**Related Documents:** [DOCUMENTATION_STANDARDS.md](./standards/DOCUMENTATION_STANDARDS.md), [DOCUMENT_INDEX.md](./DOCUMENT_INDEX.md)
 
 ---
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-26 21:15 | 2.0 | Sonnet 4.5 | Updated index: removed obsolete API-REFERENCE.md, added new API specification docs, updated metadata |
 | 2026-02-22 11:50 | 1.0 | Angus | Added metadata and change log per DOCUMENTATION_STANDARDS.md |
 | 2026-02-22 11:43 | 1.0 | Angus | Initial creation |
 
@@ -26,7 +27,9 @@
 |----------|------|---------|-----------|
 | [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) | setup, development, environment | Get the development environment running | First time setup, onboarding new dev |
 | [DEPLOYMENT-GUIDE.md](./documentation/DEPLOYMENT-GUIDE.md) | deployment, production, operations | Deploy to production | Taking to prod, updates |
-| [API-REFERENCE.md](./documentation/API-REFERENCE.md) | api, backend, endpoints | API endpoint documentation, usage examples | Building frontend, testing API |
+| [OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md](./specifications/OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md) | api, backend, endpoints, specification | Complete API specification with locked JSON contracts | Building frontend, testing API, contract reference |
+| [API-FIELD-NAMING-GUIDE.md](./standards/API-FIELD-NAMING-GUIDE.md) | api, standards, naming | Field naming conventions (backend as source of truth) | Writing API integration code |
+| [AGENTS.md](./standards/AGENTS.md) | standards, quality, api-integration | Mandatory quality standards for API integration | Before writing any API integration code |
 | [TROUBLESHOOTING.md](./documentation/TROUBLESHOOTING.md) | debugging, troubleshooting, errors | Debug common issues, error messages | When something breaks |
 
 ---
@@ -37,7 +40,7 @@
 → Start with [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md)
 
 ### I want to test the API
-→ [API-REFERENCE.md](./documentation/API-REFERENCE.md) + [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) for local setup
+→ [OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md](./specifications/OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md) + [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) for local setup
 
 ### I'm deploying to production
 → [DEPLOYMENT-GUIDE.md](./documentation/DEPLOYMENT-GUIDE.md) + [SETUP-GUIDE.md](./documentation/SETUP-GUIDE.md) (for reference)

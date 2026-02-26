@@ -15,6 +15,10 @@ export class User {
   @Column({ length: 255 })
   password_hash: string;
 
+  // CRIT-6 FIX: Add role-based access control
+  @Column({ default: 'player', length: 20 })
+  role: string; // 'player' | 'admin' | 'moderator'
+
   @OneToMany(() => TournamentPlayer, tournamentPlayer => tournamentPlayer.user)
   tournamentPlayers: TournamentPlayer[];
 
