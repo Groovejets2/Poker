@@ -4,6 +4,8 @@ module.exports = {
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.test.ts', '**/?(*.)+(spec|test).ts'],
   testPathIgnorePatterns: ['/node_modules/', '/__tests__/helpers/'],
+  // CRIT-1: Set JWT_SECRET for tests to prevent process.exit during module loading
+  setupFiles: ['<rootDir>/src/__tests__/setup.ts'],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
       isolatedModules: true

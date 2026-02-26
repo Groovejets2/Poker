@@ -13,6 +13,7 @@ let dataSourceConfig: any;
 
 if (env === 'production') {
   // PostgreSQL for production
+  // CRIT-5 FIX: Add SSL configuration for secure database connections
   dataSourceConfig = {
     type: 'postgres',
     host: process.env.DB_HOST,
@@ -23,17 +24,31 @@ if (env === 'production') {
     entities: [User, Tournament, TournamentPlayer, Match, MatchPlayer],
     synchronize: false,
     logging: false,
-    migrations: ['src/database/migrations/*.ts'],
+    migrations: [path.join(__dirname, 'migrations/*.ts'), path.join(__dirname, 'migrations/*.js')],
+    migrationsRun: true, // Automatically run migrations on startup
+    // SSL configuration for production
+    ssl: {
+      rejectUnauthorized: true,
+      ca: process.env.DB_SSL_CA || undefined,
+    },
+    // Connection pool settings
+    extra: {
+      max: 20, // Maximum number of connections in pool
+      idleTimeoutMillis: 30000, // Close idle connections after 30s
+      connectionTimeoutMillis: 2000, // Timeout for establishing connection
+    },
   };
 } else {
   // SQLite for test/development
+  // CRIT-4 FIX: Disable synchronize to prevent data loss
   dataSourceConfig = {
     type: 'sqlite',
     database: process.env.DB_PATH || path.join(__dirname, '../../data/test/poker.db'),
     entities: [User, Tournament, TournamentPlayer, Match, MatchPlayer],
-    synchronize: true,
+    synchronize: false, // Use migrations instead of auto-sync
     logging: false,
-    migrations: ['src/database/migrations/*.ts'],
+    migrations: [path.join(__dirname, 'migrations/*.ts'), path.join(__dirname, 'migrations/*.js')],
+    migrationsRun: true, // Automatically run migrations on startup
   };
 }
 

@@ -4,8 +4,8 @@
 **Purpose:** Navigate all specifications, architecture decisions, and schema definitions for OpenClaw Poker
 
 **Status:** active
-**Version:** 1.0
-**Last Updated:** 2026-02-22 11:50 GMT+13
+**Version:** 1.1
+**Last Updated:** 2026-02-26 21:30 GMT+13
 **Owner:** Jon + Angus
 **Related Documents:** [DOCUMENTATION_STANDARDS.md](../standards/DOCUMENTATION_STANDARDS.md)
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-26 21:30 | 1.1 | Sonnet 4.5 | Updated to reference actual API spec (OPEN-CLAW-API-SPECIFICATION); removed non-existent API-SCHEMA.md and DATABASE-SCHEMA.md references; moved obsolete files to archive |
 | 2026-02-22 11:50 | 1.0 | Angus | Added metadata and change log per DOCUMENTATION_STANDARDS.md |
 | 2026-02-22 11:42 | 1.0 | Angus | Initial creation with 5-document reference table |
 
@@ -27,8 +28,8 @@
 | [PROJECT_CHARTER.md](PROJECT_CHARTER.md) | project, budget, scope | Vision, budget, phases, timeline | Starting new phase, reviewing scope |
 | [DEPLOYMENT_ARCHITECTURE.md](DEPLOYMENT_ARCHITECTURE.md) | deployment, test-vs-prod, infrastructure | Test/prod tech stack and separation | **Before any backend coding** |
 | [PHASE-3-ARCHITECTURE.md](PHASE-3-ARCHITECTURE.md) | tech-stack, api, backend, frontend | Website tech stack, API design, database schema | Before Phase 3.2 or 3.3 work |
-| [API-SCHEMA.md](API-SCHEMA.md) | api, backend, endpoints | API endpoints, request/response formats | Building or testing API |
-| [DATABASE-SCHEMA.md](DATABASE-SCHEMA.md) | database, schema, backend | Data model, tables, relationships | Designing or migrating database |
+| [OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md](OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md) | api, backend, endpoints, specification | Complete API spec with locked JSON contracts | Building or testing API |
+| [SECURITY-ARCHITECTURE.md](SECURITY-ARCHITECTURE.md) | security, threats, backend | Security design and threat model | Before deployment |
 
 ---
 
@@ -36,14 +37,14 @@
 
 ### Backend Engineers
 1. **First:** [DEPLOYMENT_ARCHITECTURE.md](DEPLOYMENT_ARCHITECTURE.md) — Know test vs prod setup
-2. **Then:** [DATABASE-SCHEMA.md](DATABASE-SCHEMA.md) — Understand data model
-3. **Then:** [API-SCHEMA.md](API-SCHEMA.md) — Build according to spec
-4. **Reference:** [PHASE-3-ARCHITECTURE.md](PHASE-3-ARCHITECTURE.md) for ORM/migration strategy
+2. **Then:** [PHASE-3-ARCHITECTURE.md](PHASE-3-ARCHITECTURE.md) — Understand tech stack and database schema
+3. **Then:** [OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md](OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md) — Build according to locked spec
+4. **Reference:** [../standards/API-FIELD-NAMING-GUIDE.md](../standards/API-FIELD-NAMING-GUIDE.md) for field naming rules
 
 ### Frontend Engineers
 1. **First:** [PHASE-3-ARCHITECTURE.md](PHASE-3-ARCHITECTURE.md) — Understand tech stack
-2. **Then:** [API-SCHEMA.md](API-SCHEMA.md) — Know what data you get
-3. **Reference:** [DATABASE-SCHEMA.md](DATABASE-SCHEMA.md) if building tables/relationships
+2. **Then:** [OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md](OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md) — Know exact API contracts
+3. **Reference:** [../standards/AGENTS.md](../standards/AGENTS.md) — Quality standards before API integration
 
 ### DevOps / Deployment
 1. **First:** [DEPLOYMENT_ARCHITECTURE.md](DEPLOYMENT_ARCHITECTURE.md) — Know infrastructure
@@ -63,9 +64,9 @@
 |----------|--------|----------|-------|
 | PROJECT_CHARTER.md | active | ✓ | Foundational; don't change |
 | DEPLOYMENT_ARCHITECTURE.md | active | ✓ | Canonical; read before backend work |
-| PHASE-3-ARCHITECTURE.md | active | ✓ | Website tech decisions |
-| API-SCHEMA.md | active | ✓ | API contract; update via review process |
-| DATABASE-SCHEMA.md | active | ✓ | Data model; update via migration |
+| PHASE-3-ARCHITECTURE.md | active | ✓ | Website tech decisions and database schema |
+| OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md | active | ✓ | 🔒 Locked API contract; changes require owner approval |
+| SECURITY-ARCHITECTURE.md | active | ✓ | Security design and threat model |
 
 ---
 
