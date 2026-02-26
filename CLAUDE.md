@@ -191,8 +191,12 @@ docs/
 
 ## Operational Guidelines
 
+### ⚠️ MANDATORY - Read Before ANY Development Task:
+**`AGENTS.md`** - Quality standards, testing requirements, API contract rules
+
 ### Core Rules:
 1. **Read first:**
+   - `AGENTS.md` (MANDATORY - quality standards & testing rules)
    - `docs/standards/DOCUMENTATION_STANDARDS.md` (doc structure)
    - `docs/standards/SPENDING-TRACKER.md` (budget tracking)
    - `docs/specifications/DEPLOYMENT_ARCHITECTURE.md` (env switching)
