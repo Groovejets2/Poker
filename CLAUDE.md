@@ -52,10 +52,19 @@
 **Important:** Read [SESSION_STATE.md](docs/claude/SESSION_STATE.md) for detailed clean restart instructions.
 
 **Quick Steps:**
-1. Kill all node processes: `taskkill /F /IM node.exe`
+1. Check for processes on ports (safer than killing all node processes):
+   ```bash
+   # Check port 5000 (backend)
+   netstat -ano | findstr :5000
+   # Check port 5173 (frontend)
+   netstat -ano | findstr :5173
+   # If needed, kill by PID: taskkill /F /PID <PID_NUMBER>
+   ```
 2. Start backend: `cd backend && npm start`
 3. Start frontend: `cd frontend && npm run dev`
 4. Open browser to frontend URL (CORS should now work)
+
+**⚠️ WARNING:** Do NOT use `taskkill /F /IM node.exe` - it kills Claude Code CLI itself!
 
 **Next Phase Options:**
 - **Option A (Recommended):** Phase 3.4 - GitFlow & PR Automation (2-3 hours)

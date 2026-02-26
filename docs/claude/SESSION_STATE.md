@@ -64,13 +64,23 @@ Removed ALL mapping layers. Frontend now uses backend field names directly:
 
 ## How to Resume (Clean Restart)
 
-### Step 1: Kill All Node Processes
+### Step 1: Kill Specific Node Processes (Safer Method)
 ```powershell
-# In PowerShell or new Windows Terminal
-taskkill /F /IM node.exe
+# Check what's running on backend port
+netstat -ano | findstr :5000
+
+# Check what's running on frontend port
+netstat -ano | findstr :5173
+
+# Kill specific process by PID (replace <PID> with actual number)
+taskkill /F /PID <PID>
 ```
 
-This will kill all the conflicting background processes.
+**⚠️ CRITICAL WARNING:**
+Do NOT use `taskkill /F /IM node.exe` - it kills ALL node processes including Claude Code CLI itself, causing crashes!
+
+**Alternative - Let servers error out:**
+If you just start the servers and they report port conflicts, then use the netstat method above to kill only those specific PIDs.
 
 ### Step 2: Start Backend (Terminal 1)
 ```bash
@@ -164,15 +174,15 @@ git pull origin feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
 Error: listen EADDRINUSE: address already in use :::5000
 ```
 
-**Solution:** Port 5000 is still in use. Kill more aggressively:
+**Solution:** Port 5000 is still in use. Find and kill specific process:
 ```powershell
-# PowerShell
-Get-Process -Name node | Stop-Process -Force
-
-# Or find and kill specific process
+# Find process using port 5000
 netstat -ano | findstr :5000
 # Note the PID, then:
 taskkill /F /PID <PID_NUMBER>
+
+# ⚠️ Do NOT use: Get-Process -Name node | Stop-Process -Force
+# (This kills ALL node processes including Claude Code CLI!)
 ```
 
 ---
