@@ -4,8 +4,8 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 1.9
-**Last Updated:** 2026-02-25 15:30 GMT+13
+**Version:** 2.0
+**Last Updated:** 2026-02-26 23:45 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-26 23:45 | 2.0 | Sonnet 4.5 | Phase 3.2 DEPLOYED to production (v0.2.0); Added Phase 3.8 (Security Enhancements backlog); Phase 3.4 IN PROGRESS (GitFlow & PR automation skills); GitFlow workflow executed successfully |
 | 2026-02-25 15:30 | 1.9 | Sonnet 4.5 | Phase 3.2 COMPLETE: Premium dark casino theme implemented, all emojis removed, sophisticated design with Playfair+Inter fonts, 12/16 frontend tests passing |
 | 2026-02-25 12:45 | 1.8 | Sonnet 4.5 | Added REQUIRED TEST tasks to Phase 3.2: API start, integration flow, E2E tests, unit tests must all pass before phase completion |
 | 2026-02-25 12:00 | 1.7 | Sonnet 4.5 | Phase 3.2 Frontend UNBLOCKED: CSS import issue resolved by separating type/value imports; website now renders; buttons need backend API running |
@@ -289,6 +290,56 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ---
 
+## Phase 3.8: Security Enhancements (BACKLOG)
+
+### 3.8.1 Implement Secure Token Storage
+- [ ] Move JWT tokens from localStorage to httpOnly cookies
+- [ ] Update frontend API interceptors to use cookies instead of localStorage
+- [ ] Add CSRF protection for cookie-based auth
+- [ ] Update backend to send tokens via Set-Cookie header
+- [ ] Test authentication flow with new storage mechanism
+- **Priority:** MEDIUM (security improvement)
+- **Impact:** Mitigates XSS token theft risk
+- **Risk Level:** Currently acceptable for Phase 3.2, should be addressed before public launch
+- **Files:** frontend/src/services/api.ts, frontend/src/services/auth.service.ts, backend/src/routes/auth.ts
+- **Estimate:** 2-3 hours
+- **Status:** BACKLOG (identified 2026-02-26 in Phase 3.2 peer review)
+
+### 3.8.2 Add Refresh Token Implementation
+- [ ] Implement refresh token generation in backend
+- [ ] Add refresh token rotation logic
+- [ ] Create /api/auth/refresh endpoint
+- [ ] Add automatic token refresh in frontend interceptor
+- [ ] Store refresh tokens securely (httpOnly cookie)
+- [ ] Add refresh token revocation on logout
+- **Priority:** MEDIUM (improves UX and security)
+- **Impact:** Allows long-lived sessions without compromising security
+- **Risk Level:** Not critical for Phase 3.2, recommended for production
+- **Files:** backend/src/routes/auth.ts, frontend/src/services/api.ts
+- **Estimate:** 3-4 hours
+- **Status:** BACKLOG (identified 2026-02-26 in Phase 3.2 peer review)
+
+### 3.8.3 Expand CORS Configuration for Production
+- [ ] Add production domain to CORS allowed origins
+- [ ] Create environment-specific CORS configuration
+- [ ] Document CORS setup in deployment guide
+- [ ] Test CORS with production domain
+- [ ] Add subdomain support if needed
+- **Priority:** LOW (required only for production deployment)
+- **Impact:** Enables frontend to communicate with production API
+- **Risk Level:** Current localhost-only configuration is correct for development
+- **Files:** backend/src/server.ts
+- **Estimate:** 30 minutes
+- **Status:** BACKLOG (identified 2026-02-26 in Phase 3.2 peer review)
+- **Trigger:** When deploying to production environment
+
+**Phase 3.8 Status:** BACKLOG - Non-blocking security enhancements
+**Priority:** Address before public production launch
+**Total Estimate:** 6-8 hours
+**Identified:** 2026-02-26 during Phase 3.2 code peer review
+
+---
+
 ## Phase 3.4: GitFlow Strategy & PR Automation
 
 ### 3.4.1 Create Global GitFlow Skill
@@ -375,14 +426,17 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 - **Phase 1 Total:** Approximately 5-7 tasks, USD 1.50-2.50 — COMPLETE ✓
 - **Phase 2 Total:** Approximately 10 tasks, USD 2.00-3.00 — COMPLETE ✓
+- **Phase 3.2 Total:** Frontend, USD 1.50-2.00 — COMPLETE ✓ (2026-02-26)
 - **Phase 3.3 Total:** TypeORM + Testing, USD 2.00-2.50 — COMPLETE + DEPLOYED ✓
+- **Phase 3.4 Total:** GitFlow & PR Automation, USD 1.00-1.50 — IN PROGRESS (2026-02-26)
 - **Phase 3.6 Total:** Security Fixes, USD 1.50-2.00 — COMPLETE ✓ (2026-02-24, 3.25 hours)
 - **Phase 3.7 Total:** Test Quality, USD 0.25-0.50 — BACKLOG (optional, 30 min)
-- **Phase 3.2 Total:** Frontend, USD 1.50-2.00 — READY
+- **Phase 3.8 Total:** Security Enhancements, USD 3.00-4.00 — BACKLOG (6-8 hours)
 - **Phase 4 Total:** Approximately 2 main tasks, USD 0.50-1.00
 
-**Grand Total:** Approximately USD 7.25-11.50 (within budget with margin)
-**Spent to Date:** ~USD 7.00-8.50 (Phases 1, 2, 3.3, 3.6 complete)
+**Grand Total:** Approximately USD 10.25-14.50 (within budget with margin)
+**Spent to Date:** ~USD 8.50-10.00 (Phases 1, 2, 3.2, 3.3, 3.6 complete)
+**Backlog Items:** Phase 3.7 (30 min), Phase 3.8 (6-8 hours)
 
 ---
 
@@ -398,10 +452,12 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - 2.3 & 2.4 Testing: READY to start or skip based on timeline
 
 **Phase 3 (Platform Website):** IN PROGRESS
-- 3.3 Backend API: DEPLOYED ✓ (v0.1.0, 2026-02-24) — Full TypeScript/TypeORM conversion + 43 unit tests, deployed to production
+- 3.2 Frontend: COMPLETE ✓ (2026-02-26, v0.2.0) — Premium dark casino theme, 37 React files, 23/23 E2E tests, 16/16 unit tests, full API integration
+- 3.3 Backend API: COMPLETE ✓ (v0.1.0, 2026-02-24) — Full TypeScript/TypeORM conversion + 43 unit tests, deployed to production
+- 3.4 GitFlow & PR Automation: IN PROGRESS (2026-02-26) — Creating reusable workflow skills for all projects
 - 3.6 Security Fixes: COMPLETE ✓ (2026-02-24) — All 5 CRITICAL issues resolved in 3.25 hours
-- 3.2 Frontend: COMPLETE ✓ (2026-02-25) — Premium dark casino theme, all emojis removed, Malta/Vegas inspired design, 37 React files, 12/16 tests passing
 - 3.7 Test Quality: BACKLOG (optional) — Fix 10 RBAC tests (~30 min), low priority
+- 3.8 Security Enhancements: BACKLOG (6-8 hours) — httpOnly cookies, refresh tokens, production CORS
 - 3.1 Architecture: SUPERSEDED by DEPLOYMENT_ARCHITECTURE.md
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
 
@@ -409,11 +465,12 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ## Immediate Next Actions
 
-**PRIORITY 1:** Phase 3.4 - GitFlow Strategy & PR Automation (RECOMMENDED NEXT)
-- Status: READY (2026-02-25) - Frontend and Backend both complete
-- Work: Implement GitFlow branching strategy, PR automation, code review standards
-- Value: Establishes proper workflow for future development
-- Estimate: 2-3 hours
+**PRIORITY 1:** Phase 3.4 - GitFlow Strategy & PR Automation (IN PROGRESS)
+- Status: IN PROGRESS (2026-02-26) - Branch created, task board updated
+- Branch: feature/2026-02-26_phase-3.4-gitflow-pr-automation
+- Work: Create global GitFlow skill, PR automation skill, code review standards
+- Value: Establishes proper workflow for all future development (reusable across projects)
+- Estimate: 2-3 hours remaining
 - See: Phase 3.4 section above for detailed requirements
 
 **PRIORITY 2:** Phase 4.1 - Clinical Testing Plan (READY TO START)
