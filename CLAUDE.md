@@ -43,13 +43,13 @@
 - ✅ Backend unit tests passing (43/53, 10 RBAC expected failures)
 - ✅ Documentation reorganized per standards
 
-**Known Issue:** Multiple background processes need clean restart (see [CURRENT_SESSION_STATE.md](docs/claude/CURRENT_SESSION_STATE.md))
+**Known Issue:** Multiple background processes need clean restart (see [SESSION_STATE.md](docs/claude/SESSION_STATE.md))
 
 **Current Blocker:** CORS configuration updated but requires server restart to take effect
 
 ### To Resume Work:
 
-**Important:** Read [CURRENT_SESSION_STATE.md](docs/claude/CURRENT_SESSION_STATE.md) for detailed clean restart instructions.
+**Important:** Read [SESSION_STATE.md](docs/claude/SESSION_STATE.md) for detailed clean restart instructions.
 
 **Quick Steps:**
 1. Kill all node processes: `taskkill /F /IM node.exe`

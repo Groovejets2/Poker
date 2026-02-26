@@ -3,8 +3,8 @@
 **Category:** standards
 **Purpose:** Master index of all project documentation with hierarchical organization
 **Status:** active
-**Version:** 1.0
-**Last Updated:** 2026-02-26 21:15 GMT+13
+**Version:** 1.2
+**Last Updated:** 2026-02-26 21:35 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [DOCUMENTATION_STANDARDS.md](./standards/DOCUMENTATION_STANDARDS.md)
 
@@ -14,6 +14,8 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-26 21:35 | 1.2 | Sonnet 4.5 | Archived 3 obsolete dated documents (task-board, phase-3-architecture, openapi-spec); updated specifications INDEX.md |
+| 2026-02-26 21:30 | 1.1 | Sonnet 4.5 | Removed duplicate RESUME_STATE.md, consolidated into SESSION_STATE.md |
 | 2026-02-26 21:15 | 1.0 | Sonnet 4.5 | Initial creation as master index; consolidated from root INDEX file per documentation standards |
 
 ---
@@ -77,11 +79,10 @@ docs/
 | Document | Purpose | Status |
 |----------|---------|--------|
 | [CLAUDE.md](../CLAUDE.md) | Current project status, quick resume guide | Active - v2.0 |
-| [CURRENT_SESSION_STATE.md](../CURRENT_SESSION_STATE.md) | Session state for clean restart | Active |
+| [SESSION_STATE.md](./claude/SESSION_STATE.md) | Session recovery and clean restart instructions | Active |
 | [TASK-BOARD.md](./design/TASK-BOARD.md) | Current tasks and progress | Active |
 | [SPENDING-TRACKER.md](./standards/SPENDING-TRACKER.md) | Budget tracking | Active |
 | [CLAUDE_ARCHIVE.md](./claude/CLAUDE_ARCHIVE.md) | Archived session logs | Archive |
-| [RESUME_STATE.md](./claude/RESUME_STATE.md) | Previous resume state | Archive |
 
 ### 🏗️ Architecture & Specifications
 | Document | Purpose | Status |
@@ -130,7 +131,7 @@ docs/
 ### I'm Continuing AI Agent Work
 **Resuming:**
 1. [CLAUDE.md](../CLAUDE.md) - **Start here** for current status
-2. [CURRENT_SESSION_STATE.md](../CURRENT_SESSION_STATE.md) - Session recovery (if needed)
+2. [SESSION_STATE.md](./claude/SESSION_STATE.md) - Session recovery (if needed)
 3. [TASK-BOARD.md](./design/TASK-BOARD.md) - What's next
 
 **Before writing API code:**
@@ -177,19 +178,25 @@ docs/
 - `OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md` - Complete API specification
 - `API-FIELD-NAMING-GUIDE.md` - Field naming standards
 - `AGENTS.md` - Quality standards for API integration
-- `CURRENT_SESSION_STATE.md` - Session recovery document
+- `SESSION_STATE.md` - Session recovery document
 - `DOCUMENT_INDEX.md` - This file
 
 ### Updated Documents
 - `CLAUDE.md` - v2.0 - API integration status
 - `INDEX.md` - v2.0 - Removed obsolete API-REFERENCE.md
+- `DOCUMENTATION_STANDARDS.md` - v1.1 - Added mandatory check for existing documents
+- `DOCUMENT_INDEX.md` - v1.1 - Removed duplicate session state document
 
-### Removed Documents
+### Removed/Archived Documents
 - `API-REFERENCE.md` - Consolidated into OPEN-CLAW-API-SPECIFICATION
+- `RESUME_STATE.md` - Outdated, superseded by SESSION_STATE.md
+- `2026-02-19_task-board_v1.0.md` - Archived (superseded by TASK-BOARD.md)
+- `2026-02-21_phase-3-architecture_v1.0.md` - Archived (superseded by PHASE-3-ARCHITECTURE.md)
+- `2026-02-21_openapi-specification_v1.0.md` - Archived (superseded by OPEN-CLAW-API-SPECIFICATION)
 
 ### Reorganized
 - `CLAUDE_ARCHIVE.md` - Moved to `docs/claude/`
-- `RESUME_STATE.md` - Moved to `docs/claude/`
+- `SESSION_STATE.md` - Renamed from CURRENT_SESSION_STATE.md (simpler name)
 
 ---
 
