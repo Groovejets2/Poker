@@ -291,14 +291,38 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ## Phase 3.4: GitFlow Strategy & PR Automation
 
-### 3.4 GitFlow Implementation (COMPLETED 2026-02-24)
-- [ ] Create GitFlow skill with branching strategy (feature/, release/, hotfix/)
-- [ ] Implement PR automation via GitHub API
-- [ ] Build sub-agent for PR creation + notifications
-- [ ] Define code review standards (see below)
-- **Status:** READY (after Phase 3.3 refactor)
+### 3.4.1 Create Global GitFlow Skill
+- [ ] Design GitFlow skill for reusable workflow automation
+- [ ] Implement branching conventions (feature/, release/, hotfix/, bugfix/)
+- [ ] Add merge workflow automation (feature→develop→release→main)
+- [ ] Include version bumping logic
+- [ ] Add git tag creation and management
+- [ ] Build code peer review capabilities
+- [ ] Make skill portable across projects
+- **Status:** IN PROGRESS (2026-02-26)
+- **Branch:** feature/2026-02-26_phase-3.4-gitflow-pr-automation
 - **Estimate:** 2-3 hours
-- **Token Budget:** approximately 1000-1200 tokens
+- **Priority:** HIGH - Establishes proper workflow for all future development
+
+### 3.4.2 Create Global PR Automation Skill
+- [ ] Implement GitHub PR creation via API (gh cli)
+- [ ] Add automated PR body generation with changelogs
+- [ ] Build sub-agent for PR management
+- [ ] Add PR status checking and notifications
+- [ ] Include code review request automation
+- [ ] Make skill portable across projects
+- **Status:** READY (after 3.4.1)
+- **Estimate:** 1-2 hours
+- **Priority:** HIGH
+
+### 3.4.3 Define Code Review Standards
+- [ ] Document peer review process
+- [ ] Create review checklist template
+- [ ] Define approval criteria
+- [ ] Set up automated quality checks
+- **Status:** READY (after 3.4.2)
+- **Estimate:** 30 minutes
+- **Priority:** MEDIUM
 
 **Code Review Standards (CRITICAL):**
 - Agent must analyze code critically
@@ -307,6 +331,10 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - Use PR process as collaborative improvement tool
 - Call Jon before making major architectural decisions
 - PRs should improve code, not just pass tests
+
+**Phase 3.4 Status:** IN PROGRESS (2026-02-26)
+**Current Branch:** feature/2026-02-26_phase-3.4-gitflow-pr-automation
+**Token Budget:** approximately 1500-2000 tokens
 
 ---
 
