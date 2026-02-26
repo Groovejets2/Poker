@@ -43,36 +43,24 @@
 - ✅ Backend unit tests passing (43/53, 10 RBAC expected failures)
 - ✅ Documentation reorganized per standards
 
-**Known Issue:** Multiple background processes need clean restart (see CURRENT_SESSION_STATE.md)
+**Known Issue:** Multiple background processes need clean restart (see [CURRENT_SESSION_STATE.md](docs/claude/CURRENT_SESSION_STATE.md))
 
 **Current Blocker:** CORS configuration updated but requires server restart to take effect
 
-### To Resume Work (Next Phase):
+### To Resume Work:
 
-**Recommended Next:** Phase 3.4 - GitFlow Strategy & PR Automation
+**Important:** Read [CURRENT_SESSION_STATE.md](docs/claude/CURRENT_SESSION_STATE.md) for detailed clean restart instructions.
 
-1. **Check current branch:**
-   ```bash
-   git status  # Should be on feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
-   ```
+**Quick Steps:**
+1. Kill all node processes: `taskkill /F /IM node.exe`
+2. Start backend: `cd backend && npm start`
+3. Start frontend: `cd frontend && npm run dev`
+4. Open browser to frontend URL (CORS should now work)
 
-2. **Review options:**
-   - **Option A (Recommended):** Phase 3.4 - GitFlow & PR Automation (2-3 hours)
-     - Implement branching strategy, PR automation, code review standards
-   - **Option B:** Phase 4.1 - Clinical Testing Plan (2-3 hours)
-     - Define test scenarios, recruit test bots, run 500+ hands
-   - **Option C:** Phase 3.7 - Test Quality Improvements (30 min, optional)
-     - Fix 10 RBAC integration tests
-
-3. **To test the completed frontend:**
-   ```bash
-   # Terminal 1 - Backend
-   cd backend && npm start  # API on localhost:5000
-
-   # Terminal 2 - Frontend
-   cd frontend && npm run dev  # App on localhost:5173
-   ```
-   Then open http://localhost:5173 to see the premium dark casino theme
+**Next Phase Options:**
+- **Option A (Recommended):** Phase 3.4 - GitFlow & PR Automation (2-3 hours)
+- **Option B:** Phase 4.1 - Clinical Testing Plan (2-3 hours)
+- **Option C:** Phase 3.7 - Test Quality Improvements (30 min, optional)
 
 ---
 
