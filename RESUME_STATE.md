@@ -1,261 +1,208 @@
-# 🚀 RESUME STATE - OpenClaw Poker Project
+# RESUME STATE - 2026-02-26 21:50 GMT+13
 
-**Last Updated:** 2026-02-24 01:00 GMT+13
-**State:** Phase 3.2 Frontend Development Ready
-**Safe to Exit:** ✅ YES - All work committed and pushed
+## Current Situation
 
----
+**Status:** Phase 3.2 - API Integration Issues Fixed (Partially)
+**Branch:** `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
+**Servers Running:** Backend (port 5000), Frontend (port 5175)
 
-## Current Branch
+## What Just Happened
+
+### Problems Found & Fixed:
+1. ✅ CSS PostCSS error - Moved Google Fonts to HTML head
+2. ✅ API response structure mismatches - Added mapping layers
+3. ✅ Field name inconsistencies - Temporary mappings created
+4. ✅ Created AGENTS.md - Mandatory quality standards document
+
+### Current Code State:
+- **Frontend services** have TEMPORARY mapping layers converting backend field names
+- **Backend** uses: `buy_in_chips`, `entry_fee_usd`, `tournament_wins`, `user_id`
+- **Frontend** expects: `buy_in`, `entry_fee`, `tournaments_won`, `id`
+
+### Temporary Mappings (NEED TO BE REMOVED):
+```typescript
+// In tournaments.service.ts
+return tournaments.map((t: any) => ({
+  ...t,
+  buy_in: t.buy_in_chips,  // TEMPORARY
+  entry_fee: t.entry_fee_usd,  // TEMPORARY
+}));
+
+// In leaderboard.service.ts
+return leaderboard.map((player: any) => ({
+  ...player,
+  tournaments_won: player.tournament_wins,  // TEMPORARY
+}));
+
+// In auth.service.ts
+return {
+  token: response.data.token,
+  user: {
+    id: response.data.user_id,  // TEMPORARY
+    username: response.data.username,
+    email: response.data.email || '',
+    role: response.data.role || 'player',
+  },
+};
+```
+
+## User Feedback
+
+**Jon's Feedback:**
+- ✅ Responsive design is PERFECT (layout, organization, screen size adaptation)
+- ⚠️ Graphically needs MORE work (no graphics, boring, fonts just ok)
+- ✅ Prefers `buy_in_chips` naming style over `buy_in`
+
+## Next Tasks (ORDERED)
+
+### 1. Save Current State ✅ (THIS FILE)
+
+### 2. Create/Amend API Design Document
+**Action:** Create comprehensive API specification with:
+- Locked JSON contract for all endpoints
+- Field naming standards guide
+- Examine frontend vs backend naming conventions
+- Pick best combined approach (prefer backend style: `buy_in_chips`)
+- Document ALL endpoints with exact request/response formats
+
+**Files to create/update:**
+- `docs/specifications/API-SPECIFICATION.md` (comprehensive API contract)
+- `docs/standards/API-FIELD-NAMING-GUIDE.md` (naming conventions)
+
+### 3. Fix Frontend to Match API Spec
+**Action:** Remove all temporary mapping layers, update frontend to use backend field names
+- Update TypeScript interfaces
+- Update component code
+- Update test expectations
+
+### 4. Run Unit Tests
+**Action:** Verify all tests pass after changes
+```bash
+cd backend && npm test  # Should pass: 43/53 (10 RBAC failures known)
+cd frontend && npm test  # Should pass: 16/16
+```
+
+### 5. Integration Test
+**Action:** Manual testing with both servers running
+- Register user
+- Login
+- View tournaments
+- View leaderboard
+- All navigation
+
+## Latest Commits
+
+```
+88663eb - docs: Add AGENTS.md with mandatory quality standards
+8c79aa6 - fix: Map backend API responses to frontend structures
+56be67c - fix: Move Google Fonts to HTML head
+5037604 - docs: Mark Phase 3.2 complete with premium theme
+fe1c7f7 - test: Update test expectations to match new UI
+f63eb04 - feat: Implement premium dark casino theme
+```
+
+## File Status
+
+### Modified (Uncommitted): NONE (all clean)
+
+### Recently Created:
+- `AGENTS.md` - Quality standards (✅ committed)
+- Frontend services with temporary mappings (✅ committed, ⚠️ need fixing)
+
+### Backend API Endpoints (Current):
+```
+POST /api/auth/register
+  Request: { username, email, password }
+  Response: { user_id, username, message }
+
+POST /api/auth/login
+  Request: { username, password }
+  Response: { token, user_id, username, role, expires_in }
+
+GET /api/tournaments
+  Response: {
+    tournaments: [{
+      id, name, description, status,
+      buy_in_chips, entry_fee_usd, max_players,
+      scheduled_at, created_at, updated_at,
+      player_count, seats_available
+    }],
+    pagination: { total, page, limit, pages }
+  }
+
+GET /api/leaderboard
+  Response: {
+    leaderboard: [{
+      rank, user_id, username,
+      tournaments_played, tournament_wins,
+      avg_finish, total_winnings
+    }],
+    updated_at
+  }
+```
+
+## How to Resume from This Point
+
+### If Claude Crashes:
+
+1. **Read this file first** - `RESUME_STATE.md`
+2. **Check branch** - Should be on `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
+3. **Read AGENTS.md** - Mandatory quality standards
+4. **Follow "Next Tasks" above** - In order
+
+### Commands to Verify State:
 
 ```bash
-feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
+# Check branch
+git status
+git log --oneline -5
+
+# Check servers (should be running)
+# Backend: http://localhost:5000
+# Frontend: http://localhost:5175
+
+# Test API directly
+curl http://localhost:5000/api/tournaments
+curl http://localhost:5000/api/leaderboard
 ```
 
-**Branch Status:**
-- ✅ Created from: `develop`
-- ✅ Pushed to: `origin/feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
-- ✅ Working tree: Clean (all changes committed)
-- ✅ Synced with remote: Up to date
+## Known Issues
+
+1. **Field naming inconsistency** - Backend uses `_chips`, `_usd` suffixes, frontend doesn't
+2. **Temporary mapping layers** - Need to be removed once API spec locked in
+3. **10 RBAC tests failing** - Known issue, documented in Phase 3.7
+4. **Graphics/visuals** - Need more work per user feedback
+
+## Documentation State
+
+- ✅ CLAUDE.md - v1.9, up to date
+- ✅ TASK-BOARD.md - v1.9, Phase 3.2 marked complete (needs amendment)
+- ✅ AGENTS.md - v1.0, quality standards created
+- ⏳ API-SPECIFICATION.md - NEEDS CREATION (next task)
+- ⏳ API-FIELD-NAMING-GUIDE.md - NEEDS CREATION (next task)
+
+## Success Criteria for Next Steps
+
+**API Spec Creation:**
+- [ ] All endpoints documented with exact JSON schemas
+- [ ] Field naming conventions defined and justified
+- [ ] Frontend and backend use SAME field names (no mapping)
+- [ ] Locked in as the single source of truth
+
+**Code Fixes:**
+- [ ] Remove all temporary mapping code from services
+- [ ] Update frontend interfaces to match backend exactly
+- [ ] All unit tests pass (backend 43/53, frontend 16/16)
+- [ ] Integration test passes (manual, both servers)
+
+## Budget
+
+- **Current:** ~$5.06 remaining
+- **Estimated for this work:** 1-2 hours (~$1.24-2.48)
+- **Margin:** Adequate
 
 ---
 
-## To Resume Work
-
-### Step 1: Verify Current Branch
-```bash
-git branch
-# Expected output: * feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
-```
-
-### Step 2: Pull Latest Changes (if needed)
-```bash
-git pull origin feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
-```
-
-### Step 3: Read Current Status
-```bash
-# Read the Quick Resume section at the top of CLAUDE.md
-cat CLAUDE.md | head -80
-```
-
-### Step 4: Start Backend API
-```bash
-cd backend
-npm start
-# API will run on localhost:5000
-```
-
-### Step 5: Review Phase 3.2 Scope
-```bash
-# Read the branch creation document
-cat docs/progress/2026-02-24_phase-3.2-frontend-branch-created_v1.0.md
-```
-
----
-
-## What's Been Completed
-
-### ✅ Phase 3.3 - Backend API (DEPLOYED)
-- **Version:** v0.1.0
-- **Status:** Deployed to production (main branch)
-- **Tag:** `v0.1.0`
-- **Features:**
-  - Full TypeScript/TypeORM conversion
-  - 43 unit tests passing (93.71% routes coverage)
-  - Authentication system (JWT)
-  - Tournament management
-  - Match tracking
-  - Leaderboard system
-  - Comprehensive documentation
-
-### ✅ GitFlow Deployment Workflow
-- Feature branch merged to develop
-- Release branch created (v0.1.0)
-- Merged to main with tag
-- Main merged back to develop
-- All branches pushed to GitHub
-
-### ✅ Documentation
-- TASK-BOARD.md updated to v1.4
-- CLAUDE.md updated to v1.4 with Quick Resume
-- Session logs created:
-  - `docs/progress/2026-02-24_phase-3.3-unit-testing-and-deployment_v1.0.md`
-  - `docs/progress/2026-02-24_phase-3.2-frontend-branch-created_v1.0.md`
-
-### ✅ Phase 3.2 Branch Created
-- Branch name: `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
-- Purpose: Frontend development (Tournament Lobby + Leaderboard)
-- Status: Ready for work
-
----
-
-## Next Task: Phase 3.2 Frontend Development
-
-### Scope
-1. **Tournament Lobby UI** (React)
-   - List available tournaments
-   - Tournament details display
-   - Register/unregister functionality
-   - Filtering and search
-
-2. **Leaderboard UI** (React)
-   - Global rankings
-   - Player statistics
-   - Pagination
-   - Individual player profiles
-
-### Technical Details
-- **Backend API:** v0.1.0 deployed, running on localhost:5000
-- **Estimate:** 3-4 hours
-- **Budget:** ~USD 1.50-2.00
-- **No blockers**
-
-### Backend Endpoints Available
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/tournaments` - List tournaments
-- `POST /api/tournaments` - Create tournament
-- `GET /api/tournaments/:id` - Tournament details
-- `POST /api/tournaments/:id/register` - Register for tournament
-- `DELETE /api/tournaments/:id/unregister` - Unregister
-- `GET /api/leaderboard` - Global rankings
-- `GET /api/leaderboard/:user_id` - Player stats
-
----
-
-## Project Structure
-
-```
-poker-project/
-├── backend/                  # TypeScript/TypeORM API (v0.1.0 deployed)
-│   ├── src/
-│   │   ├── routes/          # API routes (auth, tournaments, matches, leaderboard)
-│   │   ├── database/        # TypeORM entities and data source
-│   │   ├── middleware/      # Auth and error handling
-│   │   └── __tests__/       # 43 unit tests (93.71% coverage)
-│   └── package.json
-├── frontend/                 # ⚠️ TO BE CREATED (Phase 3.2 work)
-├── docs/                     # Comprehensive documentation
-│   ├── design/
-│   │   └── TASK-BOARD.md    # Phase tracking (v1.4)
-│   ├── documentation/
-│   │   └── API-REFERENCE.md # Complete API docs
-│   ├── progress/            # Session logs
-│   └── specifications/      # Architecture docs
-├── CLAUDE.md                # Quick resume guide (v1.4)
-└── RESUME_STATE.md          # This file
-```
-
----
-
-## Git State
-
-### Branches
-- `main` - Production (v0.1.0 deployed) ✅
-- `develop` - Integration branch (synced with main) ✅
-- `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard` - **CURRENT** ✅
-- `feature/phase-3.3-orm-refactor` - Old feature (can be deleted)
-
-### Tags
-- `v0.1.0` - Current production release ✅
-- `v1.0.0-beta` - Previous tag
-
-### Remote Status
-All branches and tags pushed to GitHub:
-- https://github.com/Groovejets2/Poker
-
----
-
-## Known Issues (Not Blocking)
-
-### 5 CRITICAL Security Issues (Phase 3.6)
-Identified for future fix - safe for development:
-1. **CRIT-1:** Default JWT secret (15 min)
-2. **CRIT-3:** Database race condition (30 min)
-3. **CRIT-4:** Auto-schema sync enabled (60 min)
-4. **CRIT-5:** No PostgreSQL SSL (45 min)
-6. **CRIT-6:** No RBAC - any user can create tournaments (45 min)
-
-**Total Fix Time:** ~3 hours
-**Status:** Can defer for dev/test environments
-**Required:** Before production deployment to real users
-
----
-
-## Key Documents
-
-### Quick Start
-1. **CLAUDE.md** - Read this first (Quick Resume section at top)
-2. **docs/design/TASK-BOARD.md** - All project phases and tasks
-3. **docs/progress/2026-02-24_phase-3.2-frontend-branch-created_v1.0.md** - Phase 3.2 scope
-
-### API Documentation
-- **docs/documentation/API-REFERENCE.md** - Complete API reference
-- **docs/documentation/SETUP-GUIDE.md** - Development setup
-- **docs/specifications/PHASE-3-ARCHITECTURE.md** - Technical architecture
-
-### Session Logs
-- **docs/progress/2026-02-24_phase-3.3-unit-testing-and-deployment_v1.0.md** - Deployment log
-- **docs/progress/2026-02-23_phase-3.3-code-review_v1.0.md** - Code review with issues
-
----
-
-## Testing
-
-### Run Backend Tests
-```bash
-cd backend
-npm test
-# Expected: 43/43 tests passing, 93.71% coverage
-```
-
-### Start Backend API
-```bash
-cd backend
-npm start
-# API runs on http://localhost:5000
-```
-
-### Test API with Postman
-- Collection: `docs/specifications/2026-02-23_OpenClaw Poker Platform API.postman_collection.v1.2.json`
-- Import into Postman and test all endpoints
-
----
-
-## Budget Status
-
-- **Spent:** ~USD 5.00-6.00 (Phases 1, 2, 3.3)
-- **Remaining:** ~USD 3.00-4.00
-- **Phase 3.2 Estimate:** USD 1.50-2.00
-- **Status:** ✅ Well within budget
-
----
-
-## Contact / Team
-
-- **Owner:** Jon
-- **Contributors:** Angus Young, Sonnet 4.5 (Claude Code)
-- **Repository:** https://github.com/Groovejets2/Poker
-- **Project:** OpenClaw Poker Platform
-
----
-
-## ✅ Ready to Exit
-
-**State:** Fully saved and committed
-**Branch:** Pushed to remote
-**Documentation:** Complete and up-to-date
-**Next Steps:** Clearly defined
-
-**You can safely exit Claude Code now and resume later by:**
-1. Opening this project
-2. Reading `CLAUDE.md` (Quick Resume section)
-3. Checking out the Phase 3.2 feature branch
-4. Starting frontend development
-
----
-
-**Last Updated:** 2026-02-24 01:00 GMT+13
-**Version:** 1.0
-**Status:** ✅ SAFE TO EXIT
+**Created:** 2026-02-26 21:50 GMT+13
+**Purpose:** Resume point if session crashes during API spec creation
+**Next Action:** Create API-SPECIFICATION.md and API-FIELD-NAMING-GUIDE.md
