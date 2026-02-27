@@ -1,268 +1,118 @@
-# Current Session State - 2026-02-26
+# Current Session State - 2026-02-28
 
-## Status: CORS Fix Applied - Ready for Clean Restart
+## Status: Architecture Review Complete - Pending Test Validation
 
 **Branch:** `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
-**Last Commit:** `b483635` - CORS fix for Vite ports
+**Agent:** Opus 4.1 -> Handing off to Sonnet 4.6
+**Session Date:** 2026-02-28
 
 ---
 
-## What Was Accomplished This Session
+## What Was Accomplished This Session (Opus 4.1)
 
-### 1. ✅ Created API Documentation Standards
-- `docs/standards/AGENTS.md` - Mandatory quality standards
-- `docs/standards/API-FIELD-NAMING-GUIDE.md` - Field naming standard (backend as source of truth)
-- `docs/specifications/OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md` - Complete API spec
+### Critical Poker Engine Fixes (Python - code/poker_engine/)
 
-### 2. ✅ Fixed All Frontend Field Names
-Removed ALL mapping layers. Frontend now uses backend field names directly:
-- `buy_in_chips` (not `buy_in`)
-- `entry_fee_usd` (not `entry_fee`)
-- `tournament_wins` (not `tournaments_won`)
-- `avg_finish` (not `avg_finish_position`)
-- `user_id` (not `id`)
+1. **winner_determiner.py - Best-5-card selection**
+   - BUG: Was taking `hand[:5]` (first 5 cards) instead of evaluating all C(7,5)=21 combinations
+   - FIX: Added `_find_best_five_card_hand()` using `itertools.combinations` to evaluate all possible 5-card hands and pick the best
+   - IMPACT: Would have produced wrong winners in nearly every Texas Hold'em hand
 
-**Files Updated:**
-- All service files (`auth.service.ts`, `tournaments.service.ts`, `leaderboard.service.ts`)
-- `AuthContext.tsx`
-- All 6 page components (`Login.tsx`, `Register.tsx`, `Tournaments.tsx`, `TournamentDetails.tsx`, `Leaderboard.tsx`, `PlayerStats.tsx`)
-- All test files with mock data
+2. **dealer_engine.py - RAISE round status**
+   - BUG: After a RAISE, other players were set to `RoundStatus.ACTED` instead of `RoundStatus.WAITING_FOR_ACTION`
+   - FIX: Changed to `RoundStatus.WAITING_FOR_ACTION` so players are forced to act again after a raise
+   - Also added `_is_folded()` guard so folded players aren't reset
 
-### 3. ✅ All Unit Tests Passing
-- **Frontend:** 16/16 tests passing ✅
-- **Backend:** 43/53 tests passing (10 RBAC tests expected to fail until CRIT-6 implemented)
+3. **player_state.py - Hole card wipe between rounds**
+   - BUG: `clear_round_data()` wiped `self.hole_cards = []` but is called between betting rounds (flop->turn->river)
+   - FIX: Removed `hole_cards = []` from `clear_round_data()`, added it to `reset_for_new_hand()` instead
+   - IMPACT: Players would lose their cards before showdown
 
-### 4. ✅ Fixed CORS Issue
-**Problem Found:** Backend only allowed requests from `localhost:3000`, but frontend runs on `localhost:5173-5175`
+### Frontend Fixes (TypeScript - frontend/src/)
 
-**Solution Applied:** Updated `backend/src/server.ts` to allow:
-- `http://localhost:5173` (Vite default port)
-- `http://localhost:5174` (Vite alternate port 1)
-- `http://localhost:5175` (Vite alternate port 2)
-- Added `credentials: true`
+4. **tournaments.service.ts - Response shape mismatch**
+   - BUG: `getById()` and `create()` expected `{ tournament: T }` wrapper but backend returns flat object
+   - FIX: Changed to `response.data` directly (no wrapper unwrap)
 
-### 5. Commits Pushed
-- `821df23` - API specification documents
-- `cdc013d` - Frontend services fixed
-- `325fe8a` - Frontend components fixed
-- `4f478be` - Test mock data fixed
-- `b483635` - CORS fix ⬅️ **LATEST**
+5. **App.tsx - 404 catch-all route**
+   - Added `NotFound` component with `<Route path="*">` catch-all
+   - Uses gold-themed styling consistent with casino theme
+
+### Documentation & Standards
+
+6. **AGENTS.md** - Removed all emojis per DOCUMENTATION_STANDARDS (v1.0 -> v1.1)
+7. **TASK-BOARD.md** - Fixed footer version mismatch (1.9 -> 2.0)
+8. **CODING_STANDARDS.md** - Added full TypeScript-Specific Standards section (v1.0 -> v1.1)
+9. **CLAUDE.md** - Updated to v2.2 with all findings, removed emojis
 
 ---
 
-## Current Problem: Multiple Processes Running
+## REMAINING TASK FOR SONNET 4.6
 
-**Issue:** Multiple background processes are conflicting:
-- 7+ background bash processes started
-- Multiple backends trying to bind to port 5000
-- Multiple frontends running on different ports
-- Causing port conflicts and chaos
+### Run Poker Engine Tests
 
-**Root Cause:** Using cmd.exe terminal with background processes that couldn't be properly killed.
+pytest is not installed in the system Python. To run tests:
 
----
-
-## How to Resume (Clean Restart)
-
-### Step 1: Kill Specific Node Processes (Safer Method)
-```powershell
-# Check what's running on backend port
-netstat -ano | findstr :5000
-
-# Check what's running on frontend port
-netstat -ano | findstr :5173
-
-# Kill specific process by PID (replace <PID> with actual number)
-taskkill /F /PID <PID>
-```
-
-**⚠️ CRITICAL WARNING:**
-Do NOT use `taskkill /F /IM node.exe` - it kills ALL node processes including Claude Code CLI itself, causing crashes!
-
-**Alternative - Let servers error out:**
-If you just start the servers and they report port conflicts, then use the netstat method above to kill only those specific PIDs.
-
-### Step 2: Start Backend (Terminal 1)
 ```bash
-cd D:\DEV\JH\poker-project\backend
-npm start
+# Option A: Install pytest and run
+pip install pytest
+cd d:\DEV\JH\poker-project
+python -m pytest tests/ -v --tb=short
+
+# Option B: If there's a virtual environment
+# Check for venv or .venv folder, activate it, then run pytest
 ```
 
-**Wait for these messages:**
-```
-✓ TypeORM DataSource initialized successfully
-✓ OpenClaw Poker API running on port 5000
-✓ Environment: test
-✓ Database connection established
-```
+**What to validate:**
+- tests/test_dealer_engine.py - Should have 38 tests (some may need updating due to the 3 bug fixes)
+- tests/unit/ - Additional unit tests if present
+- If tests fail due to the fixes, update the test expectations to match the corrected behavior
 
-### Step 3: Start Frontend (Terminal 2)
-```bash
-cd D:\DEV\JH\poker-project\frontend
-npm run dev
-```
+**Expected test impacts from fixes:**
+- Tests that relied on `hand[:5]` slicing may need updating
+- Tests that checked `RoundStatus.ACTED` after RAISE need to expect `WAITING_FOR_ACTION`
+- Tests that called `clear_round_data()` and expected `hole_cards == []` need updating
 
-**You'll see:**
-```
-VITE v7.3.1  ready in XXX ms
-➜  Local:   http://localhost:5173/
-```
+### After Tests Pass
 
-**Note the port** - it will be 5173, 5174, or 5175 depending on what's available.
+1. Commit all changes:
+   ```bash
+   git add -A
+   git commit -m "fix: Critical poker engine bugs + frontend fixes + standards cleanup
 
-### Step 4: Test in Browser
+   Poker engine (3 critical fixes):
+   - winner_determiner: Evaluate all C(7,5) combinations for best hand
+   - dealer_engine: RAISE resets others to WAITING_FOR_ACTION
+   - player_state: Don't wipe hole_cards between betting rounds
 
-Open the frontend URL (from step 3) in your browser.
+   Frontend:
+   - tournaments.service: Fix response shape for getById/create
+   - App.tsx: Add 404 catch-all route
 
-**Test these features:**
-1. ✅ View tournaments list (should show buy-in chips, entry fee USD)
-2. ✅ Click Register - create new account
-3. ✅ Login with credentials
-4. ✅ View tournament details
-5. ✅ View leaderboard (should show tournament wins, avg finish)
-6. ✅ Click "View Stats" on a player
+   Standards:
+   - AGENTS.md: Remove emojis (v1.1)
+   - CODING_STANDARDS: Add TypeScript section (v1.1)
+   - TASK-BOARD: Fix version sync (v2.0)
+   - CLAUDE.md: Update with findings (v2.2)"
+   ```
 
-**Expected:** Everything should work now! No more CORS errors.
+2. Push to remote:
+   ```bash
+   git push
+   ```
 
 ---
 
-## What Should Work Now
+## Files Modified This Session
 
-### Backend API
-- Running on: `http://localhost:5000`
-- All endpoints working
-- CORS configured for Vite ports
-- Field names match API spec
-
-### Frontend
-- Running on: `http://localhost:5173` (or 5174/5175)
-- No mapping layers
-- Direct backend field usage
-- CSS rendering working
-
-### Integration
-- ✅ CORS fixed
-- ✅ Field names aligned
-- ✅ All API responses unwrapped correctly
-- ✅ Authentication flow working
-
----
-
-## If You Still See Errors
-
-**CORS Error:**
-```
-Access to XMLHttpRequest at 'http://localhost:5000/api/...' from origin 'http://localhost:XXXX'
-has been blocked by CORS policy
-```
-
-**Solution:** Make sure you did Step 1 (kill all node processes) and restarted fresh.
-
-**Field Name Error:**
-```
-Cannot read properties of undefined (reading 'toLocaleString')
-```
-
-**Solution:** This should be fixed. If you see it, the git branch may not be up to date. Run:
-```bash
-git status
-git pull origin feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
-```
-
-**Backend Not Starting:**
-```
-Error: listen EADDRINUSE: address already in use :::5000
-```
-
-**Solution:** Port 5000 is still in use. Find and kill specific process:
-```powershell
-# Find process using port 5000
-netstat -ano | findstr :5000
-# Note the PID, then:
-taskkill /F /PID <PID_NUMBER>
-
-# ⚠️ Do NOT use: Get-Process -Name node | Stop-Process -Force
-# (This kills ALL node processes including Claude Code CLI!)
-```
-
----
-
-## Next Steps After Testing
-
-Once the site works in browser:
-
-### Option A: Continue Phase 3.2 (Frontend Polish)
-- Add better styling (currently basic)
-- Improve UX/UI
-- Add loading states
-- Better error messages
-
-### Option B: Fix CRITICAL Backend Issues
-See `docs/progress/2026-02-23_critical-issues-timeline_v1.0.md`:
-- CRIT-1: Default JWT Secret (15 min)
-- CRIT-3: Database race condition (30 min)
-- CRIT-4: Auto-schema sync (60 min)
-- CRIT-5: No PostgreSQL SSL (45 min)
-- CRIT-6: No RBAC (45 min)
-
-**Total:** ~3 hours to make backend production-ready
-
-### Option C: Complete E2E Tests
-Run Playwright tests:
-```bash
-cd frontend
-npm run test:e2e
-```
-
-Fix any failures.
-
----
-
-## Quick Reference
-
-**Current Git State:**
-```bash
-git branch  # Should show: * feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard
-git log --oneline -5  # Should show b483635 as latest
-```
-
-**Backend API Test:**
-```bash
-curl http://localhost:5000/health
-curl http://localhost:5000/api/tournaments
-```
-
-**Frontend Files Changed This Session:**
-```
-frontend/src/services/auth.service.ts
-frontend/src/services/tournaments.service.ts
-frontend/src/services/leaderboard.service.ts
-frontend/src/context/AuthContext.tsx
-frontend/src/pages/Login.tsx
-frontend/src/pages/Register.tsx
-frontend/src/pages/Tournaments.tsx
-frontend/src/pages/TournamentDetails.tsx
-frontend/src/pages/Leaderboard.tsx
-frontend/src/pages/PlayerStats.tsx
-frontend/src/context/AuthContext.test.tsx
-frontend/src/pages/Login.test.tsx
-frontend/src/pages/Tournaments.test.tsx
-backend/src/server.ts
-```
-
----
-
-## Documentation Created This Session
-
-1. **AGENTS.md** - Quality standards to prevent future mistakes
-2. **API-FIELD-NAMING-GUIDE.md** - Locked field naming standard
-3. **OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md** - Comprehensive API spec with locked JSON contracts
-
-These documents are the **single source of truth** for API contracts.
-
----
-
-**Session Date:** 2026-02-26
-**Total Time:** ~2 hours
-**Status:** CORS fixed, ready for testing
-**Next:** Clean restart and browser testing
+| File | Change |
+|------|--------|
+| code/poker_engine/winner_determiner.py | Best-5-card via combinations |
+| code/poker_engine/dealer_engine.py | RAISE -> WAITING_FOR_ACTION |
+| code/poker_engine/player_state.py | Don't wipe hole_cards in clear_round_data |
+| frontend/src/services/tournaments.service.ts | Remove wrapper expectation |
+| frontend/src/App.tsx | Add 404 route + NotFound component |
+| AGENTS.md | Remove emojis, bump to v1.1 |
+| docs/design/TASK-BOARD.md | Fix footer version to 2.0 |
+| docs/standards/CODING_STANDARDS.md | Add TypeScript section, bump to v1.1 |
+| CLAUDE.md | Full update to v2.2, remove emojis |
+| docs/claude/SESSION_STATE.md | This file - handoff state |

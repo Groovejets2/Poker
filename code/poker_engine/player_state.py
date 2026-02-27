@@ -144,14 +144,14 @@ class PlayerState:
     
     def clear_round_data(self) -> None:
         """
-        Reset player data for the next round.
+        Reset player data for the next betting round.
         
-        Clears current bet, round status, and hole cards.
-        Does NOT reset stack or player status (that persists across rounds).
+        Clears current bet and round status only.
+        Does NOT reset stack, player status, or hole cards
+        (cards persist until the hand ends).
         """
         self.current_bet = 0
         self.round_status = RoundStatus.SITTING_OUT
-        self.hole_cards = []
     
     def is_active_in_hand(self) -> bool:
         """
@@ -166,12 +166,13 @@ class PlayerState:
         """
         Reset player for a new hand.
         
-        Restores ACTIVE status, clears round data, and resets bets.
-        Does NOT reset stack (chips are preserved).
+        Restores ACTIVE status, clears round data, resets bets, and
+        clears hole cards. Does NOT reset stack (chips are preserved).
         """
         if self.stack > 0:
             self.status = PlayerStatus.ACTIVE
         self.clear_round_data()
+        self.hole_cards = []
     
     def __repr__(self) -> str:
         """Return string representation of player state."""

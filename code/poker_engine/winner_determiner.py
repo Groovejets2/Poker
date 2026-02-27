@@ -1,5 +1,6 @@
 """Winner determination and pot distribution logic."""
 
+from itertools import combinations
 from typing import List, Dict, Optional
 from poker_engine.hand_evaluator import HandEvaluator
 from poker_engine.player_state import PlayerState, PlayerStatus
@@ -54,18 +55,15 @@ class WinnerDeterminer:
             return winnings
         
         # Evaluate hands for remaining players
+        # For Texas Hold'em: pick best 5-card hand from 7 (2 hole + 5 community)
         player_hands = {}
         for player in active_players:
             try:
-                hand = player.hole_cards + community_cards
-                # Use best 5-card hand
-                hand = hand[:5]  # Take first 5 (dealer should have selected best)
-                evaluation = self.hand_evaluator.evaluate(hand)
-                player_hands[player.player_id] = {
-                    'hand': hand,
-                    'evaluation': evaluation,
-                    'strength': evaluation['strength']
-                }
+                all_cards = player.hole_cards + community_cards
+                best_hand = self._find_best_five_card_hand(all_cards)
+                if best_hand is None:
+                    continue
+                player_hands[player.player_id] = best_hand
             except ValueError:
                 # Skip players with incomplete hands
                 continue
@@ -153,6 +151,48 @@ class WinnerDeterminer:
             extra = 1 if i < remainder else 0
             winnings[winner.player_id] += split_amount + extra
     
+    def _find_best_five_card_hand(self, all_cards: List) -> Optional[Dict]:
+        """
+        Find the best 5-card hand from all available cards.
+        
+        For Texas Hold'em this evaluates all C(7,5)=21 combinations.
+        For 5-card draw this evaluates the single hand directly.
+        
+        Args:
+            all_cards (List): All cards available (2-7 cards).
+        
+        Returns:
+            Optional[Dict]: Best hand with 'hand', 'evaluation', 'strength' keys,
+                or None if no valid 5-card hand can be formed.
+        """
+        if len(all_cards) < 5:
+            return None
+        
+        if len(all_cards) == 5:
+            evaluation = self.hand_evaluator.evaluate(all_cards)
+            return {
+                'hand': all_cards,
+                'evaluation': evaluation,
+                'strength': evaluation['strength']
+            }
+        
+        # Evaluate all C(n,5) combinations and keep the best
+        best_result = None
+        best_strength = -1
+        
+        for combo in combinations(all_cards, 5):
+            combo_list = list(combo)
+            evaluation = self.hand_evaluator.evaluate(combo_list)
+            if evaluation['strength'] > best_strength:
+                best_strength = evaluation['strength']
+                best_result = {
+                    'hand': combo_list,
+                    'evaluation': evaluation,
+                    'strength': evaluation['strength']
+                }
+        
+        return best_result
+    
     def get_hand_summary(
         self,
         player: PlayerState,
@@ -172,15 +212,17 @@ class WinnerDeterminer:
             return None
         
         try:
-            hand = player.hole_cards + community_cards
-            hand = hand[:5]
-            evaluation = self.hand_evaluator.evaluate(hand)
+            all_cards = player.hole_cards + community_cards
+            best = self._find_best_five_card_hand(all_cards)
+            if best is None:
+                return None
+            evaluation = best['evaluation']
             return {
                 'player_id': player.player_id,
                 'hand_name': evaluation['name'],
                 'hand_rank': evaluation['rank'],
                 'strength': evaluation['strength'],
-                'cards': [str(c) for c in hand]
+                'cards': [str(c) for c in best['hand']]
             }
         except ValueError:
             return None

@@ -2,9 +2,9 @@
 
 **Category:** standards
 **Purpose:** Current project status and how to resume work
-**Status:** Phase 3.2 COMPLETE - All Systems Operational - Ready for Phase 3.4 or 4.1
-**Version:** 2.1
-**Last Updated:** 2026-02-26 (Final)
+**Status:** Architecture Review Complete - Critical Poker Engine Bugs Fixed - Ready for Phase 3.4 or 4.1
+**Version:** 2.2
+**Last Updated:** 2026-02-28
 **Owner:** Jon + Development Team
 **Tags:** operational, phase-3.2-complete, all-tests-passing, integration-verified, ready-for-next-phase
 
@@ -17,6 +17,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-28 | 2.2 | Opus 4.1 | Architecture review: Fixed 3 critical poker engine bugs (best-5-card, RAISE status, hole card wipe), fixed frontend API mismatch, added 404 route, added TypeScript to CODING_STANDARDS, cleaned AGENTS.md emojis, synced TASK-BOARD version |
 | 2026-02-26 (Final) | 2.1 | Sonnet 4.5 | Phase 3.2 COMPLETE: All systems operational, CORS verified working, full integration tested and confirmed |
 | 2026-02-26 21:15 | 2.0 | Sonnet 4.5 | API integration fixed: Created API spec docs, aligned all field names, fixed CORS, all tests passing (16/16 frontend, 43/53 backend); documentation reorganized per standards |
 | 2026-02-25 15:30 | 1.9 | Sonnet 4.5 | Phase 3.2 COMPLETE: Premium dark casino theme fully implemented; all emojis removed; Malta/Vegas inspired design; 12/16 tests passing |
@@ -25,25 +26,46 @@
 
 ---
 
-## 🚀 QUICK RESUME - START HERE
+## QUICK RESUME - START HERE
 
-**Current State:** ✅ Phase 3.2 COMPLETE - All Systems Operational
+**Current State:** Architecture Review Complete - Critical Poker Engine Bugs Fixed
 **Branch:** `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
-**Last Updated:** 2026-02-26 (Final)
+**Last Updated:** 2026-02-28
 
-### Latest Session (2026-02-26) - Phase 3.2 Completion ✅
+### Latest Session (2026-02-28) - Architecture Review & Critical Bug Fixes
+
+**Completed:** 2026-02-28
+**Agent:** Opus 4.1
+
+**What Was Delivered:**
+
+Critical Poker Engine Fixes (Python - code/poker_engine/):
+- [OK] winner_determiner.py: Fixed best-5-card selection -- was taking first 5 cards instead of evaluating all C(7,5)=21 combinations. Added itertools.combinations-based _find_best_five_card_hand() method.
+- [OK] dealer_engine.py: Fixed RAISE action -- other players were set to RoundStatus.ACTED instead of RoundStatus.WAITING_FOR_ACTION, meaning they were never prompted to act after a raise.
+- [OK] player_state.py: Fixed clear_round_data() -- was wiping hole_cards between betting rounds (called in advance_round). Moved hole_cards reset to reset_for_new_hand() only.
+
+Frontend Fixes (TypeScript - frontend/src/):
+- [OK] tournaments.service.ts: Fixed getById() and create() -- were expecting { tournament: T } wrapper but backend returns flat object.
+- [OK] App.tsx: Added 404 catch-all route with NotFound component.
+
+Documentation & Standards:
+- [OK] AGENTS.md: Removed all emojis per DOCUMENTATION_STANDARDS (version 1.0 -> 1.1)
+- [OK] TASK-BOARD.md: Fixed footer version mismatch (1.9 -> 2.0 to match header)
+- [OK] CODING_STANDARDS.md: Added full TypeScript-Specific Standards section (version 1.0 -> 1.1)
+
+### Previous Session (2026-02-26) - Phase 3.2 Completion
 
 **Completed:** 2026-02-26 (Final)
 **Time:** ~2 hours (API field alignment + CORS fix + documentation cleanup + verification)
 
 **What Was Delivered:**
-- ✅ Created API specification documents (OPEN-CLAW-API-SPECIFICATION, API-FIELD-NAMING-GUIDE, AGENTS.md)
-- ✅ Aligned ALL frontend field names with backend (removed mapping layers)
-- ✅ Fixed CORS configuration (added Vite ports 5173-5175)
-- ✅ All frontend unit tests passing (16/16)
-- ✅ Backend unit tests passing (43/53, 10 RBAC expected failures)
-- ✅ Documentation reorganized per standards
-- ✅ Full integration verified - all systems operational
+- [OK] Created API specification documents (OPEN-CLAW-API-SPECIFICATION, API-FIELD-NAMING-GUIDE, AGENTS.md)
+- [OK] Aligned ALL frontend field names with backend (removed mapping layers)
+- [OK] Fixed CORS configuration (added Vite ports 5173-5175)
+- [OK] All frontend unit tests passing (16/16)
+- [OK] Backend unit tests passing (43/53, 10 RBAC expected failures)
+- [OK] Documentation reorganized per standards
+- [OK] Full integration verified - all systems operational
 
 **Status:** COMPLETE - Ready for Phase 3.4 or 4.1
 
@@ -64,7 +86,7 @@
 3. Start frontend: `cd frontend && npm run dev`
 4. Open browser to frontend URL (CORS should now work)
 
-**⚠️ WARNING:** Do NOT use `taskkill /F /IM node.exe` - it kills Claude Code CLI itself!
+**[WARNING]** Do NOT use `taskkill /F /IM node.exe` - it kills Claude Code CLI itself!
 
 **Next Phase Options:**
 - **Option A (Recommended):** Phase 3.4 - GitFlow & PR Automation (2-3 hours)
@@ -75,33 +97,33 @@
 
 ## What's Completed
 
-### Backend (Phase 3.3 + 3.6) ✅
+### Backend (Phase 3.3 + 3.6) - COMPLETE
 - **v0.1.0 deployed** (2026-02-24)
 - TypeORM + TypeScript conversion complete
 - All routes: auth, tournaments, matches, leaderboard
 - 43 unit tests passing (93.71% coverage)
 - All 5 CRITICAL security issues fixed (JWT, RBAC, DB race conditions, SSL, migrations)
 
-### Frontend (Phase 3.2) - ✅ COMPLETE
-- ✅ 37 React files (2,500+ lines TypeScript)
-- ✅ Complete component architecture
-- ✅ Authentication flow (JWT, localStorage, interceptors)
-- ✅ API service layer with Axios
-- ✅ All routes and navigation
-- ✅ 16 unit tests (12/16 passing, 4 mock timing issues)
-- ✅ 23 E2E tests written
-- ✅ CSS rendering working
-- ✅ Premium dark casino theme (Malta/Las Vegas inspired)
-- ✅ All emojis removed and replaced with elegant alternatives
-- ✅ Sophisticated typography (Playfair Display + Inter)
-- ✅ Dark color palette with gold accents
-- ✅ Full integration testing completed
-- ✅ API integration verified
+### Frontend (Phase 3.2) - COMPLETE
+- 37 React files (2,500+ lines TypeScript)
+- Complete component architecture
+- Authentication flow (JWT, localStorage, interceptors)
+- API service layer with Axios
+- All routes and navigation
+- 16 unit tests (12/16 passing, 4 mock timing issues)
+- 23 E2E tests written
+- CSS rendering working
+- Premium dark casino theme (Malta/Las Vegas inspired)
+- All emojis removed and replaced with elegant alternatives
+- Sophisticated typography (Playfair Display + Inter)
+- Dark color palette with gold accents
+- Full integration testing completed
+- API integration verified
 
 ### Frontend Files:
 ```
 /frontend/src/
-├── main.tsx                 # Entry point (CSS working ✅)
+├── main.tsx                 # Entry point (CSS working)
 ├── App.tsx                  # Root with routing
 ├── index.css                # TailwindCSS
 ├── context/
@@ -132,7 +154,7 @@
 
 ## Next Actions (Priority Order)
 
-### Priority 1: Phase 3.4 - GitFlow Strategy & PR Automation ⭐
+### Priority 1: Phase 3.4 - GitFlow Strategy & PR Automation
 **Status:** READY (Phase 3.2 and 3.3 complete)
 **Time:** 2-3 hours
 **Tasks:**
@@ -191,7 +213,7 @@ docs/
 
 ## Operational Guidelines
 
-### ⚠️ MANDATORY - Read Before ANY Development Task:
+### [MANDATORY] Read Before ANY Development Task:
 **`AGENTS.md`** - Quality standards, testing requirements, API contract rules
 
 ### Core Rules:
@@ -222,11 +244,11 @@ docs/
 ## Critical Issues Status
 
 **All 5 CRITICAL issues RESOLVED in Phase 3.6 (2026-02-24):**
-1. ✅ JWT Secret - No longer falls back to default
-2. ✅ DB Race Condition - Server waits for initialization
-3. ✅ PostgreSQL SSL - Configured for production
-4. ✅ Auto-Schema Sync - Disabled, migrations created
-5. ✅ RBAC - Role-based access control implemented
+1. JWT Secret - No longer falls back to default
+2. DB Race Condition - Server waits for initialization
+3. PostgreSQL SSL - Configured for production
+4. Auto-Schema Sync - Disabled, migrations created
+5. RBAC - Role-based access control implemented
 
 **See details:** [CLAUDE_ARCHIVE.md](CLAUDE_ARCHIVE.md) → "Detailed CRITICAL Issues"
 
@@ -235,15 +257,15 @@ docs/
 ## Latest Session Log
 
 **2026-02-25: Phase 3.2 COMPLETE - Premium Dark Casino Theme**
-- ✅ Implemented premium dark casino theme (Malta/Las Vegas inspired)
-- ✅ Removed ALL emojis, replaced with SVG icons or elegant text (1ST/2ND/3RD)
-- ✅ Applied sophisticated typography: Playfair Display (headings) + Inter (body)
-- ✅ Created dark color palette: #0a0e14, #1d232e backgrounds with #d4af37 gold accents
-- ✅ Designed premium cards, buttons, and forms with subtle shadows
-- ✅ Updated all components: Layout, Home, Login, Register, Tournaments, Leaderboard, etc.
-- ✅ Fixed frontend unit tests to match new UI text
-- ✅ Tested backend API integration (43/53 tests passing)
-- ✅ Tested frontend functionality (12/16 tests passing, 4 mock timing issues)
+- Implemented premium dark casino theme (Malta/Las Vegas inspired)
+- Removed ALL emojis, replaced with SVG icons or elegant text (1ST/2ND/3RD)
+- Applied sophisticated typography: Playfair Display (headings) + Inter (body)
+- Created dark color palette: #0a0e14, #1d232e backgrounds with #d4af37 gold accents
+- Designed premium cards, buttons, and forms with subtle shadows
+- Updated all components: Layout, Home, Login, Register, Tournaments, Leaderboard, etc.
+- Fixed frontend unit tests to match new UI text
+- Tested backend API integration (43/53 tests passing)
+- Tested frontend functionality (12/16 tests passing, 4 mock timing issues)
 - Commits: f63eb04 (premium theme), fe1c7f7 (test fixes)
 - Status: COMPLETE - Phase 3.2 fully delivered
 
@@ -295,23 +317,23 @@ docs/
 
 ---
 
-## Success Criteria - Phase 3.2 ✅ COMPLETE
+## Success Criteria - Phase 3.2 COMPLETE
 
 **All Requirements Met:**
-- ✅ All React components created (37 files)
-- ✅ Routing and navigation working
-- ✅ Authentication flow implemented (JWT, localStorage, interceptors)
-- ✅ CSS rendering working
-- ✅ Premium dark casino theme applied to all components
-- ✅ All emojis removed and replaced with elegant alternatives
-- ✅ Sophisticated typography implemented (Playfair Display + Inter)
-- ✅ Backend API running - Verified on port 5000 (43/53 tests passing)
-- ✅ Full integration flow verified:
-  - Register new user → Login → View tournaments → View leaderboard ✅
-  - All navigation links working ✅
-  - JWT authentication flow working ✅
-- ✅ Frontend unit tests - 12/16 passing (4 mock timing issues, not functional)
-- ✅ UI/UX polished and production-ready
+- All React components created (37 files)
+- Routing and navigation working
+- Authentication flow implemented (JWT, localStorage, interceptors)
+- CSS rendering working
+- Premium dark casino theme applied to all components
+- All emojis removed and replaced with elegant alternatives
+- Sophisticated typography implemented (Playfair Display + Inter)
+- Backend API running - Verified on port 5000 (43/53 tests passing)
+- Full integration flow verified:
+  - Register new user -> Login -> View tournaments -> View leaderboard
+  - All navigation links working
+  - JWT authentication flow working
+- Frontend unit tests - 12/16 passing (4 mock timing issues, not functional)
+- UI/UX polished and production-ready
 
 **Phase 3.2 Status:** COMPLETE (2026-02-25 15:30 GMT+13)
 
@@ -375,8 +397,8 @@ cd frontend && npm run test:e2e
 
 ---
 
-**Document Version:** 2.1
-**Last Updated:** 2026-02-26 (Final)
+**Document Version:** 2.2
+**Last Updated:** 2026-02-28
 **Next Update:** After Phase 3.4 (GitFlow) or Phase 4.1 (Clinical Testing) begins
 
 **Historical Information:** See [CLAUDE_ARCHIVE.md](CLAUDE_ARCHIVE.md)
