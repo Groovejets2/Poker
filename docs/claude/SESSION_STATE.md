@@ -1,118 +1,171 @@
 # Current Session State - 2026-02-28
 
-## Status: Architecture Review Complete - Pending Test Validation
+## Status: Phase 3.4 COMPLETE - Ready for Phase 4.1
 
-**Branch:** `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
-**Agent:** Opus 4.1 -> Handing off to Sonnet 4.6
+**Branch:** `feature/2026-02-26_phase-3.4-gitflow-pr-automation`
+**Agent:** Sonnet 4.6
 **Session Date:** 2026-02-28
 
 ---
 
-## What Was Accomplished This Session (Opus 4.1)
+## What Was Accomplished This Session (Sonnet 4.6)
 
-### Critical Poker Engine Fixes (Python - code/poker_engine/)
+### 1. Tests Confirmed (Python Engine)
 
-1. **winner_determiner.py - Best-5-card selection**
-   - BUG: Was taking `hand[:5]` (first 5 cards) instead of evaluating all C(7,5)=21 combinations
-   - FIX: Added `_find_best_five_card_hand()` using `itertools.combinations` to evaluate all possible 5-card hands and pick the best
-   - IMPACT: Would have produced wrong winners in nearly every Texas Hold'em hand
+- Ran from `code/` directory: `python -m pytest ../tests/ -v --tb=short`
+- Result: **301 passed, 0 failed**
+- Validates all Opus 4.1 poker engine bug fixes are correct
 
-2. **dealer_engine.py - RAISE round status**
-   - BUG: After a RAISE, other players were set to `RoundStatus.ACTED` instead of `RoundStatus.WAITING_FOR_ACTION`
-   - FIX: Changed to `RoundStatus.WAITING_FOR_ACTION` so players are forced to act again after a raise
-   - Also added `_is_folded()` guard so folded players aren't reset
+### 2. Phase 3.4 - GitFlow & PR Automation Skills (COMPLETE)
 
-3. **player_state.py - Hole card wipe between rounds**
-   - BUG: `clear_round_data()` wiped `self.hole_cards = []` but is called between betting rounds (flop->turn->river)
-   - FIX: Removed `hole_cards = []` from `clear_round_data()`, added it to `reset_for_new_hand()` instead
-   - IMPACT: Players would lose their cards before showdown
+Three Claude Code skills created in `.claude/skills/`:
 
-### Frontend Fixes (TypeScript - frontend/src/)
+**gitflow/SKILL.md** - `/gitflow <action>`
+- feature-start, feature-finish
+- release-start, release-finish
+- hotfix-start, hotfix-finish
+- Full safety rules: test gates before merge, no-ff merges, tag creation, no direct commits to main/develop
 
-4. **tournaments.service.ts - Response shape mismatch**
-   - BUG: `getById()` and `create()` expected `{ tournament: T }` wrapper but backend returns flat object
-   - FIX: Changed to `response.data` directly (no wrapper unwrap)
+**create-pr/SKILL.md** - `/create-pr [base-branch]`
+- Auto-detects base branch from branch name prefix
+- Runs all tests and aborts if any fail
+- Generates structured PR body: summary, commits, files, test results, task board section, checklist
+- Option A: GitHub CLI (gh) - now installed
+- Option B: GitHub REST API with dynamic repo detection via git remote
+- Option C: Manual GitHub URL fallback
 
-5. **App.tsx - 404 catch-all route**
-   - Added `NotFound` component with `<Route path="*">` catch-all
-   - Uses gold-themed styling consistent with casino theme
+**code-review/SKILL.md** - `/code-review [branch-or-file]`
+- 8-category checklist: correctness, tests, quality, TypeScript, Python, docs, security, performance
+- Verdict system: APPROVED / APPROVED WITH COMMENTS / CHANGES REQUIRED
+- Explicit mandate to be direct and critical - not to approve substandard code
 
-### Documentation & Standards
+### 3. Documentation Updated
 
-6. **AGENTS.md** - Removed all emojis per DOCUMENTATION_STANDARDS (v1.0 -> v1.1)
-7. **TASK-BOARD.md** - Fixed footer version mismatch (1.9 -> 2.0)
-8. **CODING_STANDARDS.md** - Added full TypeScript-Specific Standards section (v1.0 -> v1.1)
-9. **CLAUDE.md** - Updated to v2.2 with all findings, removed emojis
+- `GITFLOW.md`: Added Automation section with skill command references (v1.0 -> v1.1)
+- `TASK-BOARD.md`: Phase 3.4 marked COMPLETE, all tasks ticked, priority list updated (v2.0 -> v2.1)
+- `CLAUDE.md`: Updated to v2.3 with Phase 3.4 completion summary
+
+### 4. Peer Review Conducted
+
+Ran structured review of all three skill files before committing. Found 5 issues in `create-pr/SKILL.md`:
+- Hardcoded repo path -> fixed to use `git remote get-url origin`
+- Missing test exit code enforcement -> fixed
+- Title extraction ambiguity -> clarified
+- TASK-BOARD.md fallback missing -> added
+- gh availability check missing -> added explicit `gh --version` check
+
+All issues resolved before commit.
+
+### 5. Committed and Pushed
+
+Commit: `4fe177c` - `feat: Phase 3.4 complete - GitFlow & PR automation skills`
+Branch: `feature/2026-02-26_phase-3.4-gitflow-pr-automation`
+Pushed to remote: confirmed
+
+### 6. GitHub CLI Installed
+
+- Installed: `gh version 2.87.3` at `C:\Program Files\GitHub CLI\gh.exe`
+- PATH not yet refreshed in current terminal session - will work after terminal restart
+- **NOT yet authenticated** - must run `gh auth login` before `/create-pr` Option A will work
 
 ---
 
-## REMAINING TASK FOR SONNET 4.6
+## NEXT SESSION - RESUME HERE
 
-### Run Poker Engine Tests
+### Immediate First Step: Authenticate GitHub CLI
 
-pytest is not installed in the system Python. To run tests:
+Open a new terminal (so PATH includes `gh`) and run:
 
 ```bash
-# Option A: Install pytest and run
-pip install pytest
-cd d:\DEV\JH\poker-project
-python -m pytest tests/ -v --tb=short
-
-# Option B: If there's a virtual environment
-# Check for venv or .venv folder, activate it, then run pytest
+gh auth login
+# Choose: GitHub.com -> HTTPS -> Login with a web browser
+# Follow the browser prompt to complete OAuth
 ```
 
-**What to validate:**
-- tests/test_dealer_engine.py - Should have 38 tests (some may need updating due to the 3 bug fixes)
-- tests/unit/ - Additional unit tests if present
-- If tests fail due to the fixes, update the test expectations to match the corrected behavior
+Verify with:
+```bash
+gh auth status
+```
 
-**Expected test impacts from fixes:**
-- Tests that relied on `hand[:5]` slicing may need updating
-- Tests that checked `RoundStatus.ACTED` after RAISE need to expect `WAITING_FOR_ACTION`
-- Tests that called `clear_round_data()` and expected `hole_cards == []` need updating
+### Next Phase: Phase 4.1 - Clinical Testing Plan
 
-### After Tests Pass
+**Branch to create:**
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/2026-02-28_phase-4.1-clinical-testing
+```
 
-1. Commit all changes:
-   ```bash
-   git add -A
-   git commit -m "fix: Critical poker engine bugs + frontend fixes + standards cleanup
+**Tasks (from TASK-BOARD.md):**
+1. Define test scenarios
+2. Recruit eight test bots (simple strategies)
+3. Run 500+ hands across all bots
+4. Validate bot logic and dealer engine integration
 
-   Poker engine (3 critical fixes):
-   - winner_determiner: Evaluate all C(7,5) combinations for best hand
-   - dealer_engine: RAISE resets others to WAITING_FOR_ACTION
-   - player_state: Don't wipe hole_cards between betting rounds
+**Reference:** `docs/design/TASK-BOARD.md` Phase 4.1 section
 
-   Frontend:
-   - tournaments.service: Fix response shape for getById/create
-   - App.tsx: Add 404 catch-all route
+### Current Branch State
 
-   Standards:
-   - AGENTS.md: Remove emojis (v1.1)
-   - CODING_STANDARDS: Add TypeScript section (v1.1)
-   - TASK-BOARD: Fix version sync (v2.0)
-   - CLAUDE.md: Update with findings (v2.2)"
-   ```
+Working tree is **clean** on `feature/2026-02-26_phase-3.4-gitflow-pr-automation`.
+This branch is ready to be merged into `develop` via PR when Jon approves.
 
-2. Push to remote:
-   ```bash
-   git push
-   ```
+To create the PR (after gh auth):
+```bash
+gh pr create --base develop --title "Phase 3.4: GitFlow & PR automation skills" --body "..."
+```
+Or use the `/create-pr` skill.
 
 ---
 
-## Files Modified This Session
+## How to Run Tests
+
+### Python Engine (301 tests)
+```bash
+# MUST run from code/ directory - not project root
+cd code
+python -m pytest ../tests/ -v --tb=short
+```
+
+### Backend (43 tests)
+```bash
+cd backend && npm test
+```
+
+### Frontend Unit (16 tests)
+```bash
+cd frontend && npm test
+```
+
+### Frontend E2E (23 tests)
+```bash
+cd frontend && npm run test:e2e
+```
+
+---
+
+## Files Created/Modified This Session
 
 | File | Change |
 |------|--------|
-| code/poker_engine/winner_determiner.py | Best-5-card via combinations |
-| code/poker_engine/dealer_engine.py | RAISE -> WAITING_FOR_ACTION |
-| code/poker_engine/player_state.py | Don't wipe hole_cards in clear_round_data |
-| frontend/src/services/tournaments.service.ts | Remove wrapper expectation |
-| frontend/src/App.tsx | Add 404 route + NotFound component |
-| AGENTS.md | Remove emojis, bump to v1.1 |
-| docs/design/TASK-BOARD.md | Fix footer version to 2.0 |
-| docs/standards/CODING_STANDARDS.md | Add TypeScript section, bump to v1.1 |
-| CLAUDE.md | Full update to v2.2, remove emojis |
-| docs/claude/SESSION_STATE.md | This file - handoff state |
+| `.claude/skills/gitflow/SKILL.md` | Created - GitFlow automation skill |
+| `.claude/skills/create-pr/SKILL.md` | Created - PR automation skill (v1.1 after peer review) |
+| `.claude/skills/code-review/SKILL.md` | Created - Code review skill |
+| `docs/standards/GITFLOW.md` | Added Automation section (v1.0 -> v1.1) |
+| `docs/design/TASK-BOARD.md` | Phase 3.4 COMPLETE (v2.0 -> v2.1) |
+| `CLAUDE.md` | Updated to v2.3 |
+| `docs/claude/SESSION_STATE.md` | This file |
+
+---
+
+## Key Warnings
+
+- Do NOT use `taskkill /F /IM node.exe` - kills Claude Code CLI
+- Run Python tests from `code/` directory, not project root
+- `gh` CLI needs `gh auth login` before first use
+- Current branch has NOT been merged to develop yet - pending PR review
+
+---
+
+**Session saved:** 2026-02-28
+**Next agent:** Any model
+**Confidence:** High - all work committed and pushed, tests passing
