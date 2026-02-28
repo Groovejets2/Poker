@@ -324,6 +324,26 @@ git log --oneline --all --graph
 
 ---
 
+## Automation
+
+The manual commands in this document have been automated via Claude Code skills:
+
+- `/gitflow feature-start <description>` — Create a feature branch
+- `/gitflow feature-finish` — Test, merge, and clean up a feature branch
+- `/gitflow release-start <version>` — Create a release branch with version bump
+- `/gitflow release-finish <version>` — Merge to main, tag, merge back to develop
+- `/gitflow hotfix-start <description>` — Create a hotfix from main
+- `/gitflow hotfix-finish <version>` — Merge hotfix to main and develop
+
+See `.claude/skills/gitflow/SKILL.md` for full automation instructions.
+
+For PR creation after finishing a branch, use `/create-pr`.
+
+For pre-merge code review, use `/code-review`.
+
+---
+
 **Document Created:** 2026-02-20 00:00 GMT+13
-**Version:** 1.0
+**Version:** 1.1
+**Last Updated:** 2026-02-28
 **Status:** APPROVED

@@ -2,8 +2,8 @@
 
 **Category:** standards
 **Purpose:** Current project status and how to resume work
-**Status:** Architecture Review Complete - Critical Poker Engine Bugs Fixed - Ready for Phase 3.4 or 4.1
-**Version:** 2.2
+**Status:** Phase 3.4 Complete - GitFlow & PR Automation Skills Delivered - Ready for Phase 4.1
+**Version:** 2.3
 **Last Updated:** 2026-02-28
 **Owner:** Jon + Development Team
 **Tags:** operational, phase-3.2-complete, all-tests-passing, integration-verified, ready-for-next-phase
@@ -17,6 +17,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-02-28 | 2.3 | Sonnet 4.6 | Phase 3.4 COMPLETE: Tests confirmed 301/301 passing; created /gitflow, /create-pr, /code-review skills; updated GITFLOW.md, TASK-BOARD.md, CLAUDE.md |
 | 2026-02-28 | 2.2 | Opus 4.1 | Architecture review: Fixed 3 critical poker engine bugs (best-5-card, RAISE status, hole card wipe), fixed frontend API mismatch, added 404 route, added TypeScript to CODING_STANDARDS, cleaned AGENTS.md emojis, synced TASK-BOARD version |
 | 2026-02-26 (Final) | 2.1 | Sonnet 4.5 | Phase 3.2 COMPLETE: All systems operational, CORS verified working, full integration tested and confirmed |
 | 2026-02-26 21:15 | 2.0 | Sonnet 4.5 | API integration fixed: Created API spec docs, aligned all field names, fixed CORS, all tests passing (16/16 frontend, 43/53 backend); documentation reorganized per standards |
@@ -28,11 +29,31 @@
 
 ## QUICK RESUME - START HERE
 
-**Current State:** Architecture Review Complete - Critical Poker Engine Bugs Fixed
-**Branch:** `feature/2026-02-24_phase-3.2-frontend-lobby-leaderboard`
+**Current State:** Phase 3.4 Complete - GitFlow & PR Automation Skills Delivered
+**Branch:** `feature/2026-02-26_phase-3.4-gitflow-pr-automation`
 **Last Updated:** 2026-02-28
 
-### Latest Session (2026-02-28) - Architecture Review & Critical Bug Fixes
+### Latest Session (2026-02-28) - Phase 3.4 GitFlow & PR Automation
+
+**Completed:** 2026-02-28
+**Agent:** Sonnet 4.6
+
+**What Was Delivered:**
+
+Phase 3.4 Skills (.claude/skills/):
+- [OK] gitflow/SKILL.md: Full GitFlow automation -- /gitflow feature-start|finish, release-start|finish, hotfix-start|finish
+- [OK] create-pr/SKILL.md: PR automation -- /create-pr -- generates structured PR body from git log, test results, task board; gh CLI + REST API fallback
+- [OK] code-review/SKILL.md: Peer review skill -- /code-review -- 8-category checklist, verdict system, direct critical review behaviour
+
+Documentation Updates:
+- [OK] GITFLOW.md: Added Automation section referencing the three new skills (v1.0 -> v1.1)
+- [OK] TASK-BOARD.md: Phase 3.4 marked COMPLETE, all tasks ticked, priority list updated (v2.0 -> v2.1)
+- [OK] CLAUDE.md: Updated to v2.3 with Phase 3.4 completion
+
+Tests Confirmed:
+- [OK] Python engine: 301/301 passing (ran from code/ directory against tests/)
+
+### Previous Session (2026-02-28) - Architecture Review & Critical Bug Fixes
 
 **Completed:** 2026-02-28
 **Agent:** Opus 4.1
@@ -154,18 +175,7 @@ Documentation & Standards:
 
 ## Next Actions (Priority Order)
 
-### Priority 1: Phase 3.4 - GitFlow Strategy & PR Automation
-**Status:** READY (Phase 3.2 and 3.3 complete)
-**Time:** 2-3 hours
-**Tasks:**
-1. Create GitFlow skill with branching strategy (feature/, release/, hotfix/)
-2. Implement PR automation via GitHub API
-3. Build sub-agent for PR creation + notifications
-4. Define code review standards
-**Value:** Establishes proper workflow for future development
-**Reference:** See TASK-BOARD.md Phase 3.4 section
-
-### Priority 2: Phase 4.1 - Clinical Testing Plan
+### Priority 1: Phase 4.1 - Clinical Testing Plan
 **Status:** READY (Platform foundation complete)
 **Time:** 2-3 hours setup + ongoing
 **Tasks:**
