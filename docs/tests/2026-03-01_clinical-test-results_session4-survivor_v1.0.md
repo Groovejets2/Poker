@@ -8,9 +8,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Hands played | 64 |
+| Hands played | 51 |
 | Showdown rate | 100.0% |
-| Average pot | 4406.1 chips |
+| Average pot | 5432.2 chips |
 | Largest pot | 5990 chips |
 | Invariant violations | 0 |
 
@@ -18,12 +18,12 @@
 
 | Player | Wins | Chips Won |
 |--------|------|-----------|
-| Random | 59 | 278765 |
-| Pass | 6 | 1210 |
-| Agg | 1 | 2015 |
+| AllIn | 51 | 275020 |
+| Random | 1 | 2020 |
 | CS | 0 | 0 |
+| Agg | 0 | 0 |
+| Pass | 0 | 0 |
 | Fold | 0 | 0 |
-| AllIn | 0 | 0 |
 
 ## Invariant Check
 

@@ -1,64 +1,56 @@
 # Current Session State - 2026-03-01
 
-## Status: Phase 4.1 COMPLETE - Ready for Phase 4.2 or Backlog
+## Status: v0.3.0 Released - Ready for Phase 4.2
 
-**Branch:** `feature/2026-02-26_phase-3.4-gitflow-pr-automation`
+**Branch:** `develop` (main working branch)
+**Tag:** `v0.3.0` (on `main`)
 **Agent:** Sonnet 4.6
 **Session Date:** 2026-03-01
 
 ---
 
-## What Was Accomplished This Session (Sonnet 4.6)
+## What Was Accomplished This Session
 
-### 1. Clinical Test Framework Built
+### 1. BB-Check Unit Test Added
 
-New files created under `code/`:
+Added two tests to `tests/unit/test_betting_validator.py` covering the Phase 4.1 fix:
 
-- `code/bots/` — Six strategy bots: CallingStation, Aggressor, Passive, Folder, AllIn, Random
-- `code/simulator/game_runner.py` — Full game loop with `_is_round_complete()`, `advance_round()`, side pot handling
-- `code/simulator/logger.py` — SimulationLogger with per-hand output and Markdown report writer
-- `code/simulator/statistics.py` — SessionStatistics and HandResult dataclasses
-- `code/run_simulation.py` — Entry point running all 5 clinical sessions
+- `test_valid_check_bb_has_matched_big_blind` — BB with `current_bet=20`, `max_bet=20`, no raise: CHECK must be allowed
+- `test_invalid_check_bb_faces_raise` — BB posted blind but opponent raised to 100: CHECK must be rejected
 
-### 2. Six Integration Bugs Found and Fixed
+Test count: 301 -> 303. All 303 passing.
 
-| Bug | File |
-|-----|------|
-| CALL amount passed as 0 by all bots | `code/bots/*.py` |
-| AggressorBot used BET when max_bet > 0 | `code/bots/aggressor_bot.py` |
-| Game loop infinite pre-flop cycling | `code/simulator/game_runner.py` |
-| `calculate_side_pots()` double-counted chips | `code/poker_engine/pot_manager.py` |
-| `_validate_check()` rejected valid BB check | `code/poker_engine/betting_validator.py` |
-| FOLD fallback left zero active players | `code/simulator/game_runner.py` |
+### 2. Code Review Completed
 
-### 3. Clinical Test Results
+Review verdict: **APPROVED WITH COMMENTS**
 
-Five sessions, 2,264 hands total, **zero invariant violations**:
+No CRITICAL or HIGH issues found. MEDIUM items documented for Phase 4.2:
 
-| Session | Config | Hands | Result |
-|---------|--------|-------|--------|
-| 1 - Main Mixed | 6 bots (CS/Agg/Pass/Fold/AllIn/Rand) | 500 | PASS |
-| 2 - All-In Stress | 6 AllInBots | 200 | PASS |
-| 3 - Random Chaos | 6 RandomBots | 500 | PASS |
-| 4 - Survivor | Mixed 6 bots, persistent stacks | 64 | PASS |
-| 5 - Heads-Up | Agg vs CS | 1,000 | PASS |
+| Severity | Location | Description |
+|----------|----------|-------------|
+| MEDIUM | `game_runner.py:252` | Bare `except Exception` in action loop swallows unexpected errors silently |
+| MEDIUM | `game_runner.py:271` | Winner determination exception swallowed; root cause lost on invariant violation |
+| LOW | `winner_determiner.py:71` | `_find_best_five_card_hand` docstring should note ValueError propagation |
+| LOW | `game_runner.py:185` | `bot_map: Dict[str, object]` should be `Dict[str, BaseBot]` |
 
-### 4. Engine Tests Confirmed
+### 3. GitFlow Release Executed
 
-- 301/301 passing after all engine fixes (no regressions)
-- Run: `cd code && python -m pytest ../tests/ -v --tb=short`
+Full GitFlow sequence completed:
 
-### 5. Documentation Updated
+| Step | Result |
+|------|--------|
+| `feature-finish` | Merged `feature/2026-02-26_phase-3.4-gitflow-pr-automation` into `develop` |
+| `release-start v0.3.0` | Created `release/0.3.0` from develop; bumped both `package.json` to 0.3.0 |
+| `release-finish v0.3.0` | Merged `release/0.3.0` into `main`; tagged `v0.3.0`; merged back into `develop` |
+| Branch cleanup | Feature and release branches deleted locally and remotely |
 
-- `docs/tests/TEST-PLAN.md` v1.2: Section 11 added with full execution results
-- `docs/design/TASK-BOARD.md` v2.2: Phase 4.1 COMPLETE
-- `CLAUDE.md` v2.4: Phase 4.1 status, Clinical Testing section added
+### 4. Test Results at Release
 
-### 6. Committed and Pushed
-
-Commit: `a9f5ec0` - `feat: Phase 4.1 complete - clinical testing PASS, zero invariant violations`
-Branch: `feature/2026-02-26_phase-3.4-gitflow-pr-automation`
-Pushed to remote: confirmed
+| Suite | Result |
+|-------|--------|
+| Python engine | 303/303 PASS |
+| Backend unit | 43/43 PASS (10 pre-existing RBAC integration test failures — Phase 3.7 backlog, unchanged) |
+| Frontend unit | 16/16 PASS |
 
 ---
 
@@ -66,100 +58,101 @@ Pushed to remote: confirmed
 
 ### Current State
 
-Working tree is **clean** (only pre-existing untracked test artifacts remain).
-Branch `feature/2026-02-26_phase-3.4-gitflow-pr-automation` is ahead of origin by 0 commits (fully pushed).
+- Working tree is on `develop`, clean (only pre-existing untracked test artifacts remain)
+- `main` is at tag `v0.3.0`
+- `develop` is in sync with `main` post-release
 
-### Next Phase Options
+### Next Phase: Phase 4.2 - Bug Fixes and Optimisation
 
-**Option A (Recommended):** Phase 4.2 - Bug Fixes and Optimisation
-- Profile engine for performance hotspots
-- Add unit test for BB-check scenario (now valid, but no test exists)
-- Review any remaining latent correctness issues
+**Status:** READY TO START
 
-**Option B:** Phase 3.7 - Test Quality Cleanup (30 min)
-- Convert 10 failing RBAC integration tests to unit tests
+Tasks from the code review (MEDIUM/LOW, carried forward):
 
-**Option C:** Phase 3.8 - Security Enhancements (6-8 hours)
-- httpOnly cookies, refresh tokens, production CORS
+1. Add debug logging to `game_runner.py` fallback handler (bare except at line 252)
+2. Log root cause in winner determination exception handler (line 271)
+3. Update `_find_best_five_card_hand` docstring in `winner_determiner.py:71`
+4. Type `bot_map` as `Dict[str, BaseBot]` in `game_runner.py:185`
+5. Profile engine performance — `_find_best_five_card_hand` runs 21 evaluations/player/hand
 
-### To Resume Clinical Testing (if needed)
-
-```bash
-cd code
-python run_simulation.py
+To start Phase 4.2:
+```
+/gitflow feature-start phase-4.2-engine-optimisation
 ```
 
-This runs all 5 sessions and exits 0 if all pass.
+### Other Backlog Options
+
+- **Phase 3.7** (30 min): Convert 10 failing RBAC integration tests to unit tests
+- **Phase 3.8** (6-8 hrs): httpOnly cookies, refresh tokens, production CORS (required before public launch)
 
 ---
 
 ## How to Run Tests
 
-### Python Engine (301 tests)
-```bash
-# MUST run from code/ directory with PYTHONPATH set
-cd code
-python -m pytest ../tests/ -v --tb=short
-# OR:
-python -m pytest ../tests/ -q --tb=short  # quieter
+### Python Engine (303 tests)
+```
+python -c "
+import subprocess
+r = subprocess.run(['python', '-m', 'pytest', '../tests/', '-q', '--tb=short'], cwd='D:/DEV/JH/poker-project/code', capture_output=True, text=True)
+print(r.stdout)
+"
 ```
 
-### Run Clinical Simulation
-```bash
-cd code
-python run_simulation.py
-# Expects exit code 0 (all PASS)
+### Backend (43/43 unit tests — exit code 1 expected due to RBAC backlog)
 ```
-
-### Backend (43 tests)
-```bash
-cd backend && npm test
+python -c "
+import subprocess
+r = subprocess.run(['npm.cmd', 'test'], cwd='D:/DEV/JH/poker-project/backend', capture_output=True, timeout=120)
+out = (r.stdout + r.stderr).decode('utf-8', errors='replace')
+with open('backend_test_out.txt', 'w', encoding='utf-8') as f: f.write(out)
+print('Exit:', r.returncode)
+"
+# Read backend_test_out.txt to see results
 ```
 
 ### Frontend Unit (16 tests)
-```bash
-cd frontend && npm test
+```
+python -c "
+import subprocess
+r = subprocess.run(['npm.cmd', 'test'], cwd='D:/DEV/JH/poker-project/frontend', capture_output=True, timeout=120)
+out = (r.stdout + r.stderr).decode('utf-8', errors='replace')
+with open('frontend_test_out.txt', 'w', encoding='utf-8') as f: f.write(out)
+print('Exit:', r.returncode)
+"
 ```
 
----
-
-## Files Created/Modified This Session
-
-| File | Change |
-|------|--------|
-| `code/bots/__init__.py` | Created |
-| `code/bots/calling_station_bot.py` | Created (CALL fix: to_call not 0) |
-| `code/bots/aggressor_bot.py` | Created (BET/RAISE logic corrected) |
-| `code/bots/passive_bot.py` | Created (CALL fix) |
-| `code/bots/folder_bot.py` | Created (CALL fix) |
-| `code/bots/all_in_bot.py` | Created |
-| `code/bots/random_bot.py` | Created |
-| `code/bots/base_bot.py` | Created |
-| `code/simulator/__init__.py` | Created |
-| `code/simulator/game_runner.py` | Created (full game loop) |
-| `code/simulator/logger.py` | Created |
-| `code/simulator/statistics.py` | Created |
-| `code/run_simulation.py` | Created (5-session entry point) |
-| `code/poker_engine/pot_manager.py` | Fixed: side pot deduction from main_pot |
-| `code/poker_engine/betting_validator.py` | Fixed: CHECK allows matched-bet players |
-| `docs/tests/TEST-PLAN.md` | v1.1 -> v1.2: Section 11 added |
-| `docs/design/TASK-BOARD.md` | v2.1 -> v2.2: Phase 4.1 COMPLETE |
-| `CLAUDE.md` | v2.3 -> v2.4 |
-| `docs/tests/2026-03-01_clinical-test-results_*.md` | 5 session reports |
-| `docs/claude/SESSION_STATE.md` | This file |
+### Run Clinical Simulation
+```
+python -c "
+import subprocess
+r = subprocess.run(['python', 'run_simulation.py'], cwd='D:/DEV/JH/poker-project/code', capture_output=True, text=True, timeout=300)
+print(r.stdout[-2000:])
+print('Exit:', r.returncode)
+"
+```
 
 ---
 
 ## Key Warnings
 
-- Do NOT use `taskkill /F /IM node.exe` - kills Claude Code CLI
-- Run Python tests from `code/` directory (not project root) with PYTHONPATH including `code/`
-- `gh` CLI needs `gh auth login` before first use (was installed 2026-02-28)
-- Current branch has NOT been merged to develop yet - pending PR review
-- The root-level `run_simulation.py` (untracked) is a stale leftover from a previous session - use `code/run_simulation.py` instead
+- Do NOT use `taskkill /F /IM node.exe` — kills Claude Code CLI
+- Run Python tests from `code/` directory (PYTHONPATH includes `code/`)
+- `npm` must be called as `npm.cmd` when invoked via Python subprocess on Windows
+- Backend exit code 1 is normal — 10 RBAC integration tests are Phase 3.7 backlog
+- The root-level `run_simulation.py` (untracked) is a stale leftover — use `code/run_simulation.py`
+- `nul` (untracked at project root) is a Windows artifact, ignore it
+
+---
+
+## Release History
+
+| Tag | Date | Contents |
+|-----|------|----------|
+| v0.3.0 | 2026-03-01 | Phase 3.4 (GitFlow/PR skills) + Phase 4.1 (clinical testing) + BB-check test |
+| v0.2.0 | 2026-02-26 | Phase 3.2 (frontend) + Phase 3.6 (security fixes) |
+| v0.1.0 | 2026-02-24 | Phase 3.3 (backend TypeORM) |
 
 ---
 
 **Session saved:** 2026-03-01
 **Next agent:** Any model
-**Confidence:** High - all work committed and pushed, 301 tests passing, 0 invariant violations
+**Confidence:** High — v0.3.0 tagged on main, 303 tests passing, working tree clean on develop

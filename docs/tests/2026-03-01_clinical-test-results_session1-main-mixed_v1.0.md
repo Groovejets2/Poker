@@ -10,7 +10,7 @@
 |--------|-------|
 | Hands played | 500 |
 | Showdown rate | 100.0% |
-| Average pot | 4120.0 chips |
+| Average pot | 4081.9 chips |
 | Largest pot | 5010 chips |
 | Invariant violations | 0 |
 
@@ -18,11 +18,11 @@
 
 | Player | Wins | Chips Won |
 |--------|------|-----------|
-| CS | 139 | 515741 |
-| Agg | 133 | 492605 |
-| AllIn | 123 | 462849 |
-| Random | 77 | 323210 |
-| Fold | 61 | 265575 |
+| Agg | 133 | 491061 |
+| AllIn | 129 | 477374 |
+| CS | 113 | 425951 |
+| Random | 83 | 341917 |
+| Fold | 67 | 304657 |
 | Pass | 0 | 0 |
 
 ## Invariant Check
