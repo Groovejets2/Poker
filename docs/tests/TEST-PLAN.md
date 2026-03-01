@@ -2,8 +2,8 @@
 
 **Category:** tests
 **Purpose:** Project-wide living document covering all unit test suites, integration testing strategy, bot profiles, validation criteria, and stress testing for the OpenClaw Poker engine
-**Status:** APPROVED
-**Version:** 1.1
+**Status:** COMPLETE
+**Version:** 1.2
 **Last Updated:** 2026-03-01
 **Owner:** Jon + Development Team
 **Related Documents:** [TASK-BOARD.md](../design/TASK-BOARD.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
@@ -14,6 +14,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 1.2 | Sonnet 4.6 | Phase 4.1 COMPLETE: All 5 clinical sessions PASS, zero invariant violations across 2,264 hands; documented bugs found and fixed; execution results added as Section 11 |
 | 2026-03-01 | 1.1 | Sonnet 4.6 | Moved from specifications/ to docs/tests/; reframed as project-wide living document; status updated to APPROVED |
 | 2026-03-01 | 1.0 | Sonnet 4.6 | Initial creation as Phase 4.1 Clinical Testing Plan |
 
@@ -31,6 +32,7 @@
 8. Stress Test Section
 9. Success Criteria
 10. Execution Steps
+11. Phase 4.1 Execution Results (2026-03-01)
 
 ---
 
@@ -278,8 +280,59 @@ Clinical testing is considered complete when:
 
 ---
 
+## 11. Phase 4.1 Execution Results (2026-03-01)
+
+**Overall Result:** PASS
+**Date Run:** 2026-03-01
+**Conducted by:** Sonnet 4.6
+**Total hands:** 2,264 (500 + 200 + 500 + 64 survivor + 1,000 heads-up)
+**Invariant violations:** 0
+
+### Session Results
+
+| Session | Configuration | Hands | Result | Avg Pot | Max Pot |
+|---------|--------------|-------|--------|---------|---------|
+| 1 - Main Mixed | 6 bots (CS, Agg, Pass, Fold, AllIn, Random) | 500 | PASS | 4,120 | 5,010 |
+| 2 - All-In Stress | 6 AllInBots | 200 | PASS | 6,000 | 6,000 |
+| 3 - Random Chaos | 6 RandomBots | 500 | PASS | 3,766 | 6,000 |
+| 4 - Survivor | Mixed 6 bots, persistent stacks | 64 | PASS | 4,406 | 5,990 |
+| 5 - Heads-Up | AggressorBot vs CallingStationBot | 1,000 | PASS | 580 | 580 |
+
+### Bugs Found and Fixed During Clinical Testing
+
+Six bugs were identified and fixed before the final run. None were pre-existing in the 301-test unit suite (they were integration-only failures).
+
+| Bug | File | Symptom | Fix |
+|-----|------|---------|-----|
+| CALL amount passed as 0 by all bots | `code/bots/*.py` | `Call amount must be X, got 0` error | Changed to pass `to_call` from snapshot |
+| AggressorBot using BET when max_bet > 0 | `code/bots/aggressor_bot.py` | `Cannot bet; someone has already bet` | Use RAISE (not BET) when any bet exists |
+| Game loop infinite pre-flop cycling | `code/simulator/game_runner.py` | Hand never advanced to flop | Replaced `_any_player_can_act()` with `_is_round_complete()` checking `RoundStatus.ACTED` |
+| `calculate_side_pots()` double-counting | `code/poker_engine/pot_manager.py` | `Pot conservation: diff=+2000` | Deduct side pot from `main_pot.amount` before appending |
+| `_validate_check()` rejecting valid BB check | `code/poker_engine/betting_validator.py` | `Cannot check; current bet is 20` for BB | Changed condition from `max_bet > 0` to `max_bet > player.current_bet` |
+| Fallback FOLD causing zero-active-player state | `code/simulator/game_runner.py` | `Pot conservation: diff=-30` (blinds lost) | Changed fallback cascade to try CHECK before FOLD |
+
+### Engine Limitations Noted (Not Bugs)
+
+The following engine design constraints are known and handled by the simulator:
+
+- `_get_next_action_seat()` does not check `RoundStatus` — the simulator is responsible for calling `advance_round()` when all active players have acted.
+- `ALL_IN` action does not reset other players to `WAITING_FOR_ACTION` (only `RAISE` does) — `_is_round_complete()` compensates by checking `current_bet < max_bet and stack > 0`.
+- `advance_round()` raises `ValueError` if any player has `WAITING_FOR_ACTION` — round must be complete before calling it.
+
+### Artefacts
+
+| Report File | Session |
+|-------------|---------|
+| `docs/tests/2026-03-01_clinical-test-results_session1-main-mixed_v1.0.md` | Session 1 |
+| `docs/tests/2026-03-01_clinical-test-results_session2-allin-stress_v1.0.md` | Session 2 |
+| `docs/tests/2026-03-01_clinical-test-results_session3-random-chaos_v1.0.md` | Session 3 |
+| `docs/tests/2026-03-01_clinical-test-results_session4-survivor_v1.0.md` | Session 4 |
+| `docs/tests/2026-03-01_clinical-test-results_session5-headsup-agg-vs-cs_v1.0.md` | Session 5 |
+
+---
+
 **Document Created:** 2026-03-01 GMT+13
-**Version:** 1.1
-**Status:** APPROVED
+**Version:** 1.2
+**Status:** COMPLETE
 **Author:** Sonnet 4.6
 **Approved by:** Jon
