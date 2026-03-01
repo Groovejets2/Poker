@@ -4,7 +4,7 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 2.3
+**Version:** 2.4
 **Last Updated:** 2026-03-01 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 2.4 | Sonnet 4.6 | v0.3.1 RELEASED: Phase 4.2 complete; exception logging, type annotation, docstring fixes; 303/303 tests; 0 invariant violations; tagged v0.3.1 on main |
 | 2026-03-01 | 2.3 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303); code review APPROVED WITH COMMENTS; feature merged to develop; tagged v0.3.0 on main |
 | 2026-03-01 | 2.2 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing run - 5 sessions, 2,264 hands, zero invariant violations; 6 engine/simulator bugs found and fixed |
 | 2026-02-28 | 2.1 | Sonnet 4.6 | Phase 3.4 COMPLETE: Three skills created (/gitflow, /create-pr, /code-review); TASK-BOARD updated; GITFLOW.md updated with automation references |
@@ -422,11 +423,16 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - **Reports:** `docs/tests/2026-03-01_clinical-test-results_*.md`
 
 ### 4.2 Bug Fixes and Optimisation
-- [ ] Document any bugs found
-- [ ] Prioritise and fix bugs
-- [ ] Re-test after each fix
-- **Status:** READY (after 4.1)
-- **Estimate:** Variable
+- [x] Log unexpected exceptions in game_runner.py action fallback handler
+- [x] Log root cause in winner determination exception handler
+- [x] Type `bot_map` as `Dict[str, BaseBot]` (was `Dict[str, object]`)
+- [x] Add `Raises` section to `_find_best_five_card_hand` docstring
+- [x] Profile `_find_best_five_card_hand` — 501 μs/call for 7-card (21 combos)
+- [x] Confirm 303/303 tests pass and 0 invariant violations post-changes
+- **Status:** COMPLETE (2026-03-01)
+- **Completed by:** Sonnet 4.6
+- **Released:** v0.3.1
+- **Code review verdict:** APPROVED
 
 ---
 
@@ -441,10 +447,11 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - **Phase 3.7 Total:** Test Quality, USD 0.25-0.50 — BACKLOG (optional, 30 min)
 - **Phase 3.8 Total:** Security Enhancements, USD 3.00-4.00 — BACKLOG (6-8 hours)
 - **Phase 4.1 Total:** Clinical Testing, USD 0.50-1.00 — COMPLETE ✓ (2026-03-01)
+- **Phase 4.2 Total:** Engine Code Quality, USD 0.25-0.50 — COMPLETE ✓ (2026-03-01, v0.3.1)
 
-**Grand Total:** Approximately USD 10.25-14.50 (within budget with margin)
-**Spent to Date:** ~USD 9.00-10.50 (Phases 1, 2, 3.2, 3.3, 3.6, 4.1 complete)
-**Backlog Items:** Phase 3.7 (30 min), Phase 3.8 (6-8 hours), Phase 4.2 (variable)
+**Grand Total:** Approximately USD 10.50-15.00 (within budget with margin)
+**Spent to Date:** ~USD 9.25-10.75 (Phases 1, 2, 3.2, 3.3, 3.6, 4.1, 4.2 complete)
+**Backlog Items:** Phase 3.7 (30 min), Phase 3.8 (6-8 hours)
 
 ---
 
@@ -461,7 +468,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 **Phase 4 (Testing):** IN PROGRESS
 - 4.1 Clinical Testing: COMPLETE ✓ (2026-03-01) — 5/5 sessions PASS, 2,264 hands, zero violations
-- 4.2 Bug Fixes: READY
+- 4.2 Bug Fixes and Optimisation: COMPLETE ✓ (2026-03-01, v0.3.1) — 4 code quality items; APPROVED
 
 **Phase 3 (Platform Website):** IN PROGRESS
 - 3.2 Frontend: COMPLETE ✓ (2026-02-26, v0.2.0) — Premium dark casino theme, 37 React files, 23/23 E2E tests, 16/16 unit tests, full API integration
@@ -477,14 +484,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ## Immediate Next Actions
 
-**PRIORITY 1:** Phase 4.2 - Bug Fixes and Optimisation (READY TO START)
-- Status: READY - v0.3.0 shipped; code review identified MEDIUM/LOW items for this phase
-- Work: Add logging to game_runner fallback handler; type `bot_map` as `Dict[str, BaseBot]`; profile engine
-- Code review items: game_runner.py:252 (bare except), game_runner.py:271 (winner exception swallowed), winner_determiner.py:71 (ValueError doc), game_runner.py:185 (Dict[str, object] type)
-- Value: Engine hardening and code quality improvement
-- Estimate: Variable (1-4 hours)
-
-**PRIORITY 2:** Phase 3.7 Test Quality Improvements (Optional)
+**PRIORITY 1:** Phase 3.7 Test Quality Improvements (Optional)
 - Status: BACKLOG (2026-02-24), NOT BLOCKING anything
 - Work: Convert 10 failing RBAC integration tests to unit tests
 - Estimate: 30 minutes
@@ -492,7 +492,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - Note: Functionality already proven by 43 passing tests + manual testing
 - See: docs/progress/2026-02-24_rbac-test-failures-explained_v1.0.md
 
-**PRIORITY 3:** Game Engine Architecture Planning
+**PRIORITY 2:** Game Engine Architecture Planning
 - Status: DISCUSSION REQUIRED (noted 2026-02-23 18:15 GMT+13)
 - Context: TypeORM suitable for slow-path operations (auth, tournaments, leaderboard)
 - Issue: For real-time poker game state at 100s operations/second, need in-memory solution
@@ -503,5 +503,5 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ---
 
 **Last Updated:** 2026-03-01
-**Version:** 2.3
+**Version:** 2.4
 **Maintainer:** Jon + Development Team
