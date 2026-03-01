@@ -20,8 +20,11 @@ from poker_engine import (
     GamePhase,
     PlayerStatus,
     RoundStatus,
+    InvalidActionError,
+    NotPlayersTurnError,
 )
 from poker_engine.dealer_engine import DealerEngine, GameType
+from bots.base_bot import BaseBot
 
 from .statistics import SessionStatistics, HandResult
 from .logger import SimulationLogger
@@ -182,7 +185,7 @@ def play_single_hand(
         for i, bot in enumerate(bots)
     ]
 
-    bot_map: Dict[str, object] = {bot.name: bot for bot in bots}
+    bot_map: Dict[str, BaseBot] = {bot.name: bot for bot in bots}
     chips_before = {p.player_id: p.stack for p in players}
 
     # Create a fresh engine for this hand
@@ -249,7 +252,17 @@ def play_single_hand(
             snapshot = engine.request_action(player_id)
             action, amount = bot.get_action(snapshot)
             engine.process_action(player_id, action, amount)
-        except Exception:
+        except Exception as _action_err:
+            # Expected: InvalidActionError or NotPlayersTurnError when a bot
+            # returns an action that is currently illegal (e.g. BET when
+            # someone has already bet).  Unexpected errors (AttributeError,
+            # KeyError, etc.) are written to stderr so they surface during
+            # development without aborting the simulation.
+            if not isinstance(_action_err, (InvalidActionError, NotPlayersTurnError)):
+                sys.stderr.write(
+                    f"[game_runner] Unexpected error for {player_id} "
+                    f"({type(_action_err).__name__}: {_action_err})\n"
+                )
             # Fallback cascade: try CHECK first (safe when player has matched
             # the current bet), then FOLD.  Using CHECK before FOLD avoids
             # eliminating the last active player when BET/RAISE fails because
@@ -271,7 +284,14 @@ def play_single_hand(
     try:
         winnings = engine.determine_winners()
         engine.distribute_pot(winnings)
-    except Exception:
+    except Exception as _winner_err:
+        # Write the root cause to stderr so it surfaces in development.
+        # The pot-conservation invariant check will detect the resulting
+        # chip discrepancy on the next call to _check_invariants().
+        sys.stderr.write(
+            f"[game_runner] Winner determination failed "
+            f"({type(_winner_err).__name__}: {_winner_err})\n"
+        )
         winnings = {}
 
     engine.end_hand()

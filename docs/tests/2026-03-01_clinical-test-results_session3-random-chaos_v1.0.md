@@ -10,7 +10,7 @@
 |--------|-------|
 | Hands played | 500 |
 | Showdown rate | 100.0% |
-| Average pot | 3765.6 chips |
+| Average pot | 3767.5 chips |
 | Largest pot | 6000 chips |
 | Invariant violations | 0 |
 
@@ -18,12 +18,12 @@
 
 | Player | Wins | Chips Won |
 |--------|------|-----------|
-| Rand4 | 109 | 377530 |
-| Rand3 | 94 | 321840 |
-| Rand2 | 85 | 307360 |
-| Rand5 | 83 | 316580 |
-| Rand6 | 79 | 276890 |
-| Rand1 | 75 | 282610 |
+| Rand4 | 115 | 399295 |
+| Rand3 | 94 | 320035 |
+| Rand6 | 91 | 326641 |
+| Rand2 | 87 | 304917 |
+| Rand5 | 75 | 274225 |
+| Rand1 | 73 | 258627 |
 
 ## Invariant Check
 
