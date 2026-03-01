@@ -154,16 +154,22 @@ class WinnerDeterminer:
     def _find_best_five_card_hand(self, all_cards: List) -> Optional[Dict]:
         """
         Find the best 5-card hand from all available cards.
-        
+
         For Texas Hold'em this evaluates all C(7,5)=21 combinations.
         For 5-card draw this evaluates the single hand directly.
-        
+
         Args:
             all_cards (List): All cards available (2-7 cards).
-        
+
         Returns:
             Optional[Dict]: Best hand with 'hand', 'evaluation', 'strength' keys,
-                or None if no valid 5-card hand can be formed.
+                or None if fewer than 5 cards are available.
+
+        Raises:
+            ValueError: Propagated from hand_evaluator.evaluate() if a card list
+                is malformed (e.g. wrong number of cards or invalid card objects).
+                Callers (determine_winners, get_hand_summary) catch this with a
+                try/except ValueError block and skip the affected player.
         """
         if len(all_cards) < 5:
             return None

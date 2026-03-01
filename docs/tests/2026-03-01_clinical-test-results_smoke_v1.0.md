@@ -1,6 +1,6 @@
-# Clinical Test Results - Session 2 - All-In Stress
+# Clinical Test Results - smoke-test
 
-**Session:** Session 2 - All-In Stress
+**Session:** smoke-test
 **Date:** 2026-03-01
 **Result:** PASS
 
@@ -10,20 +10,18 @@
 |--------|-------|
 | Hands played | 200 |
 | Showdown rate | 100.0% |
-| Average pot | 6000.0 chips |
-| Largest pot | 6000 chips |
+| Average pot | 3501.8 chips |
+| Largest pot | 4000 chips |
 | Invariant violations | 0 |
 
 ## Results by Player
 
 | Player | Wins | Chips Won |
 |--------|------|-----------|
-| AllIn4 | 47 | 260000 |
-| AllIn2 | 38 | 209000 |
-| AllIn3 | 37 | 210000 |
-| AllIn1 | 33 | 176000 |
-| AllIn6 | 33 | 183000 |
-| AllIn5 | 29 | 162000 |
+| AllIn | 67 | 215696 |
+| CS | 65 | 207793 |
+| Agg | 60 | 196881 |
+| Rand1 | 21 | 80000 |
 
 ## Invariant Check
 
