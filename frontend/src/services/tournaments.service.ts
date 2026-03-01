@@ -38,10 +38,6 @@ interface TournamentsListResponse {
   };
 }
 
-interface TournamentDetailsResponse {
-  tournament: Tournament;
-}
-
 export const tournamentsService = {
   /**
    * Get all tournaments
@@ -53,18 +49,20 @@ export const tournamentsService = {
 
   /**
    * Get tournament by ID
+   * Backend returns a flat tournament object (not wrapped).
    */
   async getById(id: number): Promise<Tournament> {
-    const response = await apiClient.get<TournamentDetailsResponse>(`/tournaments/${id}`);
-    return response.data.tournament;
+    const response = await apiClient.get<Tournament>(`/tournaments/${id}`);
+    return response.data;
   },
 
   /**
    * Create a new tournament (admin only)
+   * Backend returns a flat tournament object (not wrapped).
    */
   async create(data: CreateTournamentData): Promise<Tournament> {
-    const response = await apiClient.post<TournamentDetailsResponse>('/tournaments', data);
-    return response.data.tournament;
+    const response = await apiClient.post<Tournament>('/tournaments', data);
+    return response.data;
   },
 
   /**

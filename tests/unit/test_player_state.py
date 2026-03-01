@@ -238,12 +238,16 @@ class TestPlayerRoundData:
         assert player.current_bet == 0
     
     def test_clear_round_data_resets_hole_cards(self):
-        """Test that clear_round_data clears hole cards."""
+        """Test that clear_round_data preserves hole cards (cards persist across betting rounds).
+
+        Hole cards are only cleared in reset_for_new_hand(), not between betting rounds.
+        This is correct: a player's hole cards must survive from pre-flop through the river.
+        """
         player = PlayerState("bot_001", 0, 1000)
         player.deal_hole_cards([Card("hearts", "A"), Card("spades", "K")])
-        
+
         player.clear_round_data()
-        assert player.hole_cards == []
+        assert player.hole_cards == [Card("hearts", "A"), Card("spades", "K")]
     
     def test_clear_round_data_resets_round_status(self):
         """Test that clear_round_data sets round_status to SITTING_OUT."""

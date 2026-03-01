@@ -79,28 +79,74 @@ class TestValidTurnCheck:
 
 class TestCheckValidation:
     """Test validating check actions."""
-    
+
     def test_valid_check_no_bet_to_match(self):
         """Test check when no one has bet."""
         players = [PlayerState("bot_1", 0, 1000), PlayerState("bot_2", 1, 1000)]
         game = GameState("game_001", players, 10, 20)
         game.current_action_player = 0
-        
+
         validator = BettingValidator(game)
         # Should not raise
         validator.validate_action("bot_1", ActionType.CHECK)
-    
+
     def test_invalid_check_bet_to_match(self):
         """Test check when there's a bet to match."""
         players = [PlayerState("bot_1", 0, 1000), PlayerState("bot_2", 1, 1000)]
         game = GameState("game_001", players, 10, 20)
         game.current_action_player = 0
-        
+
         players[1].post_bet(100)
-        
+
         validator = BettingValidator(game)
         with pytest.raises(InvalidActionError, match="Cannot check"):
             validator.validate_action("bot_1", ActionType.CHECK)
+
+    def test_valid_check_bb_has_matched_big_blind(self):
+        """Test that BB can check when no one has raised pre-flop.
+
+        This is the specific scenario fixed in Phase 4.1: the BB has already
+        posted current_bet=20 (the big blind).  No other player has raised, so
+        max_bet == BB.current_bet == 20.  The BB has nothing left to call and
+        must be allowed to check.
+
+        The old validator used `if max_bet > 0`, which incorrectly rejected this
+        action.  The corrected condition is `if max_bet > player.current_bet`.
+        """
+        players = [PlayerState("bot_1", 0, 1000), PlayerState("bb", 1, 1000)]
+        game = GameState("game_001", players, 10, 20)
+
+        # Simulate BB posting the big blind (current_bet = 20)
+        players[1].post_bet(20)
+
+        # It is the BB's turn to act (everyone else has folded or called)
+        game.current_action_player = 1
+
+        validator = BettingValidator(game)
+        # Should not raise - BB has already matched max_bet
+        validator.validate_action("bb", ActionType.CHECK)
+
+    def test_invalid_check_bb_faces_raise(self):
+        """Test that BB cannot check after a pre-flop raise.
+
+        BB posted current_bet=20.  Another player raised to 100 (max_bet=100).
+        BB has an unmatched bet of 80 remaining and must call, raise, or fold -
+        not check.
+        """
+        players = [PlayerState("bot_1", 0, 1000), PlayerState("bb", 1, 1000)]
+        game = GameState("game_001", players, 10, 20)
+
+        # BB posted blind
+        players[1].post_bet(20)
+        # bot_1 raised to 100
+        players[0].post_bet(100)
+
+        # It is the BB's turn to respond to the raise
+        game.current_action_player = 1
+
+        validator = BettingValidator(game)
+        with pytest.raises(InvalidActionError, match="Cannot check"):
+            validator.validate_action("bb", ActionType.CHECK)
 
 
 class TestFoldValidation:

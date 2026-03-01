@@ -4,8 +4,8 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 1.9
-**Last Updated:** 2026-02-25 15:30 GMT+13
+**Version:** 2.2
+**Last Updated:** 2026-03-01 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
 
@@ -15,6 +15,9 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 2.2 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing run - 5 sessions, 2,264 hands, zero invariant violations; 6 engine/simulator bugs found and fixed |
+| 2026-02-28 | 2.1 | Sonnet 4.6 | Phase 3.4 COMPLETE: Three skills created (/gitflow, /create-pr, /code-review); TASK-BOARD updated; GITFLOW.md updated with automation references |
+| 2026-02-26 23:45 | 2.0 | Sonnet 4.5 | Phase 3.2 DEPLOYED to production (v0.2.0); Added Phase 3.8 (Security Enhancements backlog); Phase 3.4 IN PROGRESS (GitFlow & PR automation skills); GitFlow workflow executed successfully |
 | 2026-02-25 15:30 | 1.9 | Sonnet 4.5 | Phase 3.2 COMPLETE: Premium dark casino theme implemented, all emojis removed, sophisticated design with Playfair+Inter fonts, 12/16 frontend tests passing |
 | 2026-02-25 12:45 | 1.8 | Sonnet 4.5 | Added REQUIRED TEST tasks to Phase 3.2: API start, integration flow, E2E tests, unit tests must all pass before phase completion |
 | 2026-02-25 12:00 | 1.7 | Sonnet 4.5 | Phase 3.2 Frontend UNBLOCKED: CSS import issue resolved by separating type/value imports; website now renders; buttons need backend API running |
@@ -289,24 +292,102 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ---
 
+## Phase 3.8: Security Enhancements (BACKLOG)
+
+### 3.8.1 Implement Secure Token Storage
+- [ ] Move JWT tokens from localStorage to httpOnly cookies
+- [ ] Update frontend API interceptors to use cookies instead of localStorage
+- [ ] Add CSRF protection for cookie-based auth
+- [ ] Update backend to send tokens via Set-Cookie header
+- [ ] Test authentication flow with new storage mechanism
+- **Priority:** MEDIUM (security improvement)
+- **Impact:** Mitigates XSS token theft risk
+- **Risk Level:** Currently acceptable for Phase 3.2, should be addressed before public launch
+- **Files:** frontend/src/services/api.ts, frontend/src/services/auth.service.ts, backend/src/routes/auth.ts
+- **Estimate:** 2-3 hours
+- **Status:** BACKLOG (identified 2026-02-26 in Phase 3.2 peer review)
+
+### 3.8.2 Add Refresh Token Implementation
+- [ ] Implement refresh token generation in backend
+- [ ] Add refresh token rotation logic
+- [ ] Create /api/auth/refresh endpoint
+- [ ] Add automatic token refresh in frontend interceptor
+- [ ] Store refresh tokens securely (httpOnly cookie)
+- [ ] Add refresh token revocation on logout
+- **Priority:** MEDIUM (improves UX and security)
+- **Impact:** Allows long-lived sessions without compromising security
+- **Risk Level:** Not critical for Phase 3.2, recommended for production
+- **Files:** backend/src/routes/auth.ts, frontend/src/services/api.ts
+- **Estimate:** 3-4 hours
+- **Status:** BACKLOG (identified 2026-02-26 in Phase 3.2 peer review)
+
+### 3.8.3 Expand CORS Configuration for Production
+- [ ] Add production domain to CORS allowed origins
+- [ ] Create environment-specific CORS configuration
+- [ ] Document CORS setup in deployment guide
+- [ ] Test CORS with production domain
+- [ ] Add subdomain support if needed
+- **Priority:** LOW (required only for production deployment)
+- **Impact:** Enables frontend to communicate with production API
+- **Risk Level:** Current localhost-only configuration is correct for development
+- **Files:** backend/src/server.ts
+- **Estimate:** 30 minutes
+- **Status:** BACKLOG (identified 2026-02-26 in Phase 3.2 peer review)
+- **Trigger:** When deploying to production environment
+
+**Phase 3.8 Status:** BACKLOG - Non-blocking security enhancements
+**Priority:** Address before public production launch
+**Total Estimate:** 6-8 hours
+**Identified:** 2026-02-26 during Phase 3.2 code peer review
+
+---
+
 ## Phase 3.4: GitFlow Strategy & PR Automation
 
-### 3.4 GitFlow Implementation (COMPLETED 2026-02-24)
-- [ ] Create GitFlow skill with branching strategy (feature/, release/, hotfix/)
-- [ ] Implement PR automation via GitHub API
-- [ ] Build sub-agent for PR creation + notifications
-- [ ] Define code review standards (see below)
-- **Status:** READY (after Phase 3.3 refactor)
-- **Estimate:** 2-3 hours
-- **Token Budget:** approximately 1000-1200 tokens
+### 3.4.1 Create Global GitFlow Skill
+- [x] Design GitFlow skill for reusable workflow automation
+- [x] Implement branching conventions (feature/, release/, hotfix/, bugfix/)
+- [x] Add merge workflow automation (feature->develop->release->main)
+- [x] Include version bumping logic
+- [x] Add git tag creation and management
+- [x] Build code peer review capabilities (via separate code-review skill)
+- [x] Make skill portable across projects
+- **Status:** COMPLETE (2026-02-28)
+- **File:** `.claude/skills/gitflow/SKILL.md`
+- **Commands:** `/gitflow feature-start`, `/gitflow feature-finish`, `/gitflow release-start`, `/gitflow release-finish`, `/gitflow hotfix-start`, `/gitflow hotfix-finish`
+
+### 3.4.2 Create Global PR Automation Skill
+- [x] Implement GitHub PR creation via API (gh cli + REST API fallback)
+- [x] Add automated PR body generation with changelogs and test results
+- [x] Build structured PR template with checklist
+- [x] Add manual fallback with GitHub URL when gh/token not available
+- [x] Make skill portable across projects
+- **Status:** COMPLETE (2026-02-28)
+- **File:** `.claude/skills/create-pr/SKILL.md`
+- **Command:** `/create-pr [base-branch]`
+- **Note:** GitHub CLI (`gh`) not installed -- install with `winget install GitHub.cli` for full automation
+
+### 3.4.3 Define Code Review Standards
+- [x] Document peer review process
+- [x] Create review checklist template (correctness, tests, quality, TS, Python, docs, security, performance)
+- [x] Define approval criteria (APPROVED / APPROVED WITH COMMENTS / CHANGES REQUIRED)
+- [x] Embed quality standards from AGENTS.md and CODING_STANDARDS.md
+- **Status:** COMPLETE (2026-02-28)
+- **File:** `.claude/skills/code-review/SKILL.md`
+- **Command:** `/code-review [branch-or-file]`
 
 **Code Review Standards (CRITICAL):**
-- Agent must analyze code critically
+- Agent must analyse code critically
 - Challenge logic when confident in alternative approach
 - Willingly recode solutions for better quality
 - Use PR process as collaborative improvement tool
 - Call Jon before making major architectural decisions
 - PRs should improve code, not just pass tests
+
+**Phase 3.4 Status:** COMPLETE (2026-02-28)
+**Completed by:** Sonnet 4.6
+**Files created:** `.claude/skills/gitflow/SKILL.md`, `.claude/skills/create-pr/SKILL.md`, `.claude/skills/code-review/SKILL.md`
+**Token Budget:** approximately 1500-2000 tokens
 
 ---
 
@@ -327,12 +408,17 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ## Phase 4: Testing and Quality Assurance
 
 ### 4.1 Clinical Testing Plan
-- [ ] Define test scenarios
-- [ ] Recruit eight test bots (simple strategies)
-- [ ] Run 500 or more hands across all bots
-- **Status:** READY (after Phase 3)
-- **Estimate:** 2-3 hours (setup), then ongoing
-- **Token Budget:** approximately 400-600 tokens
+- [x] Define test scenarios (5 sessions designed)
+- [x] Recruit six test bots (CS, Agg, Pass, Fold, AllIn, Random)
+- [x] Run 500+ hands across all bots (2,264 hands total, 5 sessions)
+- [x] Fix 6 integration bugs found during testing
+- [x] All invariants verified: zero violations across all hands
+- **Status:** COMPLETE (2026-03-01)
+- **Completed by:** Sonnet 4.6
+- **Results:** 5/5 sessions PASS, 0 invariant violations, 2,264 hands
+- **Bugs fixed:** CALL amounts, AggressorBot BET/RAISE, game loop cycling, side pot double-counting, CHECK validator, fallback cascade
+- **See:** `docs/tests/TEST-PLAN.md` Section 11 for full results
+- **Reports:** `docs/tests/2026-03-01_clinical-test-results_*.md`
 
 ### 4.2 Bug Fixes and Optimisation
 - [ ] Document any bugs found
@@ -347,14 +433,17 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 - **Phase 1 Total:** Approximately 5-7 tasks, USD 1.50-2.50 — COMPLETE ✓
 - **Phase 2 Total:** Approximately 10 tasks, USD 2.00-3.00 — COMPLETE ✓
+- **Phase 3.2 Total:** Frontend, USD 1.50-2.00 — COMPLETE ✓ (2026-02-26)
 - **Phase 3.3 Total:** TypeORM + Testing, USD 2.00-2.50 — COMPLETE + DEPLOYED ✓
+- **Phase 3.4 Total:** GitFlow & PR Automation, USD 1.00-1.50 — COMPLETE (2026-02-28)
 - **Phase 3.6 Total:** Security Fixes, USD 1.50-2.00 — COMPLETE ✓ (2026-02-24, 3.25 hours)
 - **Phase 3.7 Total:** Test Quality, USD 0.25-0.50 — BACKLOG (optional, 30 min)
-- **Phase 3.2 Total:** Frontend, USD 1.50-2.00 — READY
-- **Phase 4 Total:** Approximately 2 main tasks, USD 0.50-1.00
+- **Phase 3.8 Total:** Security Enhancements, USD 3.00-4.00 — BACKLOG (6-8 hours)
+- **Phase 4.1 Total:** Clinical Testing, USD 0.50-1.00 — COMPLETE ✓ (2026-03-01)
 
-**Grand Total:** Approximately USD 7.25-11.50 (within budget with margin)
-**Spent to Date:** ~USD 7.00-8.50 (Phases 1, 2, 3.3, 3.6 complete)
+**Grand Total:** Approximately USD 10.25-14.50 (within budget with margin)
+**Spent to Date:** ~USD 9.00-10.50 (Phases 1, 2, 3.2, 3.3, 3.6, 4.1 complete)
+**Backlog Items:** Phase 3.7 (30 min), Phase 3.8 (6-8 hours), Phase 4.2 (variable)
 
 ---
 
@@ -369,11 +458,17 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - 2.2 Core Dealer Logic: DONE (2026-02-21) — 38/38 tests passing
 - 2.3 & 2.4 Testing: READY to start or skip based on timeline
 
+**Phase 4 (Testing):** IN PROGRESS
+- 4.1 Clinical Testing: COMPLETE ✓ (2026-03-01) — 5/5 sessions PASS, 2,264 hands, zero violations
+- 4.2 Bug Fixes: READY
+
 **Phase 3 (Platform Website):** IN PROGRESS
-- 3.3 Backend API: DEPLOYED ✓ (v0.1.0, 2026-02-24) — Full TypeScript/TypeORM conversion + 43 unit tests, deployed to production
+- 3.2 Frontend: COMPLETE ✓ (2026-02-26, v0.2.0) — Premium dark casino theme, 37 React files, 23/23 E2E tests, 16/16 unit tests, full API integration
+- 3.3 Backend API: COMPLETE ✓ (v0.1.0, 2026-02-24) — Full TypeScript/TypeORM conversion + 43 unit tests, deployed to production
+- 3.4 GitFlow & PR Automation: COMPLETE (2026-02-28) — Three skills created: /gitflow, /create-pr, /code-review
 - 3.6 Security Fixes: COMPLETE ✓ (2026-02-24) — All 5 CRITICAL issues resolved in 3.25 hours
-- 3.2 Frontend: COMPLETE ✓ (2026-02-25) — Premium dark casino theme, all emojis removed, Malta/Vegas inspired design, 37 React files, 12/16 tests passing
 - 3.7 Test Quality: BACKLOG (optional) — Fix 10 RBAC tests (~30 min), low priority
+- 3.8 Security Enhancements: BACKLOG (6-8 hours) — httpOnly cookies, refresh tokens, production CORS
 - 3.1 Architecture: SUPERSEDED by DEPLOYMENT_ARCHITECTURE.md
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
 
@@ -381,20 +476,13 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ## Immediate Next Actions
 
-**PRIORITY 1:** Phase 3.4 - GitFlow Strategy & PR Automation (RECOMMENDED NEXT)
-- Status: READY (2026-02-25) - Frontend and Backend both complete
-- Work: Implement GitFlow branching strategy, PR automation, code review standards
-- Value: Establishes proper workflow for future development
-- Estimate: 2-3 hours
-- See: Phase 3.4 section above for detailed requirements
+**PRIORITY 1:** Phase 4.2 - Bug Fixes and Optimisation (READY TO START)
+- Status: READY - 6 bugs found and fixed during Phase 4.1; further profiling optional
+- Work: Profile for performance bottlenecks, review any latent engine correctness issues
+- Value: Engine hardening beyond clinical test pass
+- Estimate: Variable (1-4 hours)
 
-**PRIORITY 2:** Phase 4.1 - Clinical Testing Plan (READY TO START)
-- Status: READY - Platform foundation complete
-- Work: Define test scenarios, recruit test bots, run 500+ hands
-- Value: Validate bot logic and dealer engine integration
-- Estimate: 2-3 hours setup + ongoing testing
-
-**PRIORITY 3:** Phase 3.7 Test Quality Improvements (Optional)
+**PRIORITY 2:** Phase 3.7 Test Quality Improvements (Optional)
 - Status: BACKLOG (2026-02-24), NOT BLOCKING anything
 - Work: Convert 10 failing RBAC integration tests to unit tests
 - Estimate: 30 minutes
@@ -412,6 +500,6 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ---
 
-**Last Updated:** 2026-02-25 15:30 GMT+13
-**Version:** 1.9
+**Last Updated:** 2026-03-01
+**Version:** 2.2
 **Maintainer:** Jon + Development Team

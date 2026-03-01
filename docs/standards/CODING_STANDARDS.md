@@ -1,7 +1,7 @@
 # Coding Standards - OpenClaw Poker Project
 
 **Effective Date:** 2026-02-20
-**Version:** 1.0
+**Version:** 1.1
 
 ---
 
@@ -495,6 +495,149 @@ Before committing code:
 - [ ] Error handling implemented and tested
 - [ ] No TODO comments without context
 - [ ] All tests run locally before commit
+
+---
+
+## TypeScript-Specific Standards (Backend + Frontend)
+
+### Naming Conventions
+
+| Element | Convention | Example |
+|---------|-----------|---------|
+| Variables, functions | camelCase | `buyInChips`, `getActivePlayers()` |
+| Classes, interfaces, types | PascalCase | `Tournament`, `PlayerState` |
+| Enums | PascalCase (name), UPPER_SNAKE (members) | `enum Role { ADMIN, PLAYER }` |
+| Constants | UPPER_SNAKE_CASE | `MAX_PLAYERS`, `DEFAULT_STACK` |
+| File names | kebab-case | `auth.service.ts`, `tournament-card.tsx` |
+| React components (files) | PascalCase | `TournamentCard.tsx`, `Layout.tsx` |
+| Database columns | snake_case | `buy_in_chips`, `entry_fee_usd` |
+
+### Type Safety
+
+- **strict mode required** in all `tsconfig.json` files (`"strict": true`)
+- Never use `any` without a justifying comment — prefer `unknown` and narrow
+- Always type function parameters and return values explicitly for exported functions
+- Use discriminated unions over optional fields where states are mutually exclusive:
+
+```typescript
+// BAD - ambiguous state
+interface ApiResult {
+  data?: Tournament[];
+  error?: string;
+  loading?: boolean;
+}
+
+// GOOD - discriminated union
+type ApiResult =
+  | { status: 'loading' }
+  | { status: 'success'; data: Tournament[] }
+  | { status: 'error'; error: string };
+```
+
+### Enums and Constants
+
+- Use TypeScript `enum` for fixed sets of values shared across the codebase:
+
+```typescript
+// Prefer enums over string literals for status fields
+enum TournamentStatus {
+  SCHEDULED = 'scheduled',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
+enum PlayerRole {
+  ADMIN = 'admin',
+  PLAYER = 'player',
+}
+```
+
+- Use `as const` for simple value maps that don't need reverse lookup:
+
+```typescript
+const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+} as const;
+```
+
+### API Layer Conventions
+
+- Frontend service files must match the **actual backend response shape** (see AGENTS.md)
+- Never assume wrapper objects — verify with `curl` first
+- Type API responses at the service boundary, not in components:
+
+```typescript
+// Service layer types the response
+async getAll(): Promise<Tournament[]> {
+  const response = await apiClient.get<TournamentsListResponse>('/tournaments');
+  return response.data.tournaments;
+}
+
+// Component receives clean typed data
+const tournaments: Tournament[] = await tournamentsService.getAll();
+```
+
+### React / Frontend Patterns
+
+- Use functional components exclusively (no class components)
+- Prefer named exports over default exports for components
+- Co-locate component tests in `__tests__/` with matching names
+- Use React Context sparingly — only for truly global state (auth, theme)
+- Keep components under 200 lines; extract sub-components when larger
+
+### Import Order
+
+Enforce consistent import ordering in all TypeScript files:
+
+```typescript
+// 1. React / framework imports
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// 2. Third-party libraries
+import axios from 'axios';
+
+// 3. Project services / utils
+import { tournamentsService } from '../services/tournaments.service';
+
+// 4. Project components
+import { TournamentCard } from '../components/TournamentCard';
+
+// 5. Types / interfaces (type-only imports)
+import type { Tournament } from '../services/tournaments.service';
+```
+
+### Error Handling (TypeScript)
+
+- Use typed error responses from the backend:
+
+```typescript
+interface ApiError {
+  error: {
+    code: string;
+    message: string;
+  };
+}
+```
+
+- Catch Axios errors with type narrowing:
+
+```typescript
+try {
+  await tournamentsService.create(data);
+} catch (err) {
+  if (axios.isAxiosError(err) && err.response) {
+    const apiError = err.response.data as ApiError;
+    setError(apiError.error.message);
+  } else {
+    setError('An unexpected error occurred');
+  }
+}
+```
 
 ---
 

@@ -133,13 +133,15 @@ class BettingValidator:
     def _validate_check(self, player) -> None:
         """
         Validate a check action.
-        
-        Only valid if the player has no bet to match this round.
+
+        Only valid if the player has no unmatched bet to call this round.
+        A player who has already matched the maximum bet (e.g., the BB when
+        no one has raised) may always check.
         """
         active_players = self.game_state.get_active_players()
         max_bet = max(p.current_bet for p in active_players) if active_players else 0
-        
-        if max_bet > 0:
+
+        if max_bet > player.current_bet:
             raise InvalidActionError(
                 f"Cannot check; current bet is {max_bet}"
             )

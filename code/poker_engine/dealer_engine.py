@@ -237,10 +237,10 @@ class DealerEngine:
             player.post_bet(raise_total)
             self.pot_manager.add_to_pot(player_id, raise_total)
             player.round_status = RoundStatus.ACTED
-            # Reset other players' round status
+            # Reset other players so they must act again after the raise
             for p in self.game_state.get_active_players():
-                if p.player_id != player_id and not self._is_all_in(p):
-                    p.round_status = RoundStatus.ACTED
+                if p.player_id != player_id and not self._is_all_in(p) and not self._is_folded(p):
+                    p.round_status = RoundStatus.WAITING_FOR_ACTION
             
         elif action == ActionType.ALL_IN:
             all_in_amount = player.stack
