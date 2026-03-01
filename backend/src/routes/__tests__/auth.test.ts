@@ -4,6 +4,7 @@
 
 import request from 'supertest';
 import express, { Express } from 'express';
+import cookieParser from 'cookie-parser';
 import authRouter from '../auth';
 import { AppDataSource } from '../../database/data-source';
 import { User } from '../../database/entities/User';
@@ -24,6 +25,7 @@ describe('Auth Routes', () => {
     // Create Express app
     app = express();
     app.use(express.json());
+    app.use(cookieParser());
     app.use('/auth', authRouter);
 
     // Create mock repository
@@ -117,9 +119,12 @@ describe('Auth Routes', () => {
         password_hash: 'hashedpassword',
         email: 'test@example.com',
         role: 'player', // CRIT-6: Include role
+        refresh_token_hash: null,
+        refresh_token_expires_at: null,
       } as User;
 
       mockUserRepository.findOne.mockResolvedValue(user);
+      mockUserRepository.save.mockResolvedValue(user);
 
       // Mock bcrypt.compare to return true for valid password
       bcrypt.compare = jest.fn().mockResolvedValue(true);
@@ -132,11 +137,15 @@ describe('Auth Routes', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
+      // Phase 3.8: token is in httpOnly cookie, NOT in response body
+      expect(response.body).not.toHaveProperty('token');
       expect(response.body).toHaveProperty('user_id', 1);
       expect(response.body).toHaveProperty('username', 'testuser');
       expect(response.body).toHaveProperty('role', 'player'); // CRIT-6: Check role in response
-      expect(response.body).toHaveProperty('expires_in', 3600);
+      const cookies: string[] = Array.isArray(response.headers['set-cookie'])
+        ? response.headers['set-cookie'] as string[]
+        : [response.headers['set-cookie'] as string];
+      expect(cookies.some((c: string) => c.startsWith('access_token='))).toBe(true);
     });
 
     it('should return 400 if username is missing', async () => {
