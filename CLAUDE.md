@@ -2,8 +2,8 @@
 
 **Category:** standards
 **Purpose:** Current project status and how to resume work
-**Status:** Phase 4.1 Complete - Clinical Testing PASS - Ready for Phase 4.2 or Backlog
-**Version:** 2.4
+**Status:** v0.3.0 Released - Ready for Phase 4.2
+**Version:** 2.5
 **Last Updated:** 2026-03-01
 **Owner:** Jon + Development Team
 **Tags:** operational, phase-3.2-complete, all-tests-passing, integration-verified, ready-for-next-phase
@@ -17,7 +17,8 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
-| 2026-03-01 | 2.4 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing PASS; 5/5 sessions, 2,264 hands, zero invariant violations; 6 integration bugs fixed (CALL amounts, BET/RAISE, game loop, side pots, CHECK validator, fallback cascade); 301/301 engine tests still passing |
+| 2026-03-01 | 2.5 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303 passing); code review APPROVED WITH COMMENTS; feature branch merged to develop; release/0.3.0 merged to main; tagged v0.3.0 |
+| 2026-03-01 | 2.4 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing PASS; 5/5 sessions, 2,264 hands, zero invariant violations; 6 integration bugs fixed (CALL amounts, BET/RAISE, game loop, side pots, CHECK validator, fallback cascade); 303/303 engine tests passing |
 | 2026-02-28 | 2.3 | Sonnet 4.6 | Phase 3.4 COMPLETE: Tests confirmed 301/301 passing; created /gitflow, /create-pr, /code-review skills; updated GITFLOW.md, TASK-BOARD.md, CLAUDE.md |
 | 2026-02-28 | 2.2 | Opus 4.1 | Architecture review: Fixed 3 critical poker engine bugs (best-5-card, RAISE status, hole card wipe), fixed frontend API mismatch, added 404 route, added TypeScript to CODING_STANDARDS, cleaned AGENTS.md emojis, synced TASK-BOARD version |
 | 2026-02-26 (Final) | 2.1 | Sonnet 4.5 | Phase 3.2 COMPLETE: All systems operational, CORS verified working, full integration tested and confirmed |
@@ -30,8 +31,8 @@
 
 ## QUICK RESUME - START HERE
 
-**Current State:** Phase 4.1 Complete - Clinical Testing PASS
-**Branch:** `feature/2026-02-26_phase-3.4-gitflow-pr-automation`
+**Current State:** v0.3.0 Released to main - Ready for Phase 4.2
+**Branch:** `develop` (current working branch)
 **Last Updated:** 2026-03-01
 
 ### Latest Session (2026-03-01) - Phase 4.1 Clinical Testing

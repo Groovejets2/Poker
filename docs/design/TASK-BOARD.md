@@ -4,7 +4,7 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 2.2
+**Version:** 2.3
 **Last Updated:** 2026-03-01 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 2.3 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303); code review APPROVED WITH COMMENTS; feature merged to develop; tagged v0.3.0 on main |
 | 2026-03-01 | 2.2 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing run - 5 sessions, 2,264 hands, zero invariant violations; 6 engine/simulator bugs found and fixed |
 | 2026-02-28 | 2.1 | Sonnet 4.6 | Phase 3.4 COMPLETE: Three skills created (/gitflow, /create-pr, /code-review); TASK-BOARD updated; GITFLOW.md updated with automation references |
 | 2026-02-26 23:45 | 2.0 | Sonnet 4.5 | Phase 3.2 DEPLOYED to production (v0.2.0); Added Phase 3.8 (Security Enhancements backlog); Phase 3.4 IN PROGRESS (GitFlow & PR automation skills); GitFlow workflow executed successfully |
@@ -477,9 +478,10 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ## Immediate Next Actions
 
 **PRIORITY 1:** Phase 4.2 - Bug Fixes and Optimisation (READY TO START)
-- Status: READY - 6 bugs found and fixed during Phase 4.1; further profiling optional
-- Work: Profile for performance bottlenecks, review any latent engine correctness issues
-- Value: Engine hardening beyond clinical test pass
+- Status: READY - v0.3.0 shipped; code review identified MEDIUM/LOW items for this phase
+- Work: Add logging to game_runner fallback handler; type `bot_map` as `Dict[str, BaseBot]`; profile engine
+- Code review items: game_runner.py:252 (bare except), game_runner.py:271 (winner exception swallowed), winner_determiner.py:71 (ValueError doc), game_runner.py:185 (Dict[str, object] type)
+- Value: Engine hardening and code quality improvement
 - Estimate: Variable (1-4 hours)
 
 **PRIORITY 2:** Phase 3.7 Test Quality Improvements (Optional)
@@ -501,5 +503,5 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ---
 
 **Last Updated:** 2026-03-01
-**Version:** 2.2
+**Version:** 2.3
 **Maintainer:** Jon + Development Team
