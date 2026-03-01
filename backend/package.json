@@ -1,6 +1,6 @@
 {
   "name": "openclaw-poker-backend",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "OpenClaw Poker Platform - Backend API",
   "main": "src/server.ts",
   "scripts": {
