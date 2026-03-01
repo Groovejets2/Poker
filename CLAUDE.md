@@ -2,8 +2,8 @@
 
 **Category:** standards
 **Purpose:** Current project status and how to resume work
-**Status:** v0.3.0 Released - Ready for Phase 4.2
-**Version:** 2.5
+**Status:** v0.3.1 Released - Phase 4.2 Complete
+**Version:** 2.6
 **Last Updated:** 2026-03-01
 **Owner:** Jon + Development Team
 **Tags:** operational, phase-3.2-complete, all-tests-passing, integration-verified, ready-for-next-phase
@@ -17,6 +17,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 2.6 | Sonnet 4.6 | v0.3.1 RELEASED: Phase 4.2 complete; exception logging, type annotation, docstring fixes in game_runner.py and winner_determiner.py; code review APPROVED; tagged v0.3.1 on main |
 | 2026-03-01 | 2.5 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303 passing); code review APPROVED WITH COMMENTS; feature branch merged to develop; release/0.3.0 merged to main; tagged v0.3.0 |
 | 2026-03-01 | 2.4 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing PASS; 5/5 sessions, 2,264 hands, zero invariant violations; 6 integration bugs fixed (CALL amounts, BET/RAISE, game loop, side pots, CHECK validator, fallback cascade); 303/303 engine tests passing |
 | 2026-02-28 | 2.3 | Sonnet 4.6 | Phase 3.4 COMPLETE: Tests confirmed 301/301 passing; created /gitflow, /create-pr, /code-review skills; updated GITFLOW.md, TASK-BOARD.md, CLAUDE.md |
@@ -31,40 +32,34 @@
 
 ## QUICK RESUME - START HERE
 
-**Current State:** v0.3.0 Released to main - Ready for Phase 4.2
-**Branch:** `develop` (current working branch)
+**Current State:** v0.3.1 Released - Phase 4.2 Complete
+**Branch:** `develop` (clean, in sync with main)
 **Last Updated:** 2026-03-01
 
-### Latest Session (2026-03-01) - Phase 4.1 Clinical Testing
+### Latest Session (2026-03-01) - Phase 4.2 Engine Code Quality
 
 **Completed:** 2026-03-01
 **Agent:** Sonnet 4.6
 
 **What Was Delivered:**
 
-Clinical Test Framework (code/):
-- [OK] `code/simulator/game_runner.py`: Complete game loop rewrite -- `_is_round_complete()` with RoundStatus checking and ALL_IN gap detection; CHECK->FOLD fallback cascade
-- [OK] `code/simulator/statistics.py`: SessionStatistics and HandResult dataclasses
-- [OK] `code/simulator/logger.py`: SimulationLogger with per-hand logging and Markdown report writer
-- [OK] `code/run_simulation.py`: Entry point running all 5 clinical sessions
-- [OK] Six test bots in `code/bots/`: CS, Agg, Pass, Fold, AllIn, Random -- all CALL/RAISE/BET amounts corrected
+Code Quality Fixes (code/simulator/game_runner.py):
+- [OK] Added `InvalidActionError`, `NotPlayersTurnError` to imports; named exception in fallback handler (`except Exception as _action_err`); unexpected exceptions logged to stderr, expected ones silent
+- [OK] Named exception in winner determination handler (`except Exception as _winner_err`); root cause logged to stderr
+- [OK] `from bots.base_bot import BaseBot` added; `bot_map` typed as `Dict[str, BaseBot]`
 
-Engine Fixes (code/poker_engine/):
-- [OK] `pot_manager.py`: `calculate_side_pots()` now deducts side pot from main_pot (prevents double-counting)
-- [OK] `betting_validator.py`: `_validate_check()` now uses `max_bet > player.current_bet` (allows BB to check when unraised)
+Docstring Update (code/poker_engine/winner_determiner.py):
+- [OK] `_find_best_five_card_hand`: Added `Raises: ValueError` section documenting propagation from `hand_evaluator.evaluate()`
+
+Performance Profile:
+- `_find_best_five_card_hand` (7 cards, 21 combos): 501 μs/call — acceptable for simulation
 
 Test Results:
-- [OK] Session 1 (Main Mixed, 500 hands): PASS
-- [OK] Session 2 (All-In Stress, 200 hands): PASS
-- [OK] Session 3 (Random Chaos, 500 hands): PASS
-- [OK] Session 4 (Survivor, 64 hands): PASS -- Random won survivor tournament
-- [OK] Session 5 (Heads-Up Agg vs CS, 1,000 hands): PASS -- near-even split
-- [OK] Python engine: 301/301 passing (no regressions)
+- [OK] 303/303 Python engine tests passing
+- [OK] 5/5 clinical sessions PASS, 0 invariant violations (re-run post-changes)
+- [OK] Code review verdict: APPROVED
 
-Documentation:
-- [OK] `docs/tests/TEST-PLAN.md`: Section 11 added with full execution results (v1.1 -> v1.2)
-- [OK] `docs/design/TASK-BOARD.md`: Phase 4.1 marked COMPLETE (v2.1 -> v2.2)
-- [OK] `CLAUDE.md`: Updated to v2.4
+Released as v0.3.1 on 2026-03-01.
 
 ### Previous Session (2026-02-28) - Architecture Review & Critical Bug Fixes
 

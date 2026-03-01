@@ -1,9 +1,9 @@
 # Current Session State - 2026-03-01
 
-## Status: v0.3.0 Released - Ready for Phase 4.2
+## Status: v0.3.1 Released - Phase 4.2 Complete
 
 **Branch:** `develop` (main working branch)
-**Tag:** `v0.3.0` (on `main`)
+**Tag:** `v0.3.1` (on `main`)
 **Agent:** Sonnet 4.6
 **Session Date:** 2026-03-01
 
@@ -11,40 +11,56 @@
 
 ## What Was Accomplished This Session
 
-### 1. BB-Check Unit Test Added
+### 1. Phase 4.2 - Engine Code Quality
 
-Added two tests to `tests/unit/test_betting_validator.py` covering the Phase 4.1 fix:
+Addressed all MEDIUM/LOW items carried forward from the v0.3.0 code review:
 
-- `test_valid_check_bb_has_matched_big_blind` — BB with `current_bet=20`, `max_bet=20`, no raise: CHECK must be allowed
-- `test_invalid_check_bb_faces_raise` — BB posted blind but opponent raised to 100: CHECK must be rejected
+| File | Change |
+|------|--------|
+| `code/simulator/game_runner.py` | Log unexpected exceptions in action fallback handler (`isinstance` check: `InvalidActionError`/`NotPlayersTurnError` are silent; all others go to stderr) |
+| `code/simulator/game_runner.py` | Log root cause in winner determination exception handler |
+| `code/simulator/game_runner.py` | Added `InvalidActionError`, `NotPlayersTurnError` to `poker_engine` imports |
+| `code/simulator/game_runner.py` | Added `from bots.base_bot import BaseBot`; typed `bot_map` as `Dict[str, BaseBot]` |
+| `code/poker_engine/winner_determiner.py` | Added `Raises: ValueError` section to `_find_best_five_card_hand` docstring |
 
-Test count: 301 -> 303. All 303 passing.
+### 2. Performance Profiling
 
-### 2. Code Review Completed
+`_find_best_five_card_hand` benchmarked:
 
-Review verdict: **APPROVED WITH COMMENTS**
+- 7-card (21 combos): **501 μs/call**
+- 6 players/hand: **~3ms** total
+- 1,000 hands: **~3 seconds** — acceptable for simulation; would need optimisation (caching/lookup tables) for real-time multi-table use
 
-No CRITICAL or HIGH issues found. MEDIUM items documented for Phase 4.2:
+### 3. Clinical Simulation Confirmed 0 Violations
 
-| Severity | Location | Description |
-|----------|----------|-------------|
-| MEDIUM | `game_runner.py:252` | Bare `except Exception` in action loop swallows unexpected errors silently |
-| MEDIUM | `game_runner.py:271` | Winner determination exception swallowed; root cause lost on invariant violation |
-| LOW | `winner_determiner.py:71` | `_find_best_five_card_hand` docstring should note ValueError propagation |
-| LOW | `game_runner.py:185` | `bot_map: Dict[str, object]` should be `Dict[str, BaseBot]` |
+Full 5-session simulation run after Phase 4.2 changes:
 
-### 3. GitFlow Release Executed
+| Session | Hands | Result |
+|---------|-------|--------|
+| Session 1 — Main Mixed | 500 | PASS |
+| Session 2 — All-In Stress | 200 | PASS |
+| Session 3 — Random Chaos | 500 | PASS |
+| Session 4 — Survivor | 51 | PASS |
+| Session 5 — Heads-Up Agg vs CS | 1,000 | PASS |
 
-Full GitFlow sequence completed:
+**Total: 0 invariant violations**
+
+### 4. Code Review
+
+Verdict: **APPROVED**
+
+No CRITICAL, HIGH, or MEDIUM issues. One LOW (missing trailing newline in smoke test file) — fixed immediately before merge.
+
+### 5. GitFlow Release v0.3.1
 
 | Step | Result |
 |------|--------|
-| `feature-finish` | Merged `feature/2026-02-26_phase-3.4-gitflow-pr-automation` into `develop` |
-| `release-start v0.3.0` | Created `release/0.3.0` from develop; bumped both `package.json` to 0.3.0 |
-| `release-finish v0.3.0` | Merged `release/0.3.0` into `main`; tagged `v0.3.0`; merged back into `develop` |
+| `feature-finish` | Merged `feature/2026-03-01_phase-4.2-engine-code-quality` into `develop` |
+| `release-start v0.3.1` | Created `release/0.3.1` from develop; bumped both `package.json` to 0.3.1 |
+| `release-finish v0.3.1` | Merged `release/0.3.1` into `main`; tagged `v0.3.1`; merged back into `develop` |
 | Branch cleanup | Feature and release branches deleted locally and remotely |
 
-### 4. Test Results at Release
+### 6. Test Results at Release
 
 | Suite | Result |
 |-------|--------|
@@ -59,30 +75,29 @@ Full GitFlow sequence completed:
 ### Current State
 
 - Working tree is on `develop`, clean (only pre-existing untracked test artifacts remain)
-- `main` is at tag `v0.3.0`
+- `main` is at tag `v0.3.1`
 - `develop` is in sync with `main` post-release
 
-### Next Phase: Phase 4.2 - Bug Fixes and Optimisation
+### Next Phase Options
 
-**Status:** READY TO START
+**Option A: Phase 3.7 — Test Quality Cleanup (30 min, optional)**
+- Convert 10 failing RBAC integration tests to unit tests
+- File: `backend/src/__tests__/critical/rbac.test.ts`
+- Low priority, can defer indefinitely
 
-Tasks from the code review (MEDIUM/LOW, carried forward):
+**Option B: Phase 3.8 — Security Enhancements (6-8 hours, required before public launch)**
+- httpOnly cookies (replaces localStorage JWT)
+- Refresh token rotation
+- Production CORS configuration
 
-1. Add debug logging to `game_runner.py` fallback handler (bare except at line 252)
-2. Log root cause in winner determination exception handler (line 271)
-3. Update `_find_best_five_card_hand` docstring in `winner_determiner.py:71`
-4. Type `bot_map` as `Dict[str, BaseBot]` in `game_runner.py:185`
-5. Profile engine performance — `_find_best_five_card_hand` runs 21 evaluations/player/hand
+**Option C: Game Engine Architecture Planning (discussion)**
+- Real-time game state at 100s ops/sec needs in-memory solution (Redis/Node.js)
+- TypeORM suitable for slow-path only (auth, tournaments, leaderboard)
 
-To start Phase 4.2:
+To start next phase:
 ```
-/gitflow feature-start phase-4.2-engine-optimisation
+/gitflow feature-start <phase-name>
 ```
-
-### Other Backlog Options
-
-- **Phase 3.7** (30 min): Convert 10 failing RBAC integration tests to unit tests
-- **Phase 3.8** (6-8 hrs): httpOnly cookies, refresh tokens, production CORS (required before public launch)
 
 ---
 
@@ -147,6 +162,7 @@ print('Exit:', r.returncode)
 
 | Tag | Date | Contents |
 |-----|------|----------|
+| v0.3.1 | 2026-03-01 | Phase 4.2 engine code quality (exception logging, type annotation, docstring) |
 | v0.3.0 | 2026-03-01 | Phase 3.4 (GitFlow/PR skills) + Phase 4.1 (clinical testing) + BB-check test |
 | v0.2.0 | 2026-02-26 | Phase 3.2 (frontend) + Phase 3.6 (security fixes) |
 | v0.1.0 | 2026-02-24 | Phase 3.3 (backend TypeORM) |
@@ -155,4 +171,4 @@ print('Exit:', r.returncode)
 
 **Session saved:** 2026-03-01
 **Next agent:** Any model
-**Confidence:** High — v0.3.0 tagged on main, 303 tests passing, working tree clean on develop
+**Confidence:** High — v0.3.1 tagged on main, 303 tests passing, working tree clean on develop
