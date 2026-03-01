@@ -4,7 +4,7 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 2.6
+**Version:** 2.7
 **Last Updated:** 2026-03-01 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 2.7 | Sonnet 4.6 | Cleanup: fully archived Phase 3.1 stub from board |
 | 2026-03-01 | 2.6 | Sonnet 4.6 | Cleanup: removed superseded phases 2.3, 2.4, 3.1 from active board |
 | 2026-03-01 | 2.5 | Sonnet 4.6 | v0.3.2 RELEASED: Phase 3.7 complete; 10 RBAC integration tests converted to unit tests; 53/53 backend tests now passing; tagged v0.3.2 on main |
 | 2026-03-01 | 2.4 | Sonnet 4.6 | v0.3.1 RELEASED: Phase 4.2 complete; exception logging, type annotation, docstring fixes; 303/303 tests; 0 invariant violations; tagged v0.3.1 on main |
@@ -112,9 +113,6 @@ Use these sections with offset/limit to avoid loading full file:
 ---
 
 ## Phase 3: Platform Website
-
-### 3.1 Technology Stack and Architecture
-- **Status:** SUPERSEDED -- tech choices in DEPLOYMENT_ARCHITECTURE.md; API spec created in Phase 3.2; schema implemented as TypeORM entities in Phase 3.3
 
 ### 3.2 Website Frontend
 - [x] React + TypeScript + Vite setup (DONE 2026-02-24)
@@ -461,7 +459,6 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - 3.6 Security Fixes: COMPLETE ✓ (2026-02-24) — All 5 CRITICAL issues resolved in 3.25 hours
 - 3.7 Test Quality: COMPLETE (2026-03-01, v0.3.2) — 53/53 backend tests passing
 - 3.8 Security Enhancements: BACKLOG (6-8 hours) — httpOnly cookies, refresh tokens, production CORS
-- 3.1 Architecture: SUPERSEDED -- removed from active board
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
 
 ---
@@ -485,5 +482,5 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ---
 
 **Last Updated:** 2026-03-01
-**Version:** 2.6
+**Version:** 2.7
 **Maintainer:** Jon + Development Team
