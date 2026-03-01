@@ -4,8 +4,8 @@
 **Purpose:** User guides, setup procedures, troubleshooting, and operational documentation
 
 **Status:** active
-**Version:** 2.1
-**Last Updated:** 2026-03-01 GMT+13
+**Version:** 2.2
+**Last Updated:** 2026-03-02 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [DOCUMENTATION_STANDARDS.md](./standards/DOCUMENTATION_STANDARDS.md), [DOCUMENT_INDEX.md](./DOCUMENT_INDEX.md)
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-02 | 2.2 | Sonnet 4.6 | Added SECURITY-ARCHITECTURE.md to quick reference |
 | 2026-03-01 | 2.1 | Sonnet 4.6 | Added tests/ folder reference; TEST-PLAN.md established as living document |
 | 2026-02-26 21:15 | 2.0 | Sonnet 4.5 | Updated index: removed obsolete API-REFERENCE.md, added new API specification docs, updated metadata |
 | 2026-02-22 11:50 | 1.0 | Angus | Added metadata and change log per DOCUMENTATION_STANDARDS.md |
@@ -33,6 +34,7 @@
 | [AGENTS.md](./standards/AGENTS.md) | standards, quality, api-integration | Mandatory quality standards for API integration | Before writing any API integration code |
 | [TROUBLESHOOTING.md](./documentation/TROUBLESHOOTING.md) | debugging, troubleshooting, errors | Debug common issues, error messages | When something breaks |
 | [tests/TEST-PLAN.md](./tests/TEST-PLAN.md) | testing, unit-tests, integration, stress | Project-wide test plan - all test suites, clinical testing, stress tests | Before running tests or starting Phase 4.1 |
+| [specifications/SECURITY-ARCHITECTURE.md](./specifications/SECURITY-ARCHITECTURE.md) | security, authentication, jwt, cookies, rbac | Security architecture: httpOnly cookies, refresh tokens, RBAC, CORS | Before modifying auth, deploying to production, or reviewing security posture |
 
 ---
 
