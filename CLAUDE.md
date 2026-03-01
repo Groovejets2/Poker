@@ -2,9 +2,9 @@
 
 **Category:** standards
 **Purpose:** Current project status and how to resume work
-**Status:** v0.3.1 Released - Phase 4.2 Complete
-**Version:** 2.6
-**Last Updated:** 2026-03-01
+**Status:** v0.3.3 Released - Phase 3.8 Complete
+**Version:** 2.7
+**Last Updated:** 2026-03-02
 **Owner:** Jon + Development Team
 **Tags:** operational, phase-3.2-complete, all-tests-passing, integration-verified, ready-for-next-phase
 
@@ -17,6 +17,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-02 | 2.7 | Sonnet 4.6 | Phase 3.8 COMPLETE: httpOnly cookie auth, refresh token rotation, stateful sessions; 66/66 backend + 14/14 frontend tests; code review APPROVED WITH COMMENTS; released v0.3.3 |
 | 2026-03-01 | 2.6 | Sonnet 4.6 | v0.3.1 RELEASED: Phase 4.2 complete; exception logging, type annotation, docstring fixes in game_runner.py and winner_determiner.py; code review APPROVED; tagged v0.3.1 on main |
 | 2026-03-01 | 2.5 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303 passing); code review APPROVED WITH COMMENTS; feature branch merged to develop; release/0.3.0 merged to main; tagged v0.3.0 |
 | 2026-03-01 | 2.4 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing PASS; 5/5 sessions, 2,264 hands, zero invariant violations; 6 integration bugs fixed (CALL amounts, BET/RAISE, game loop, side pots, CHECK validator, fallback cascade); 303/303 engine tests passing |
@@ -33,21 +34,32 @@
 
 ## QUICK RESUME - START HERE
 
-**Current State:** v0.3.1 Released - Phase 4.2 Complete
-**Branch:** `develop` (clean, in sync with main)
-**Last Updated:** 2026-03-01
+**Current State:** v0.3.3 Released - Phase 3.8 Complete
+**Branch:** `develop` (clean, in sync with main after feature-finish + release)
+**Last Updated:** 2026-03-02
 
-### Latest Session (2026-03-01) - Phase 4.2 Engine Code Quality
+### Latest Session (2026-03-02) - Phase 3.8 Security Enhancements
 
-**Completed:** 2026-03-01
+**Completed:** 2026-03-02
 **Agent:** Sonnet 4.6
 
 **What Was Delivered:**
 
-Code Quality Fixes (code/simulator/game_runner.py):
-- [OK] Added `InvalidActionError`, `NotPlayersTurnError` to imports; named exception in fallback handler (`except Exception as _action_err`); unexpected exceptions logged to stderr, expected ones silent
-- [OK] Named exception in winner determination handler (`except Exception as _winner_err`); root cause logged to stderr
-- [OK] `from bots.base_bot import BaseBot` added; `bot_map` typed as `Dict[str, BaseBot]`
+Backend Security (backend/src/):
+- [OK] backend/src/routes/auth.ts: Rewrote with login cookies (/login, /refresh, /logout), httpOnly + sameSite=strict + secure in prod
+- [OK] backend/src/middleware/auth.ts: Cookie-first token reading (falls back to Authorization header)
+- [OK] backend/src/server.ts: Added cookieParser(), env-var CORS origins (CORS_ORIGIN)
+- [OK] backend/src/database/entities/User.ts: Added refresh_token_hash + refresh_token_expires_at columns
+- [OK] backend/src/database/migrations/1740787200000-AddRefreshTokenToUser.ts: Migration for new columns
+- [OK] backend/.env + .env.example: Added REFRESH_SECRET
+- [OK] backend/src/__tests__/auth.routes.test.ts: New Phase 3.8 test suite (11 tests)
+- [OK] 66/66 backend tests passing; all coverage thresholds met
+
+Frontend (frontend/src/):
+- [OK] services/api.ts: withCredentials=true, 401 interceptor with isRefreshing queue
+- [OK] services/auth.service.ts: checkSession() via /auth/refresh, no localStorage
+- [OK] context/AuthContext.tsx: isLoading state, async logout, SessionData type
+- [OK] 14/14 frontend tests passing
 
 Docstring Update (code/poker_engine/winner_determiner.py):
 - [OK] `_find_best_five_card_hand`: Added `Raises: ValueError` section documenting propagation from `hand_evaluator.evaluate()`
