@@ -13,6 +13,7 @@
 
 import request from 'supertest';
 import express, { Request, Response, NextFunction } from 'express';
+import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 import { createMockRepository } from '../helpers/mockRepository';
 
@@ -37,8 +38,7 @@ import { AppDataSource } from '../../database/data-source';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-// Inline error handler — avoids importing errorHandler.ts into coverage totals
-// for a test file that does not exercise its error code paths.
+// Inline error handler
 const inlineErrorHandler = (err: any, _req: Request, res: Response, _next: NextFunction): void => {
   res.status(err.status || 500).json({ error: { code: 'SERVER_ERROR', message: err.message } });
 };
@@ -50,6 +50,7 @@ const makeToken = (userId: number, username: string, role: string): string =>
 // Express apps under test
 const authApp = express();
 authApp.use(express.json());
+authApp.use(cookieParser());
 authApp.use('/api/auth', authRoutes);
 authApp.use(inlineErrorHandler);
 
@@ -69,7 +70,7 @@ describe('CRIT-6: Role-Based Access Control', () => {
     mockUserRepo = createMockRepository();
     mockTournamentRepo = createMockRepository();
 
-    // Route repository calls are dispatched by entity class — match by class name.
+    // Route repository calls are dispatched by entity class
     (AppDataSource.getRepository as jest.Mock).mockImplementation((entity: any) => {
       const entityName: string = typeof entity === 'function' ? entity.name : String(entity);
       if (entityName === 'User') return mockUserRepo;
@@ -80,10 +81,6 @@ describe('CRIT-6: Role-Based Access Control', () => {
 
   // ---------------------------------------------------------------------------
   // User Entity - Role Column
-  //
-  // Verifies that the registration route relies on the entity-level 'player'
-  // default (does not inject a role), and that all three valid role values can
-  // be carried in a JWT and decoded correctly.
   // ---------------------------------------------------------------------------
   describe('User Entity - Role Column', () => {
     it('should create user with default role "player"', async () => {
@@ -102,23 +99,18 @@ describe('CRIT-6: Role-Based Access Control', () => {
         .send({ username: 'testplayer', email: 'player@test.com', password: 'password123' });
 
       expect(response.status).toBe(201);
-      // The route destructures only { username, email, password } and never sets role.
-      // The entity column default ('player') is what determines the stored value.
       expect(mockUserRepo.create).toHaveBeenCalledWith(
         expect.not.objectContaining({ role: expect.anything() })
       );
     });
 
     it('should allow creating user with role "admin"', () => {
-      // A JWT bearing role='admin' can be signed and decoded correctly.
-      // This confirms the system recognises 'admin' as a valid role value.
       const adminToken = makeToken(1, 'testadmin', 'admin');
       const decoded = jwt.verify(adminToken, JWT_SECRET) as { role: string };
       expect(decoded.role).toBe('admin');
     });
 
     it('should allow creating user with role "moderator"', () => {
-      // Confirms the system recognises 'moderator' as a valid role value.
       const modToken = makeToken(1, 'testmod', 'moderator');
       const decoded = jwt.verify(modToken, JWT_SECRET) as { role: string };
       expect(decoded.role).toBe('moderator');
@@ -128,35 +120,44 @@ describe('CRIT-6: Role-Based Access Control', () => {
   // ---------------------------------------------------------------------------
   // JWT Payload - Role Inclusion
   //
-  // Verifies that the login route embeds the user's role in both the JWT
-  // payload and the response body.
+  // Phase 3.8: token is in httpOnly cookie, not in response body.
+  // Verifies login returns role in body and sets access_token cookie.
   // ---------------------------------------------------------------------------
   describe('JWT Payload - Role Inclusion', () => {
     it('should include role in JWT token on login', async () => {
-      mockUserRepo.findOne.mockResolvedValue({
+      const mockUser = {
         id: 1,
         username: 'jwttest',
         password_hash: '$2a$12$mockedhashedpassword',
         role: 'player',
-      });
+        refresh_token_hash: null,
+        refresh_token_expires_at: null,
+      };
+      mockUserRepo.findOne.mockResolvedValue(mockUser);
+      mockUserRepo.save.mockResolvedValue(mockUser);
 
       const response = await request(authApp)
         .post('/api/auth/login')
         .send({ username: 'jwttest', password: 'password123' });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
+      // Phase 3.8: token is in httpOnly cookie, NOT in response body
+      expect(response.body).not.toHaveProperty('token');
       expect(response.body).toHaveProperty('role');
       expect(response.body.role).toBe('player');
     });
 
     it('should include admin role in JWT for admin user', async () => {
-      mockUserRepo.findOne.mockResolvedValue({
+      const mockAdmin = {
         id: 2,
         username: 'admin',
         password_hash: '$2a$12$mockedhashedpassword',
         role: 'admin',
-      });
+        refresh_token_hash: null,
+        refresh_token_expires_at: null,
+      };
+      mockUserRepo.findOne.mockResolvedValue(mockAdmin);
+      mockUserRepo.save.mockResolvedValue(mockAdmin);
 
       const response = await request(authApp)
         .post('/api/auth/login')
@@ -169,9 +170,6 @@ describe('CRIT-6: Role-Based Access Control', () => {
 
   // ---------------------------------------------------------------------------
   // Tournament Creation Authorization
-  //
-  // Verifies that POST /api/tournaments enforces the requireRole(['admin'])
-  // middleware: players receive 403, admins receive 201.
   // ---------------------------------------------------------------------------
   describe('Tournament Creation Authorization', () => {
     const tournamentPayload = {
@@ -207,7 +205,6 @@ describe('CRIT-6: Role-Based Access Control', () => {
         scheduled_at: new Date(),
       };
 
-      // Route verifies the requesting user exists in the database.
       mockUserRepo.findOne.mockResolvedValue({ id: 2, username: 'admin', role: 'admin' });
       mockTournamentRepo.create.mockReturnValue(createdTournament);
       mockTournamentRepo.save.mockResolvedValue(createdTournament);
@@ -240,9 +237,6 @@ describe('CRIT-6: Role-Based Access Control', () => {
 
   // ---------------------------------------------------------------------------
   // Registration - Role Assignment
-  //
-  // Verifies that the registration endpoint always assigns the default 'player'
-  // role and ignores any role field submitted in the request body.
   // ---------------------------------------------------------------------------
   describe('Registration - Role Assignment', () => {
     it('should assign "player" role to new registrations', async () => {
@@ -261,7 +255,6 @@ describe('CRIT-6: Role-Based Access Control', () => {
         .send({ username: 'newuser', email: 'new@test.com', password: 'password123' });
 
       expect(response.status).toBe(201);
-      // Route does not pass role to create() — entity default applies.
       expect(mockUserRepo.create).toHaveBeenCalledWith(
         expect.not.objectContaining({ role: expect.anything() })
       );
@@ -273,7 +266,7 @@ describe('CRIT-6: Role-Based Access Control', () => {
         username: 'hacker',
         email: 'hacker@test.com',
         password_hash: '$2a$12$mockedhashedpassword',
-        role: 'player', // DB default — the submitted 'admin' value is ignored
+        role: 'player',
       };
       mockUserRepo.create.mockReturnValue(savedUser);
       mockUserRepo.save.mockResolvedValue(savedUser);
@@ -282,7 +275,6 @@ describe('CRIT-6: Role-Based Access Control', () => {
         .post('/api/auth/register')
         .send({ username: 'hacker', email: 'hacker@test.com', password: 'password123', role: 'admin' });
 
-      // Route only destructures { username, email, password } — 'role' is never forwarded.
       expect(mockUserRepo.create).toHaveBeenCalledWith(
         expect.not.objectContaining({ role: 'admin' })
       );

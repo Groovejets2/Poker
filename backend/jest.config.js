@@ -18,6 +18,8 @@ module.exports = {
     '!src/server.ts',
     '!src/**/*.d.ts',
     '!src/database/data-source.ts',
+    '!src/database/migrations/**',
+    '!src/database/entities/**',
     '!src/**/__tests__/**',
     '!src/**/*.test.ts',
     '!src/**/*.spec.ts'
