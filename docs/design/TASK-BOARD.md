@@ -4,7 +4,7 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 2.5
+**Version:** 2.6
 **Last Updated:** 2026-03-01 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 2.6 | Sonnet 4.6 | Cleanup: removed superseded phases 2.3, 2.4, 3.1 from active board |
 | 2026-03-01 | 2.5 | Sonnet 4.6 | v0.3.2 RELEASED: Phase 3.7 complete; 10 RBAC integration tests converted to unit tests; 53/53 backend tests now passing; tagged v0.3.2 on main |
 | 2026-03-01 | 2.4 | Sonnet 4.6 | v0.3.1 RELEASED: Phase 4.2 complete; exception logging, type annotation, docstring fixes; 303/303 tests; 0 invariant violations; tagged v0.3.1 on main |
 | 2026-03-01 | 2.3 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303); code review APPROVED WITH COMMENTS; feature merged to develop; tagged v0.3.0 on main |
@@ -105,33 +106,15 @@ Use these sections with offset/limit to avoid loading full file:
 - **Estimate:** 4-5 hours
 - **Token Budget:** approximately 1500-2000 tokens
 
-### 2.3 Game Flow Integration
-- [ ] Connect dealer to bot interface
-- [ ] Test two-bot game with 10 hands
-- [ ] Debug any state issues
-- **Status:** READY (after 2.2)
-- **Estimate:** 2-3 hours
-- **Token Budget:** approximately 800-1200 tokens
-
-### 2.4 Multi-Bot Testing
-- [ ] Test dealer with four bots
-- [ ] Test dealer with eight bots
-- [ ] Stress test for 100 hands
-- **Status:** READY (after 2.3)
-- **Estimate:** 2 hours
-- **Token Budget:** approximately 600-900 tokens
+### 2.3 + 2.4 Game Flow Integration and Multi-Bot Testing
+- **Status:** SUPERSEDED by Phase 4.1 clinical testing (2,264 hands, 6 bots, 0 violations)
 
 ---
 
 ## Phase 3: Platform Website
 
 ### 3.1 Technology Stack and Architecture
-- [ ] Finalise technology choices (database, hosting, etc.)
-- [ ] Design API specification
-- [ ] Design database schema
-- **Status:** READY (after Phase 2)
-- **Estimate:** 2 hours
-- **Token Budget:** approximately 600-800 tokens
+- **Status:** SUPERSEDED -- tech choices in DEPLOYMENT_ARCHITECTURE.md; API spec created in Phase 3.2; schema implemented as TypeORM entities in Phase 3.3
 
 ### 3.2 Website Frontend
 - [x] React + TypeScript + Vite setup (DONE 2026-02-24)
@@ -452,7 +435,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 **Grand Total:** Approximately USD 10.50-15.00 (within budget with margin)
 **Spent to Date:** ~USD 9.25-10.75 (Phases 1, 2, 3.2, 3.3, 3.6, 4.1, 4.2 complete)
-**Backlog Items:** Phase 3.7 (30 min), Phase 3.8 (6-8 hours)
+**Backlog Items:** Phase 3.8 (6-8 hours)
 
 ---
 
@@ -465,7 +448,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 **Phase 2 (Dealer Engine):** COMPLETE ✓
 - 2.1 Functional Requirements: DONE (2026-02-20)
 - 2.2 Core Dealer Logic: DONE (2026-02-21) — 38/38 tests passing
-- 2.3 & 2.4 Testing: READY to start or skip based on timeline
+- 2.3 & 2.4 Testing: SUPERSEDED by Phase 4.1 clinical testing
 
 **Phase 4 (Testing):** IN PROGRESS
 - 4.1 Clinical Testing: COMPLETE ✓ (2026-03-01) — 5/5 sessions PASS, 2,264 hands, zero violations
@@ -478,7 +461,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - 3.6 Security Fixes: COMPLETE ✓ (2026-02-24) — All 5 CRITICAL issues resolved in 3.25 hours
 - 3.7 Test Quality: COMPLETE (2026-03-01, v0.3.2) — 53/53 backend tests passing
 - 3.8 Security Enhancements: BACKLOG (6-8 hours) — httpOnly cookies, refresh tokens, production CORS
-- 3.1 Architecture: SUPERSEDED by DEPLOYMENT_ARCHITECTURE.md
+- 3.1 Architecture: SUPERSEDED -- removed from active board
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
 
 ---
@@ -502,5 +485,5 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ---
 
 **Last Updated:** 2026-03-01
-**Version:** 2.5
+**Version:** 2.6
 **Maintainer:** Jon + Development Team
