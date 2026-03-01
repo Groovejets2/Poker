@@ -177,6 +177,9 @@ class PotManager:
             
             if eligible:
                 side_pot_amount = chips_per_player * len(eligible)
+                # Move chips from main pot into this side pot to prevent
+                # double-counting in get_pot_total().
+                self.main_pot.amount -= side_pot_amount
                 side_pot = Pot(side_pot_amount, eligible)
                 self.side_pots.append(side_pot)
             

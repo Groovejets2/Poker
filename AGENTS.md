@@ -2,14 +2,14 @@
 
 **Category:** standards
 **Purpose:** Mandatory instructions for all AI agents working on this project
-**Version:** 1.0
+**Version:** 1.1
 **Created:** 2026-02-26
 **Owner:** Jon + Development Team
 **Tags:** agent-instructions, quality-standards, testing-requirements, api-contracts
 
 ---
 
-## 🚨 CRITICAL - READ BEFORE ANY CODING TASK
+## [CRITICAL] READ BEFORE ANY CODING TASK
 
 **These are MANDATORY requirements. Failure to follow results in broken code.**
 
@@ -19,8 +19,8 @@
 
 ### BEFORE Writing Any API Integration Code:
 
-**❌ NEVER assume API response structure**
-**✅ ALWAYS verify actual API responses first**
+**[X] NEVER assume API response structure**
+**[OK] ALWAYS verify actual API responses first**
 
 #### Mandatory Steps for API Work:
 
@@ -63,7 +63,7 @@
 
      return data.map((t: any) => ({
        ...t,
-       buy_in: t.buy_in_chips,  // Map backend → frontend
+       buy_in: t.buy_in_chips,  // Map backend -> frontend
        entry_fee: t.entry_fee_usd,
      }));
    }
@@ -71,17 +71,17 @@
 
 4. **Test the integration manually:**
    - Start both backend and frontend
-   - Open browser DevTools → Network tab
+   - Open browser DevTools -> Network tab
    - Click the feature that calls the API
    - Verify the request succeeds and data displays correctly
 
 ### API Contract Violations (Recent Failures):
 
 **2026-02-26 - Phase 3.2 Frontend:**
-- ❌ Assumed `/api/tournaments` returns array directly → Actually returns `{ tournaments: [] }`
-- ❌ Used `buy_in` field → Backend uses `buy_in_chips`
-- ❌ Used `entry_fee` field → Backend uses `entry_fee_usd`
-- ❌ Assumed login returns `{ token, user: {...} }` → Actually flat object `{ token, user_id, username, role }`
+- [X] Assumed `/api/tournaments` returns array directly -> Actually returns `{ tournaments: [] }`
+- [X] Used `buy_in` field -> Backend uses `buy_in_chips`
+- [X] Used `entry_fee` field -> Backend uses `entry_fee_usd`
+- [X] Assumed login returns `{ token, user: {...} }` -> Actually flat object `{ token, user_id, username, role }`
 - **Result:** "Failed to load tournaments" error, complete site breakage
 
 ---
@@ -98,12 +98,14 @@ cd backend && npm test
 cd frontend && npm test
 ```
 
-**❌ DO NOT mark phase complete if tests are failing**
-**✅ Fix ALL test failures before moving on**
+**[X] DO NOT mark phase complete if tests are failing**
+**[OK] Fix ALL test failures before moving on**
 
 ### Integration Tests (MANDATORY):
 
 **After any API integration work:**
+```
+```
 
 1. **Start both servers:**
    ```bash
@@ -124,11 +126,11 @@ cd frontend && npm test
 3. **Document test results:**
    ```markdown
    Integration Test Results:
-   - ✅ Register new user → Success, redirects to /tournaments
-   - ✅ Login → Success, JWT stored, redirects correctly
-   - ✅ View tournaments → All 3 tournaments display
-   - ✅ View leaderboard → 2 players display
-   - ✅ Navigation → All links work
+   - [OK] Register new user -> Success, redirects to /tournaments
+   - [OK] Login -> Success, JWT stored, redirects correctly
+   - [OK] View tournaments -> All 3 tournaments display
+   - [OK] View leaderboard -> 2 players display
+   - [OK] Navigation -> All links work
    ```
 
 ### CSS/Styling Tests:
@@ -137,19 +139,19 @@ cd frontend && npm test
 
 1. Hard refresh browser (Ctrl+Shift+R)
 2. Check browser console for CSS errors
-3. Verify fonts load (DevTools → Network → filter:font)
+3. Verify fonts load (DevTools -> Network -> filter:font)
 4. Check responsive design (resize browser window)
 5. Test on multiple screen sizes
 
 ### Test Failure Response:
 
 **When tests fail:**
-1. ❌ DO NOT ignore failures
-2. ❌ DO NOT mark task complete
-3. ✅ Investigate the failure
-4. ✅ Fix the root cause
-5. ✅ Re-run tests until ALL pass
-6. ✅ Document what was fixed
+1. [X] DO NOT ignore failures
+2. [X] DO NOT mark task complete
+3. [OK] Investigate the failure
+4. [OK] Fix the root cause
+5. [OK] Re-run tests until ALL pass
+6. [OK] Document what was fixed
 
 ---
 
@@ -170,7 +172,7 @@ git commit -m "fix: Map backend API responses to frontend structures
 Frontend services now handle actual backend response formats:
 - Tournaments: Extract from { tournaments: [] } wrapper
 - Auth: Map flat response to { token, user } structure
-- Field mappings: buy_in_chips → buy_in, user_id → id
+- Field mappings: buy_in_chips -> buy_in, user_id -> id
 
 Fixes: 'Failed to load tournaments' error"
 
@@ -186,7 +188,7 @@ git commit -m "wip"
 
 ### Google Fonts / External Assets:
 
-**✅ ALWAYS put external resources in HTML `<head>`:**
+**[OK] ALWAYS put external resources in HTML `<head>`:**
 ```html
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -194,7 +196,7 @@ git commit -m "wip"
 </head>
 ```
 
-**❌ NEVER use `@import` for external fonts in CSS:**
+**[X] NEVER use `@import` for external fonts in CSS:**
 ```css
 /* WRONG - Causes PostCSS errors */
 @import url('https://fonts.googleapis.com/...');
@@ -207,9 +209,9 @@ git commit -m "wip"
 **Why:** TailwindCSS expands before the font import, violating CSS `@import` order rules.
 
 ### Recent CSS Failure (2026-02-26):
-- ❌ Used `@import url('...')` for Google Fonts in CSS
+- [X] Used `@import url('...')` for Google Fonts in CSS
 - **Result:** PostCSS error, blank white screen, site completely broken
-- ✅ **Fix:** Moved fonts to HTML `<head>` with preconnect
+- [OK] **Fix:** Moved fonts to HTML `<head>` with preconnect
 
 ---
 
@@ -226,50 +228,50 @@ git commit -m "wip"
 - [ ] CSS loads without errors (check Network tab)
 - [ ] Responsive design tested (resize browser)
 - [ ] CLAUDE.md updated with completion status
-- [ ] TASK-BOARD.md updated with ✅ checkmarks
+- [ ] TASK-BOARD.md updated
 - [ ] All code committed with clear messages
 - [ ] All commits pushed to remote
 - [ ] User has tested the feature (if requested)
 
-**⚠️ If ANY checkbox is unchecked, phase is NOT complete**
+**[WARNING] If ANY checkbox is unchecked, phase is NOT complete**
 
 ---
 
 ## 6. Common Mistakes to AVOID
 
 ### API Integration:
-- ❌ Assuming response structure without checking
-- ❌ Mismatched field names (buy_in vs buy_in_chips)
-- ❌ Not handling wrapped responses ({ data: [] } vs [])
-- ❌ Skipping manual integration testing
+- [X] Assuming response structure without checking
+- [X] Mismatched field names (buy_in vs buy_in_chips)
+- [X] Not handling wrapped responses ({ data: [] } vs [])
+- [X] Skipping manual integration testing
 
 ### Testing:
-- ❌ Ignoring test failures ("I'll fix them later")
-- ❌ Not running tests before marking complete
-- ❌ Only running unit tests, skipping integration tests
+- [X] Ignoring test failures ("I'll fix them later")
+- [X] Not running tests before marking complete
+- [X] Only running unit tests, skipping integration tests
 
 ### CSS/Styling:
-- ❌ Using `@import` for external fonts in CSS
-- ❌ Not checking browser console for errors
-- ❌ Not doing hard refresh after CSS changes
+- [X] Using `@import` for external fonts in CSS
+- [X] Not checking browser console for errors
+- [X] Not doing hard refresh after CSS changes
 
 ### Documentation:
-- ❌ Vague commit messages
-- ❌ Not updating CLAUDE.md after completion
-- ❌ Not documenting test results
+- [X] Vague commit messages
+- [X] Not updating CLAUDE.md after completion
+- [X] Not documenting test results
 
 ---
 
 ## 7. When Starting a New Task
 
 **Step 1: Read Task Requirements**
-- TASK-BOARD.md → Find current phase and tasks
-- CLAUDE.md → Check current status and blockers
+- TASK-BOARD.md -> Find current phase and tasks
+- CLAUDE.md -> Check current status and blockers
 
 **Step 2: Understand Dependencies**
-- What APIs will I use? → Test them first with curl
-- What data structures? → Check actual backend responses
-- What tests exist? → Read test files to understand expectations
+- What APIs will I use? -> Test them first with curl
+- What data structures? -> Check actual backend responses
+- What tests exist? -> Read test files to understand expectations
 
 **Step 3: Plan Before Coding**
 - Write down expected API responses
@@ -295,7 +297,7 @@ git commit -m "wip"
 ### If Site is Broken:
 
 1. **Check browser console first:**
-   - F12 → Console tab
+   - F12 -> Console tab
    - Look for red errors
    - Note the exact error message
 
@@ -337,12 +339,12 @@ git commit -m "wip"
 ## 9. Quality Standards
 
 **Code is NOT done until:**
-- ✅ It works in production (both servers running)
-- ✅ ALL tests pass
-- ✅ User has tested (if requested)
-- ✅ No console errors
-- ✅ Documentation updated
-- ✅ Committed with clear message
+- [OK] It works in production (both servers running)
+- [OK] ALL tests pass
+- [OK] User has tested (if requested)
+- [OK] No console errors
+- [OK] Documentation updated
+- [OK] Committed with clear message
 
 **"It works on my machine" is NOT acceptable**
 **"Tests pass but feature doesn't work" is NOT acceptable**
@@ -361,11 +363,11 @@ git commit -m "wip"
 5. **Learning from Mistakes** - Read this file before every task
 
 **I will NOT:**
-- ❌ Assume API structures without testing
-- ❌ Mark tasks complete when tests fail
-- ❌ Skip manual integration testing
-- ❌ Ignore browser console errors
-- ❌ Write vague commit messages
+- [X] Assume API structures without testing
+- [X] Mark tasks complete when tests fail
+- [X] Skip manual integration testing
+- [X] Ignore browser console errors
+- [X] Write vague commit messages
 
 ---
 
@@ -374,6 +376,7 @@ git commit -m "wip"
 | Date | Version | Changes |
 |------|---------|---------|
 | 2026-02-26 | 1.0 | Initial creation after Phase 3.2 API failures |
+| 2026-02-26 | 1.1 | Removed emojis per DOCUMENTATION_STANDARDS; added poker engine bridge gap note |
 
 ---
 
