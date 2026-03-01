@@ -20,6 +20,7 @@
 | 2026-03-01 | 2.6 | Sonnet 4.6 | v0.3.1 RELEASED: Phase 4.2 complete; exception logging, type annotation, docstring fixes in game_runner.py and winner_determiner.py; code review APPROVED; tagged v0.3.1 on main |
 | 2026-03-01 | 2.5 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303 passing); code review APPROVED WITH COMMENTS; feature branch merged to develop; release/0.3.0 merged to main; tagged v0.3.0 |
 | 2026-03-01 | 2.4 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing PASS; 5/5 sessions, 2,264 hands, zero invariant violations; 6 integration bugs fixed (CALL amounts, BET/RAISE, game loop, side pots, CHECK validator, fallback cascade); 303/303 engine tests passing |
+| 2026-03-01 | 2.6 | Sonnet 4.6 | Phase 3.7 COMPLETE: RBAC tests converted to unit tests; 53/53 backend tests passing; released v0.3.2 |
 | 2026-02-28 | 2.3 | Sonnet 4.6 | Phase 3.4 COMPLETE: Tests confirmed 301/301 passing; created /gitflow, /create-pr, /code-review skills; updated GITFLOW.md, TASK-BOARD.md, CLAUDE.md |
 | 2026-02-28 | 2.2 | Opus 4.1 | Architecture review: Fixed 3 critical poker engine bugs (best-5-card, RAISE status, hole card wipe), fixed frontend API mismatch, added 404 route, added TypeScript to CODING_STANDARDS, cleaned AGENTS.md emojis, synced TASK-BOARD version |
 | 2026-02-26 (Final) | 2.1 | Sonnet 4.5 | Phase 3.2 COMPLETE: All systems operational, CORS verified working, full integration tested and confirmed |

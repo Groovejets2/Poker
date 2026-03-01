@@ -4,7 +4,7 @@
 **Purpose:** Work queue, task breakdown, status tracking, and timeline for all project phases
 
 **Status:** active
-**Version:** 2.4
+**Version:** 2.5
 **Last Updated:** 2026-03-01 GMT+13
 **Owner:** Jon + Development Team
 **Related Documents:** [PROJECT_CHARTER.md](../specifications/PROJECT_CHARTER.md), [DEPLOYMENT_ARCHITECTURE.md](../specifications/DEPLOYMENT_ARCHITECTURE.md)
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 2.5 | Sonnet 4.6 | v0.3.2 RELEASED: Phase 3.7 complete; 10 RBAC integration tests converted to unit tests; 53/53 backend tests now passing; tagged v0.3.2 on main |
 | 2026-03-01 | 2.4 | Sonnet 4.6 | v0.3.1 RELEASED: Phase 4.2 complete; exception logging, type annotation, docstring fixes; 303/303 tests; 0 invariant violations; tagged v0.3.1 on main |
 | 2026-03-01 | 2.3 | Sonnet 4.6 | v0.3.0 RELEASED: BB-check unit test added (303/303); code review APPROVED WITH COMMENTS; feature merged to develop; tagged v0.3.0 on main |
 | 2026-03-01 | 2.2 | Sonnet 4.6 | Phase 4.1 COMPLETE: Clinical testing run - 5 sessions, 2,264 hands, zero invariant violations; 6 engine/simulator bugs found and fixed |
@@ -277,20 +278,20 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ## Phase 3.7: Test Quality Improvements
 
 ### 3.7.1 Fix RBAC Integration Tests (Optional)
-- [ ] Convert 10 failing RBAC integration tests to unit tests with mocks
-- [ ] Update tests to match existing test suite pattern (using createMockRepository)
-- [ ] Ensure all new tests pass alongside existing 43 tests
-- [ ] Remove database initialization code from test files
+- [x] Convert 10 failing RBAC integration tests to unit tests with mocks
+- [x] Update tests to match existing test suite pattern (using createMockRepository)
+- [x] Ensure all new tests pass alongside existing 43 tests (53/53 passing)
+- [x] Remove database initialization code from test files
 - **Priority:** LOW (functionality already proven by existing tests)
 - **Impact:** Test suite consistency, removes failing tests from output
 - **Files:** backend/src/__tests__/critical/rbac.test.ts
 - **Estimate:** 30 minutes
-- **Status:** BACKLOG (2026-02-24) - Not blocking, optional cleanup
+- **Status:** COMPLETE (2026-03-01) - 10 tests converted; 53/53 now passing
 - **Note:** Tests fail due to database setup, but functionality is proven working via existing unit tests + manual testing
 - **Reference:** docs/progress/2026-02-24_rbac-test-failures-explained_v1.0.md
 
-**Phase 3.7 Status:** BACKLOG - Low priority cleanup task
-**Can Defer:** Indefinitely (functionality already tested)
+**Phase 3.7 Status:** COMPLETE (2026-03-01) - Released in v0.3.2
+**Result:** 53/53 backend tests passing (was 43/53)
 
 ---
 
@@ -444,7 +445,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - **Phase 3.3 Total:** TypeORM + Testing, USD 2.00-2.50 — COMPLETE + DEPLOYED ✓
 - **Phase 3.4 Total:** GitFlow & PR Automation, USD 1.00-1.50 — COMPLETE (2026-02-28)
 - **Phase 3.6 Total:** Security Fixes, USD 1.50-2.00 — COMPLETE ✓ (2026-02-24, 3.25 hours)
-- **Phase 3.7 Total:** Test Quality, USD 0.25-0.50 — BACKLOG (optional, 30 min)
+- **Phase 3.7 Total:** Test Quality, USD 0.25-0.50 — COMPLETE (2026-03-01, v0.3.2)
 - **Phase 3.8 Total:** Security Enhancements, USD 3.00-4.00 — BACKLOG (6-8 hours)
 - **Phase 4.1 Total:** Clinical Testing, USD 0.50-1.00 — COMPLETE ✓ (2026-03-01)
 - **Phase 4.2 Total:** Engine Code Quality, USD 0.25-0.50 — COMPLETE ✓ (2026-03-01, v0.3.1)
@@ -475,7 +476,7 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 - 3.3 Backend API: COMPLETE ✓ (v0.1.0, 2026-02-24) — Full TypeScript/TypeORM conversion + 43 unit tests, deployed to production
 - 3.4 GitFlow & PR Automation: COMPLETE (2026-02-28) — Three skills created: /gitflow, /create-pr, /code-review
 - 3.6 Security Fixes: COMPLETE ✓ (2026-02-24) — All 5 CRITICAL issues resolved in 3.25 hours
-- 3.7 Test Quality: BACKLOG (optional) — Fix 10 RBAC tests (~30 min), low priority
+- 3.7 Test Quality: COMPLETE (2026-03-01, v0.3.2) — 53/53 backend tests passing
 - 3.8 Security Enhancements: BACKLOG (6-8 hours) — httpOnly cookies, refresh tokens, production CORS
 - 3.1 Architecture: SUPERSEDED by DEPLOYMENT_ARCHITECTURE.md
 - Bot upload: MOVED TO BACKLOG (on-hold indefinitely)
@@ -484,13 +485,11 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 
 ## Immediate Next Actions
 
-**PRIORITY 1:** Phase 3.7 Test Quality Improvements (Optional)
-- Status: BACKLOG (2026-02-24), NOT BLOCKING anything
-- Work: Convert 10 failing RBAC integration tests to unit tests
-- Estimate: 30 minutes
-- Timeline: Optional cleanup task, can defer indefinitely
-- Note: Functionality already proven by 43 passing tests + manual testing
-- See: docs/progress/2026-02-24_rbac-test-failures-explained_v1.0.md
+**PRIORITY 1:** Phase 3.8 Security Enhancements
+- Status: BACKLOG (required before public launch)
+- Work: httpOnly cookies, refresh token rotation, production CORS
+- Estimate: 6-8 hours
+- Timeline: Must complete before deploying to real users
 
 **PRIORITY 2:** Game Engine Architecture Planning
 - Status: DISCUSSION REQUIRED (noted 2026-02-23 18:15 GMT+13)
@@ -503,5 +502,5 @@ Five CRITICAL security/stability issues discovered during Phase 3.3 code review.
 ---
 
 **Last Updated:** 2026-03-01
-**Version:** 2.4
+**Version:** 2.5
 **Maintainer:** Jon + Development Team
