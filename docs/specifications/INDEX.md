@@ -4,8 +4,8 @@
 **Purpose:** Navigate all specifications, architecture decisions, and schema definitions for OpenClaw Poker
 
 **Status:** active
-**Version:** 1.1
-**Last Updated:** 2026-02-26 21:30 GMT+13
+**Version:** 1.2
+**Last Updated:** 2026-03-01 GMT+13
 **Owner:** Jon + Angus
 **Related Documents:** [DOCUMENTATION_STANDARDS.md](../standards/DOCUMENTATION_STANDARDS.md)
 
@@ -15,6 +15,7 @@
 
 | Date | Version | Author | Change |
 |------|---------|--------|--------|
+| 2026-03-01 | 1.2 | Sonnet 4.6 | Removed Phase 4.1 Clinical Testing Plan (moved to docs/tests/TEST-PLAN.md as living document) |
 | 2026-02-26 21:30 | 1.1 | Sonnet 4.5 | Updated to reference actual API spec (OPEN-CLAW-API-SPECIFICATION); removed non-existent API-SCHEMA.md and DATABASE-SCHEMA.md references; moved obsolete files to archive |
 | 2026-02-22 11:50 | 1.0 | Angus | Added metadata and change log per DOCUMENTATION_STANDARDS.md |
 | 2026-02-22 11:42 | 1.0 | Angus | Initial creation with 5-document reference table |
@@ -30,6 +31,7 @@
 | [PHASE-3-ARCHITECTURE.md](PHASE-3-ARCHITECTURE.md) | tech-stack, api, backend, frontend | Website tech stack, API design, database schema | Before Phase 3.2 or 3.3 work |
 | [OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md](OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md) | api, backend, endpoints, specification | Complete API spec with locked JSON contracts | Building or testing API |
 | [SECURITY-ARCHITECTURE.md](SECURITY-ARCHITECTURE.md) | security, threats, backend | Security design and threat model | Before deployment |
+| [../tests/TEST-PLAN.md](../tests/TEST-PLAN.md) | testing, integration, bots, unit-tests | Project-wide test plan - unit test inventory and clinical testing strategy | Before running tests or starting Phase 4.1 |
 
 ---
 
@@ -67,6 +69,7 @@
 | PHASE-3-ARCHITECTURE.md | active | ✓ | Website tech decisions and database schema |
 | OPEN-CLAW-API-SPECIFICATION_v1.0_2026-02-26.md | active | ✓ | 🔒 Locked API contract; changes require owner approval |
 | SECURITY-ARCHITECTURE.md | active | ✓ | Security design and threat model |
+| ../tests/TEST-PLAN.md | active | Jon | Moved to docs/tests/ as living document |
 
 ---
 
